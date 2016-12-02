@@ -1,2 +1,2 @@
 # UtaiteBox
-This is Android Application. name is Utaite Box
+This is Android Application.
