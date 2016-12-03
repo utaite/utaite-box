@@ -20,6 +20,7 @@ import com.yuyu.utaitebox.retrofit.Music;
 import com.yuyu.utaitebox.retrofit.Repo;
 import com.yuyu.utaitebox.view.MainAdapter;
 import com.yuyu.utaitebox.view.MainData;
+import com.yuyu.utaitebox.view.Task;
 
 import java.util.ArrayList;
 
@@ -34,11 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainFragment extends Fragment {
 
     private View view;
-    private Context context;
-    private RequestManager glideManager;
-
-    public MainFragment() {
-    }
+    private RequestManager glide;
+    private String tag = "MainFragment";
 
     @BindView(R.id.main_recyclerview)
     RecyclerView main_recyclerview;
@@ -47,92 +45,49 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        context = view.getContext();
-        glideManager = Glide.with(context);
-
-        if (MainActivity.today == -1) {
-            final Call<Repo> repos = new Retrofit.Builder()
-                    .baseUrl(MainActivity.BASE)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                    .create(MainActivity.UtaiteBoxGET.class)
-                    .listRepos("chart", 688888);
-            repos.enqueue(new Callback<Repo>() {
-                @Override
-                public void onResponse(Call<Repo> call, Response<Repo> response) {
-                    MainActivity.today = Integer.parseInt(response.body().getNavigation().getPageCount());
-                    requestRetrofit("chart", MainActivity.today);
-                }
-
-                @Override
-                public void onFailure(Call<Repo> call, Throwable t) {
-                    Log.e("chart Problem", String.valueOf(t));
-                }
-            });
-        } else {
-            requestRetrofit("chart", MainActivity.today);
-        }
+        glide = Glide.with(getActivity());
+        requestRetrofit("chart", MainActivity.today);
         return view;
     }
 
+    // today의 값이 없으면 today의 값을, 있으면 차트의 값을 받아옴
     public void requestRetrofit(String what, int index) {
-        final CheckTypesTask task = new CheckTypesTask();
+        Task task = new Task(getActivity(), 0);
         task.onPreExecute();
         Call<Repo> repos = new Retrofit.Builder()
                 .baseUrl(MainActivity.BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(MainActivity.UtaiteBoxGET.class)
+                .create(MainActivity.UtaiteBoxGetRepo.class)
                 .listRepos(what, index);
         repos.enqueue(new Callback<Repo>() {
             @Override
             public void onResponse(Call<Repo> call, Response<Repo> response) {
-                main_recyclerview.setHasFixedSize(true);
-                LinearLayoutManager llm = new LinearLayoutManager(context);
-                llm.setOrientation(LinearLayoutManager.VERTICAL);
-                main_recyclerview.setLayoutManager(llm);
-                ArrayList<MainData> mainDataSet = new ArrayList<>();
-                ArrayList<Music> music = response.body().getMusic();
-                for (Music e : music) {
-                    mainDataSet.add(new MainData(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
-                            e.get_sid(), e.get_aid()));
+                if (MainActivity.today == 688882) {
+                    MainActivity.today = Integer.parseInt(response.body().getNavigation().getPageCount());
+                    requestRetrofit("chart", MainActivity.today);
+                } else {
+                    main_recyclerview.setHasFixedSize(true);
+                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    llm.setOrientation(LinearLayoutManager.VERTICAL);
+                    main_recyclerview.setLayoutManager(llm);
+                    ArrayList<MainData> mainData = new ArrayList<>();
+                    ArrayList<Music> music = response.body().getMusic();
+                    for (Music e : music) {
+                        mainData.add(new MainData(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                e.get_sid(), e.get_aid()));
+                    }
+                    MainAdapter mainAdapter = new MainAdapter(mainData, getActivity(), glide, getFragmentManager());
+                    main_recyclerview.setAdapter(mainAdapter);
                 }
-                MainAdapter mainAdapter = new MainAdapter(mainDataSet, context, glideManager, getFragmentManager());
-                main_recyclerview.setAdapter(mainAdapter);
                 task.onPostExecute(null);
             }
 
             @Override
             public void onFailure(Call<Repo> call, Throwable t) {
-                Log.e("chart Problem", String.valueOf(t));
+                Log.e(tag, String.valueOf(t));
             }
         });
-    }
-
-    private class CheckTypesTask extends AsyncTask<Void, Void, Void> {
-
-        ProgressDialog asyncDialog = new ProgressDialog(context);
-
-        @Override
-        protected void onPreExecute() {
-            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            asyncDialog.setMessage("리스트를 불러오는 중입니다 ...");
-            asyncDialog.show();
-            asyncDialog.setCancelable(false);
-            asyncDialog.setCanceledOnTouchOutside(false);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            asyncDialog.dismiss();
-            super.onPostExecute(result);
-        }
     }
 
 }
