@@ -64,11 +64,11 @@ public class MainFragment extends Fragment {
         repos.enqueue(new Callback<Repo>() {
             @Override
             public void onResponse(Call<Repo> call, Response<Repo> response) {
-                if (MainActivity.today == 688882 && loading) {
-                    loading = false;
+                if (MainActivity.today == 688882) {
                     MainActivity.today = Integer.parseInt(response.body().getNavigation().getPageCount());
                     requestRetrofit("chart", MainActivity.today);
-                } else {
+                } else if (loading) {
+                    loading = false;
                     main_recyclerview.setHasFixedSize(true);
                     LinearLayoutManager llm = new LinearLayoutManager(context);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
