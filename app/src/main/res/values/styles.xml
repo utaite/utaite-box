@@ -8,14 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="musicinfo">
-        <item name="android:textColor">#fff</item>
-        <item name="android:shadowColor">#000</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">-5</item>
-        <item name="android:shadowRadius">5</item>
-    </style>
-
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">#FFBB00</item>
     </style>
@@ -28,5 +20,24 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="musicinfo">
+        <item name="android:textColor">#fff</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-5</item>
+        <item name="android:shadowRadius">5</item>
+    </style>
+
+    <style name="listtext">
+        <item name="android:textColor">#fff</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:background">@drawable/border</item>
+        <item name="android:textAlignment">center</item>
+        <style name="android:textColor">#000</style>
+        <item name="android:textSize">20sp</item>
+    </style>
 
 </resources>

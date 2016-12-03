@@ -6,20 +6,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingRight="5px">
+        android:paddingRight="5dp">
 
         <TextView
             android:id="@+id/main_text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/border"
-            android:text="▼  어제 가장 많이 재생된 노래에요."
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20dp" />
+            android:text="@string/main_list"
+            style="@style/listtext"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/main_recyclerview"

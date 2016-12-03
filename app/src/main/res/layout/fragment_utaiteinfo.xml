@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -55,20 +55,14 @@
 
         <TextView
             android:id="@+id/utaiteinfo_text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/border"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20dp" />
+            style="@style/listtext" />
 
         <ImageView
             android:id="@+id/utaiteinfo_text1src"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="20sp"
             android:src="@drawable/ic_ribbon2"
             android:tint="#fff" />
 
@@ -82,13 +76,7 @@
 
         <TextView
             android:id="@+id/utaiteinfo_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/border"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20dp" />
+            style="@style/listtext" />
 
         <LinearLayout
             android:id="@+id/utaiteinfo_timeline"
@@ -123,7 +111,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="10dp"
-                    android:text="Submit"
+                    android:text="@string/submit"
                     android:theme="@style/AppTheme.Button" />
 
                 <ImageView
@@ -136,6 +124,16 @@
             </RelativeLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/utaiteinfo_text3"
+            style="@style/listtext" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/utaiteinfo_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
 
     </LinearLayout>
 

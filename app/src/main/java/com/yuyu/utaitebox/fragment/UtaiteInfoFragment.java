@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -49,7 +50,7 @@ public class UtaiteInfoFragment extends Fragment {
     private Context context;
     private RequestManager glide;
     private Utaite utaite;
-    private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check;
+    private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
     private String str1Check, tag = "UtaiteInfoFragment";
 
     @BindView(R.id.utaiteinfo_bg1)
@@ -70,6 +71,10 @@ public class UtaiteInfoFragment extends Fragment {
     LinearLayout utaiteinfo_timeline;
     @BindView(R.id.utaiteinfo_avatar)
     ImageView utaiteinfo_avatar;
+    @BindView(R.id.utaiteinfo_text3)
+    TextView utaiteinfo_text3;
+    @BindView(R.id.utaiteinfo_recyclerview)
+    RecyclerView utaiteinfo_recyclerview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -194,13 +199,12 @@ public class UtaiteInfoFragment extends Fragment {
                     }
                     text1Check = !text1Check;
                 });
-                final String txt2 = getString(R.string.utaiteinfo_txt2);
                 final int nickInt = 1, contInt = 100, dateInt = 10000;
-                utaiteinfo_text2.setText("▼" + txt2);
+                utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, "▼"));
                 utaiteinfo_text2.setOnClickListener(view12 -> {
                     if (!text2Check) {
                         if (!img2Check) {
-                            glide.load((MainActivity.PROFILE == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
+                            glide.load((MainActivity.tempCover == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
                                     .bitmapTransform(new CropCircleTransformation(context))
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                     .override(300, 300)
@@ -283,12 +287,16 @@ public class UtaiteInfoFragment extends Fragment {
                             img2Check = true;
                         }
                         utaiteinfo_timeline.setVisibility(View.VISIBLE);
-                        utaiteinfo_text2.setText("▲" + txt2);
+                        utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, "▲"));
                     } else {
                         utaiteinfo_timeline.setVisibility(View.GONE);
-                        utaiteinfo_text2.setText("▼" + txt2);
+                        utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, "▼"));
                     }
                     text2Check = !text2Check;
+                });
+                utaiteinfo_text3.setText(getString(R.string.utaiteinfo_txt3, "▼"));
+                utaiteinfo_text3.setOnClickListener(view12 -> {
+
                 });
             }
 

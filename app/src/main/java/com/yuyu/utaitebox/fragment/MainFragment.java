@@ -32,7 +32,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment {
 
-    private View view;
     private Context context;
     private RequestManager glide;
     private String tag = "MainFragment";
@@ -43,7 +42,7 @@ public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
         glide = Glide.with(context);
@@ -51,7 +50,7 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    // today의 값이 없으면 today의 값을, 있으면 차트의 값을 받아옴
+    // today의 값이 없으면 today의 값을, 있으면 chart의 값을 받아옴
     public void requestRetrofit(String what, int index) {
         Task task = new Task(context, 0);
         task.onPreExecute();
@@ -74,8 +73,7 @@ public class MainFragment extends Fragment {
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     main_recyclerview.setLayoutManager(llm);
                     ArrayList<MainData> mainData = new ArrayList<>();
-                    ArrayList<Music> music = response.body().getMusic();
-                    for (Music e : music) {
+                    for (Music e : response.body().getMusic()) {
                         mainData.add(new MainData(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                                 e.get_sid(), e.get_aid()));
                     }

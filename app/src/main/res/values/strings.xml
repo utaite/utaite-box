@@ -4,16 +4,21 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
-    <string name="musicinfo_txt1">&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
+    <string name="musicinfo_txt1">%1$s&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
     <string name="musicinfo_txt2_1">&#160;&#160;노래에 좋아요를 눌러주셨어요.</string>
     <string name="musicinfo_txt2_2">&#160;&#160;노래에 좋아요를 눌러보세요.</string>
     <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
-    <string name="musicinfo_txt3">&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
+    <string name="musicinfo_txt3">%1$s&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
     <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드 된 노래에요.</string>
     <string name="musiclist_txt2">▲&#160;&#160;이전 페이지로</string>
     <string name="utaiteinfo_txt1_1">&#160;&#160;우타이테에 좋아요를 눌러주셨어요.</string>
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>
-    <string name="utaiteinfo_txt2">&#160;&#160;어떤 느낌의 우타이테인가요?</string>
+    <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
+    <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 다른 노래는 어때요?</string>
     <string name="task_0">리스트를 불러오는 중입니다 ...</string>
     <string name="task_1">로딩 중입니다 ...</string>
+    <string name="main_list">▼  어제 가장 많이 재생된 노래에요.</string>
+    <string name="submit">Submit</string>
+    <string name="addlist">ADDLIST</string>
+    <string name="like">LIKE</string>
 </resources>

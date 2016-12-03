@@ -48,7 +48,6 @@ import com.yuyu.utaitebox.view.Task;
 
 public class MusicInfoFragment extends Fragment {
 
-    private View view;
     private Context context;
     private RequestManager glide;
     private Repo repo;
@@ -82,6 +81,8 @@ public class MusicInfoFragment extends Fragment {
     TextView musicinfo_playedright;
     @BindView(R.id.musicinfo_commentright)
     TextView musicinfo_commentright;
+    @BindView(R.id.musicinfo_status)
+    RelativeLayout musicinfo_status;
     @BindView(R.id.musicinfo_text1)
     TextView musicinfo_text1;
     @BindView(R.id.musicinfo_text2)
@@ -99,7 +100,7 @@ public class MusicInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_musicinfo, container, false);
+        View view = inflater.inflate(R.layout.fragment_musicinfo, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
         glide = Glide.with(context);
@@ -108,6 +109,7 @@ public class MusicInfoFragment extends Fragment {
         musicinfo_text2src.setVisibility(View.GONE);
         musicinfo_ribbonimg.setVisibility(View.GONE);
         musicinfo_timeline.setVisibility(View.GONE);
+        musicinfo_status.setVisibility(View.GONE);
         requestRetrofit("song", getArguments().getInt("sid"));
         return view;
     }
@@ -185,12 +187,13 @@ public class MusicInfoFragment extends Fragment {
                         played = String.valueOf(Integer.parseInt(played) / 1000) + "." + String.valueOf(Integer.parseInt(played) % 1000).substring(0, 1) + "K+";
                     }
                     musicinfo_playedright.setText(played);
+                    musicinfo_status.setVisibility(View.VISIBLE);
                     musicinfo_recyclerview.setHasFixedSize(true);
                     LinearLayoutManager llm = new LinearLayoutManager(context);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     musicinfo_recyclerview.setLayoutManager(llm);
                     mainDataSet = new ArrayList<>();
-                    musicinfo_text1.setText("▼" + getString(R.string.musicinfo_txt1));
+                    musicinfo_text1.setText(getString(R.string.musicinfo_txt1, "▼"));
                     musicinfo_text1.setOnClickListener(view1 -> {
                         if (!text1Check) {
                             if (!img1Check) {
@@ -200,9 +203,9 @@ public class MusicInfoFragment extends Fragment {
                                 img1Check = true;
                             }
                             musicinfo_recyclerview.setVisibility(View.VISIBLE);
-                            musicinfo_text1.setText("▲" + getString(R.string.musicinfo_txt1));
+                            musicinfo_text1.setText(getString(R.string.musicinfo_txt1, "▲"));
                         } else {
-                            musicinfo_text1.setText("▼" + getString(R.string.musicinfo_txt1));
+                            musicinfo_text1.setText(getString(R.string.musicinfo_txt1, "▼"));
                             musicinfo_recyclerview.setVisibility(View.GONE);
                         }
                         text1Check = !text1Check;
@@ -274,11 +277,11 @@ public class MusicInfoFragment extends Fragment {
                         text2Check = !text2Check;
                     });
                     final int nickInt = 1, contInt = 100, dateInt = 10000;
-                    musicinfo_text3.setText("▼" + getString(R.string.musicinfo_txt3));
+                    musicinfo_text3.setText(getString(R.string.musicinfo_txt3, "▼"));
                     musicinfo_text3.setOnClickListener(view12 -> {
                         if (!text3Check) {
                             if (!img3Check) {
-                                glide.load((MainActivity.PROFILE == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
+                                glide.load((MainActivity.tempCover == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
                                         .bitmapTransform(new CropCircleTransformation(context))
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .override(300, 300)
@@ -320,11 +323,11 @@ public class MusicInfoFragment extends Fragment {
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
                                         pNick.setMargins(250, 0, 0, 0);
                                         rRelativeNick.setLayoutParams(pNick);
-                                        rRelativeNick.addView(nick[i]);
                                         rRelativeNick.setPadding(0, 10, 10, 0);
+                                        rRelativeNick.addView(nick[i]);
                                         rRelativeImg.addView(rRelativeNick);
                                         cont[i] = new TextView(context);
-                                        cont[i].setText((comment.get(i).getContent() != "") ? comment.get(i).getContent() : (comment.get(i).getType().equals("1") ? "/*   Upload music   */" : "/*   Upload cover image   */"));
+                                        cont[i].setText((!comment.get(i).getContent().equals("")) ? comment.get(i).getContent() : (comment.get(i).getType().equals("1") ? "/*   Upload music   */" : "/*   Upload cover image   */"));
                                         cont[i].setTextColor(Color.BLACK);
                                         cont[i].setTextSize(12);
                                         rRelativeCont = new RelativeLayout(context);
@@ -361,10 +364,10 @@ public class MusicInfoFragment extends Fragment {
                                 img3Check = true;
                             }
                             musicinfo_timeline.setVisibility(View.VISIBLE);
-                            musicinfo_text3.setText("▲" + getString(R.string.musicinfo_txt3));
+                            musicinfo_text3.setText(getString(R.string.musicinfo_txt3, "▲"));
                         } else {
                             musicinfo_timeline.setVisibility(View.GONE);
-                            musicinfo_text3.setText("▼" + getString(R.string.musicinfo_txt3));
+                            musicinfo_text3.setText(getString(R.string.musicinfo_txt3, "▼"));
                         }
                         text3Check = !text3Check;
                     });

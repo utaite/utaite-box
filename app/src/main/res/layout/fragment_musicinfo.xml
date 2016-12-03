@@ -22,91 +22,98 @@
                 android:layout_alignParentTop="true"
                 android:scaleType="fitXY" />
 
-            <ImageView
-                android:layout_width="38dp"
-                android:layout_height="25dp"
-                android:layout_marginRight="7dp"
-                android:layout_marginTop="317dp"
-                android:layout_toLeftOf="@+id/musicinfo_commentright"
-                android:background="@drawable/circle_black" />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="316dp"
-                android:layout_toLeftOf="@+id/musicinfo_ribbonright"
-                android:background="@drawable/circle_black" />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="316dp"
-                android:layout_toLeftOf="@+id/musicinfo_playedright"
-                android:background="@drawable/circle_black" />
-
-            <ImageView
-                android:id="@+id/musicinfo_ribbonsrcright"
+            <RelativeLayout
+                android:id="@+id/musicinfo_status"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="310dp"
-                android:layout_toLeftOf="@+id/musicinfo_ribbonright"
-                android:src="@drawable/ic_ribbon"
-                android:tint="#fff" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/musicinfo_ribbonright"
-                style="@style/musicinfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="310dp"
-                android:layout_toLeftOf="@+id/musicinfo_playedrightsrc"
-                android:textSize="25dp" />
+                <ImageView
+                    android:layout_width="38dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_marginTop="317dp"
+                    android:layout_toLeftOf="@+id/musicinfo_commentright"
+                    android:background="@drawable/circle_black" />
 
-            <ImageView
-                android:id="@+id/musicinfo_playedrightsrc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="310dp"
-                android:layout_toLeftOf="@+id/musicinfo_playedright"
-                android:src="@drawable/ic_music"
-                android:tint="#fff" />
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="316dp"
+                    android:layout_toLeftOf="@+id/musicinfo_ribbonright"
+                    android:background="@drawable/circle_black" />
 
-            <TextView
-                android:id="@+id/musicinfo_playedright"
-                style="@style/musicinfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="310dp"
-                android:layout_toLeftOf="@+id/musicinfo_commentsrcright"
-                android:textSize="25dp" />
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="316dp"
+                    android:layout_toLeftOf="@+id/musicinfo_playedright"
+                    android:background="@drawable/circle_black" />
 
-            <ImageView
-                android:id="@+id/musicinfo_commentsrcright"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="310dp"
-                android:layout_toLeftOf="@+id/musicinfo_commentright"
-                android:src="@drawable/ic_comment"
-                android:tint="#fff" />
+                <ImageView
+                    android:id="@+id/musicinfo_ribbonsrcright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="310dp"
+                    android:layout_toLeftOf="@+id/musicinfo_ribbonright"
+                    android:src="@drawable/ic_ribbon"
+                    android:tint="#fff" />
 
-            <TextView
-                android:id="@+id/musicinfo_commentright"
-                style="@style/musicinfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="310dp"
-                android:paddingRight="15dp"
-                android:textSize="25dp" />
+                <TextView
+                    android:id="@+id/musicinfo_ribbonright"
+                    style="@style/musicinfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="310dp"
+                    android:layout_toLeftOf="@+id/musicinfo_playedrightsrc"
+                    android:textSize="25sp" />
+
+                <ImageView
+                    android:id="@+id/musicinfo_playedrightsrc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="310dp"
+                    android:layout_toLeftOf="@+id/musicinfo_playedright"
+                    android:src="@drawable/ic_music"
+                    android:tint="#fff" />
+
+                <TextView
+                    android:id="@+id/musicinfo_playedright"
+                    style="@style/musicinfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="310dp"
+                    android:layout_toLeftOf="@+id/musicinfo_commentsrcright"
+                    android:textSize="25sp" />
+
+                <ImageView
+                    android:id="@+id/musicinfo_commentsrcright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="310dp"
+                    android:layout_toLeftOf="@+id/musicinfo_commentright"
+                    android:src="@drawable/ic_comment"
+                    android:tint="#fff" />
+
+                <TextView
+                    android:id="@+id/musicinfo_commentright"
+                    style="@style/musicinfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="310dp"
+                    android:paddingRight="15dp"
+                    android:textSize="25sp" />
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -141,8 +148,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="135dp"
-                    android:text="LIKE"
-                    android:textSize="15dp" />
+                    android:text="@string/like"
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:id="@+id/musicinfo_addlistsrc"
@@ -160,8 +167,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="195dp"
-                    android:text="ADDLIST"
-                    android:textSize="15dp" />
+                    android:text="@string/addlist"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/musicinfo_utaite"
@@ -170,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="80dp"
                     android:layout_marginTop="10dp"
-                    android:textSize="25dp" />
+                    android:textSize="25sp" />
 
                 <TextView
                     android:id="@+id/musicinfo_song"
@@ -179,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="80dp"
                     android:layout_marginTop="40dp"
-                    android:textSize="25dp" />
+                    android:textSize="25sp" />
 
                 <TextView
                     android:id="@+id/musicinfo_songkr"
@@ -188,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/musicinfo_song"
                     android:layout_marginLeft="80dp"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
@@ -196,13 +203,7 @@
 
         <TextView
             android:id="@+id/musicinfo_text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/border"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20dp" />
+            style="@style/listtext" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/musicinfo_recyclerview"
@@ -212,13 +213,7 @@
 
         <TextView
             android:id="@+id/musicinfo_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/border"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20dp" />
+            style="@style/listtext" />
 
         <ImageView
             android:id="@+id/musicinfo_text2src"
@@ -239,13 +234,7 @@
 
         <TextView
             android:id="@+id/musicinfo_text3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/border"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20dp" />
+            style="@style/listtext" />
 
         <LinearLayout
             android:id="@+id/musicinfo_timeline"
@@ -280,7 +269,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="10dp"
-                    android:text="Submit"
+                    android:text="@string/submit"
                     android:theme="@style/AppTheme.Button" />
 
                 <ImageView
