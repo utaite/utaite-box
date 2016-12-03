@@ -1,9 +1,7 @@
 package com.yuyu.utaitebox.fragment;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,12 +36,14 @@ import com.yuyu.utaitebox.view.Task;
 
 public class MusicListFragment extends Fragment {
 
+    // ArrayList<Song> 타입으로 retrofit 통신
     public interface UtaiteBoxGetArrSong {
         @GET("/api/{what}/{index}")
         Call<ArrayList<Song>> listRepos(@Path("what") String what,
                                         @Path("index") int index);
     }
 
+    private Context context;
     private ArrayList<MainData> mainDataSet;
     private MainAdapter mainAdapter;
     private final int PAGE = 5;
@@ -64,15 +64,16 @@ public class MusicListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_musiclist, container, false);
         ButterKnife.bind(this, view);
-        RequestManager glide = Glide.with(getActivity());
+        context = getActivity();
+        RequestManager glide = Glide.with(context);
         musiclist_recyclerview.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         musiclist_recyclerview.setLayoutManager(llm);
         mainDataSet = new ArrayList<>();
         count = 1;
         requestRetrofit("songlist", count);
-        mainAdapter = new MainAdapter(mainDataSet, getActivity(), glide, getFragmentManager());
+        mainAdapter = new MainAdapter(mainDataSet, context, glide, getFragmentManager());
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_next.setVisibility(View.GONE);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));
@@ -113,7 +114,7 @@ public class MusicListFragment extends Fragment {
 
     // 스크롤을 밑으로 내리면 최신 순으로 추가적으로 노래 정보를 받아옴
     public void requestRetrofit(String what, int index) {
-        Task task = new Task(getActivity(), 1);
+        Task task = new Task(context, 0);
         task.onPreExecute();
         Call<ArrayList<Song>> repos = new Retrofit.Builder()
                 .baseUrl(MainActivity.BASE)

@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
         nav_view.getMenu().getItem(0).setChecked(true);
-        requestRetrofit("member", 1);
-        // requestRetrofit("member", _mid);
+        _mid = 1;
+        requestRetrofit("member", _mid);
         getFragmentManager().beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
     }
 

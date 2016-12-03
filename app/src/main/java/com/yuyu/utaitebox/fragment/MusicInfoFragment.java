@@ -1,6 +1,7 @@
 package com.yuyu.utaitebox.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.GradientDrawable;
@@ -48,6 +49,7 @@ import com.yuyu.utaitebox.view.Task;
 public class MusicInfoFragment extends Fragment {
 
     private View view;
+    private Context context;
     private RequestManager glide;
     private Repo repo;
     private Task task;
@@ -99,8 +101,9 @@ public class MusicInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_musicinfo, container, false);
         ButterKnife.bind(this, view);
-        glide = Glide.with(getActivity());
-        task = new Task(getActivity(), 1);
+        context = getActivity();
+        glide = Glide.with(context);
+        task = new Task(context, 1);
         task.onPreExecute();
         musicinfo_text2src.setVisibility(View.GONE);
         musicinfo_ribbonimg.setVisibility(View.GONE);
@@ -183,7 +186,7 @@ public class MusicInfoFragment extends Fragment {
                     }
                     musicinfo_playedright.setText(played);
                     musicinfo_recyclerview.setHasFixedSize(true);
-                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    LinearLayoutManager llm = new LinearLayoutManager(context);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     musicinfo_recyclerview.setLayoutManager(llm);
                     mainDataSet = new ArrayList<>();
@@ -219,28 +222,28 @@ public class MusicInfoFragment extends Fragment {
                                     RelativeLayout rRelative;
                                     for (int i = 0; i < temp; i++) {
                                         if (i % 4 == 0) {
-                                            rHorizontal = new LinearLayout(getActivity());
+                                            rHorizontal = new LinearLayout(context);
                                             rHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
                                             rHorizontal.setOrientation(LinearLayout.HORIZONTAL);
                                             musicinfo_ribbonimg.addView(rHorizontal);
                                         }
-                                        img[i] = new ImageView(getActivity());
+                                        img[i] = new ImageView(context);
                                         img[i].setScaleType(ImageView.ScaleType.FIT_XY);
                                         String avatar = ribbon1.get(i).getAvatar();
                                         glide.load((avatar == null) ? MainActivity.BASE + "/res/profile/image/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + avatar)
-                                                .bitmapTransform(new CropCircleTransformation(getActivity()))
+                                                .bitmapTransform(new CropCircleTransformation(context))
                                                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                                 .into(img[i]);
-                                        iv[i] = new TextView(getActivity());
+                                        iv[i] = new TextView(context);
                                         String nickname = ribbon1.get(i).getNickname();
                                         iv[i].setText((nickname.length() <= 10) ? nickname : nickname.substring(0, 10) + "...");
                                         iv[i].setTextColor(Color.BLACK);
-                                        rAbsolute = new LinearLayout(getActivity());
+                                        rAbsolute = new LinearLayout(context);
                                         rAbsolute.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                                         rAbsolute.setOrientation(LinearLayout.VERTICAL);
                                         rAbsolute.addView(img[i], param1);
                                         rAbsolute.setId(i + 1);
-                                        rRelative = new RelativeLayout(getActivity());
+                                        rRelative = new RelativeLayout(context);
                                         RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
                                         p.addRule(RelativeLayout.BELOW, rAbsolute.getId());
@@ -251,7 +254,7 @@ public class MusicInfoFragment extends Fragment {
                                         rHorizontal.addView(rAbsolute);
                                     }
                                 } else {
-                                    TextView iv = new TextView(getActivity());
+                                    TextView iv = new TextView(context);
                                     iv.setText(R.string.not_ribbon);
                                     iv.setTextColor(Color.BLACK);
                                     iv.setTextSize(20);
@@ -276,7 +279,7 @@ public class MusicInfoFragment extends Fragment {
                         if (!text3Check) {
                             if (!img3Check) {
                                 glide.load((MainActivity.PROFILE == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
-                                        .bitmapTransform(new CropCircleTransformation(getActivity()))
+                                        .bitmapTransform(new CropCircleTransformation(context))
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .override(300, 300)
                                         .into(musicinfo_avatar);
@@ -284,7 +287,7 @@ public class MusicInfoFragment extends Fragment {
                                 int temp = comment.size();
                                 if (temp != 0) {
                                     LinearLayout rAbsolute;
-                                    rAbsolute = new LinearLayout(getActivity());
+                                    rAbsolute = new LinearLayout(context);
                                     rAbsolute.setOrientation(LinearLayout.VERTICAL);
                                     RelativeLayout rRelativeNick, rRelativeCont, rRelativeImg, rRelativeDate;
                                     ImageView img[] = new ImageView[temp];
@@ -292,26 +295,26 @@ public class MusicInfoFragment extends Fragment {
                                     TextView cont[] = new TextView[temp];
                                     TextView date[] = new TextView[temp];
                                     for (int i = 0; i < temp; i++) {
-                                        img[i] = new ImageView(getActivity());
+                                        img[i] = new ImageView(context);
                                         img[i].setScaleType(ImageView.ScaleType.FIT_XY);
                                         String avatar = comment.get(i).getAvatar();
                                         glide.load((avatar == null) ? MainActivity.BASE + "/res/profile/image/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + avatar)
-                                                .bitmapTransform(new CropCircleTransformation(getActivity()))
+                                                .bitmapTransform(new CropCircleTransformation(context))
                                                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                                 .into(img[i]);
-                                        rRelativeImg = new RelativeLayout(getActivity());
+                                        rRelativeImg = new RelativeLayout(context);
                                         RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
                                         rRelativeImg.setLayoutParams(pImg);
                                         rRelativeImg.setPadding(10, 10, 0, 10);
                                         rRelativeImg.addView(img[i]);
                                         rAbsolute.addView(rRelativeImg);
-                                        nick[i] = new TextView(getActivity());
+                                        nick[i] = new TextView(context);
                                         String nickname = comment.get(i).getNickname();
                                         nick[i].setText((nickname.length() <= 10) ? nickname : nickname.substring(0, 10) + "...");
                                         nick[i].setTextColor(Color.BLACK);
                                         nick[i].setTextSize(20);
-                                        rRelativeNick = new RelativeLayout(getActivity());
+                                        rRelativeNick = new RelativeLayout(context);
                                         rRelativeNick.setId(i + nickInt);
                                         RelativeLayout.LayoutParams pNick = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -320,11 +323,11 @@ public class MusicInfoFragment extends Fragment {
                                         rRelativeNick.addView(nick[i]);
                                         rRelativeNick.setPadding(0, 10, 10, 0);
                                         rRelativeImg.addView(rRelativeNick);
-                                        cont[i] = new TextView(getActivity());
+                                        cont[i] = new TextView(context);
                                         cont[i].setText((comment.get(i).getContent() != "") ? comment.get(i).getContent() : (comment.get(i).getType().equals("1") ? "/*   Upload music   */" : "/*   Upload cover image   */"));
                                         cont[i].setTextColor(Color.BLACK);
                                         cont[i].setTextSize(12);
-                                        rRelativeCont = new RelativeLayout(getActivity());
+                                        rRelativeCont = new RelativeLayout(context);
                                         RelativeLayout.LayoutParams pCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
                                         pCont.setMargins(250, 0, 0, 0);
@@ -334,12 +337,12 @@ public class MusicInfoFragment extends Fragment {
                                         rRelativeCont.setLayoutParams(pCont);
                                         rRelativeCont.addView(cont[i]);
                                         rRelativeImg.addView(rRelativeCont);
-                                        date[i] = new TextView(getActivity());
+                                        date[i] = new TextView(context);
                                         String dateStr = comment.get(i).getDate();
                                         date[i].setText(dateStr.substring(0, dateStr.indexOf("T")));
                                         date[i].setTextColor(Color.BLACK);
                                         date[i].setTextSize(10);
-                                        rRelativeDate = new RelativeLayout(getActivity());
+                                        rRelativeDate = new RelativeLayout(context);
                                         rRelativeDate.setId(i + dateInt);
                                         RelativeLayout.LayoutParams pDate = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -384,7 +387,7 @@ public class MusicInfoFragment extends Fragment {
                     Song song = response.body().getSong();
                     mainDataSet.add(new MainData(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),
                             song.get_sid(), song.get_aid()));
-                    musicinfo_recyclerview.setAdapter(new MainAdapter(mainDataSet, getActivity(), glide, getFragmentManager()));
+                    musicinfo_recyclerview.setAdapter(new MainAdapter(mainDataSet, context, glide, getFragmentManager()));
                 }
             }
 

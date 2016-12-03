@@ -7,8 +7,7 @@
     <string name="musicinfo_txt1">&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
     <string name="musicinfo_txt2_1">&#160;&#160;노래에 좋아요를 눌러주셨어요.</string>
     <string name="musicinfo_txt2_2">&#160;&#160;노래에 좋아요를 눌러보세요.</string>
-    <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.
-                                첫 좋아요를 눌러보세요!</string>
+    <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
     <string name="musicinfo_txt3">&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
     <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드 된 노래에요.</string>
     <string name="musiclist_txt2">▲&#160;&#160;이전 페이지로</string>

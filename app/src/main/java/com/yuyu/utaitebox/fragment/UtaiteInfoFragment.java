@@ -1,6 +1,7 @@
 package com.yuyu.utaitebox.fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -38,13 +39,14 @@ import retrofit2.http.Path;
 
 public class UtaiteInfoFragment extends Fragment {
 
+    // Utaite 타입으로 retrofit 통신
     public interface UtaiteBoxUtaite {
         @GET("/api/{what}/{index}")
         Call<Utaite> listRepos(@Path("what") String what,
                                @Path("index") int index);
     }
 
-    private View view;
+    private Context context;
     private RequestManager glide;
     private Utaite utaite;
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check;
@@ -71,9 +73,10 @@ public class UtaiteInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_utaiteinfo, container, false);
+        View view = inflater.inflate(R.layout.fragment_utaiteinfo, container, false);
         ButterKnife.bind(this, view);
-        glide = Glide.with(getActivity());
+        context = getActivity();
+        glide = Glide.with(context);
         utaiteinfo_text1src.setVisibility(View.GONE);
         utaiteinfo_ribbonimg.setVisibility(View.GONE);
         utaiteinfo_timeline.setVisibility(View.GONE);
@@ -83,7 +86,7 @@ public class UtaiteInfoFragment extends Fragment {
 
     // bundle로 받은 aid로 해당 우타이테의 정보를 받아옴
     public void requestRetrofit(String what, int index) {
-        Task task = new Task(getActivity(), 1);
+        Task task = new Task(context, 1);
         task.onPreExecute();
         Call<Utaite> repos = new Retrofit.Builder()
                 .baseUrl(MainActivity.BASE)
@@ -99,7 +102,7 @@ public class UtaiteInfoFragment extends Fragment {
                 utaiteinfo_id.setText(utaite.getAritst().getAritst_en());
                 String cover = utaite.getAritst().getArtist_cover();
                 glide.load((cover == null) ? MainActivity.BASE + "/images/artist.jpg" : MainActivity.BASE + "/res/artist/image/" + utaite.getAritst().getArtist_cover())
-                        .bitmapTransform(new CropCircleTransformation(getActivity()))
+                        .bitmapTransform(new CropCircleTransformation(context))
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(utaiteinfo_img);
                 if (utaite.getAritst().getArtist_background() == null) {
@@ -140,28 +143,28 @@ public class UtaiteInfoFragment extends Fragment {
                                 RelativeLayout rRelative;
                                 for (int i = 0; i < temp; i++) {
                                     if (i % 4 == 0) {
-                                        rHorizontal = new LinearLayout(getActivity());
+                                        rHorizontal = new LinearLayout(context);
                                         rHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
                                         rHorizontal.setOrientation(LinearLayout.HORIZONTAL);
                                         utaiteinfo_ribbonimg.addView(rHorizontal);
                                     }
-                                    img[i] = new ImageView(getActivity());
+                                    img[i] = new ImageView(context);
                                     img[i].setScaleType(ImageView.ScaleType.FIT_XY);
                                     String avatar = ribbon1.get(i).getAvatar();
                                     glide.load((avatar == null) ? MainActivity.BASE + "/res/profile/image/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + avatar)
-                                            .bitmapTransform(new CropCircleTransformation(getActivity()))
+                                            .bitmapTransform(new CropCircleTransformation(context))
                                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                             .into(img[i]);
-                                    iv[i] = new TextView(getActivity());
+                                    iv[i] = new TextView(context);
                                     String nickname = ribbon1.get(i).getNickname();
                                     iv[i].setText((nickname.length() <= 10) ? nickname : nickname.substring(0, 10) + "...");
                                     iv[i].setTextColor(Color.BLACK);
-                                    rAbsolute = new LinearLayout(getActivity());
+                                    rAbsolute = new LinearLayout(context);
                                     rAbsolute.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                                     rAbsolute.setOrientation(LinearLayout.VERTICAL);
                                     rAbsolute.addView(img[i], param1);
                                     rAbsolute.setId(i + 1);
-                                    rRelative = new RelativeLayout(getActivity());
+                                    rRelative = new RelativeLayout(context);
                                     RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT);
                                     p.addRule(RelativeLayout.BELOW, rAbsolute.getId());
@@ -172,7 +175,7 @@ public class UtaiteInfoFragment extends Fragment {
                                     rHorizontal.addView(rAbsolute);
                                 }
                             } else {
-                                TextView iv = new TextView(getActivity());
+                                TextView iv = new TextView(context);
                                 iv.setText(getString(R.string.not_ribbon));
                                 iv.setTextColor(Color.BLACK);
                                 iv.setTextSize(20);
@@ -198,7 +201,7 @@ public class UtaiteInfoFragment extends Fragment {
                     if (!text2Check) {
                         if (!img2Check) {
                             glide.load((MainActivity.PROFILE == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
-                                    .bitmapTransform(new CropCircleTransformation(getActivity()))
+                                    .bitmapTransform(new CropCircleTransformation(context))
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                     .override(300, 300)
                                     .into(utaiteinfo_avatar);
@@ -206,7 +209,7 @@ public class UtaiteInfoFragment extends Fragment {
                             int temp = comment.size();
                             if (temp != 0) {
                                 LinearLayout rAbsolute;
-                                rAbsolute = new LinearLayout(getActivity());
+                                rAbsolute = new LinearLayout(context);
                                 rAbsolute.setOrientation(LinearLayout.VERTICAL);
                                 RelativeLayout rRelativeNick, rRelativeCont, rRelativeImg, rRelativeDate;
                                 ImageView img[] = new ImageView[temp];
@@ -214,26 +217,26 @@ public class UtaiteInfoFragment extends Fragment {
                                 TextView cont[] = new TextView[temp];
                                 TextView date[] = new TextView[temp];
                                 for (int i = 0; i < temp; i++) {
-                                    img[i] = new ImageView(getActivity());
+                                    img[i] = new ImageView(context);
                                     img[i].setScaleType(ImageView.ScaleType.FIT_XY);
                                     String avatar = comment.get(i).getAvatar();
                                     glide.load((avatar == null) ? MainActivity.BASE + "/res/profile/image/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + avatar)
-                                            .bitmapTransform(new CropCircleTransformation(getActivity()))
+                                            .bitmapTransform(new CropCircleTransformation(context))
                                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                             .into(img[i]);
-                                    rRelativeImg = new RelativeLayout(getActivity());
+                                    rRelativeImg = new RelativeLayout(context);
                                     RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT);
                                     rRelativeImg.setLayoutParams(pImg);
                                     rRelativeImg.setPadding(10, 10, 0, 10);
                                     rRelativeImg.addView(img[i]);
                                     rAbsolute.addView(rRelativeImg);
-                                    nick[i] = new TextView(getActivity());
+                                    nick[i] = new TextView(context);
                                     String nickname = comment.get(i).getNickname();
                                     nick[i].setText((nickname.length() <= 10) ? nickname : nickname.substring(0, 10) + "...");
                                     nick[i].setTextColor(Color.BLACK);
                                     nick[i].setTextSize(20);
-                                    rRelativeNick = new RelativeLayout(getActivity());
+                                    rRelativeNick = new RelativeLayout(context);
                                     rRelativeNick.setId(i + nickInt);
                                     RelativeLayout.LayoutParams pNick = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -242,11 +245,11 @@ public class UtaiteInfoFragment extends Fragment {
                                     rRelativeNick.addView(nick[i]);
                                     rRelativeNick.setPadding(0, 10, 10, 0);
                                     rRelativeImg.addView(rRelativeNick);
-                                    cont[i] = new TextView(getActivity());
+                                    cont[i] = new TextView(context);
                                     cont[i].setText(comment.get(i).getContent());
                                     cont[i].setTextColor(Color.BLACK);
                                     cont[i].setTextSize(12);
-                                    rRelativeCont = new RelativeLayout(getActivity());
+                                    rRelativeCont = new RelativeLayout(context);
                                     RelativeLayout.LayoutParams pCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT);
                                     pCont.setMargins(250, 0, 0, 0);
@@ -256,12 +259,12 @@ public class UtaiteInfoFragment extends Fragment {
                                     rRelativeCont.setLayoutParams(pCont);
                                     rRelativeCont.addView(cont[i]);
                                     rRelativeImg.addView(rRelativeCont);
-                                    date[i] = new TextView(getActivity());
+                                    date[i] = new TextView(context);
                                     String dateStr = comment.get(i).getDate();
                                     date[i].setText(dateStr.substring(0, dateStr.indexOf("T")));
                                     date[i].setTextColor(Color.BLACK);
                                     date[i].setTextSize(10);
-                                    rRelativeDate = new RelativeLayout(getActivity());
+                                    rRelativeDate = new RelativeLayout(context);
                                     rRelativeDate.setId(i + dateInt);
                                     RelativeLayout.LayoutParams pDate = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                             ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -1,9 +1,7 @@
 package com.yuyu.utaitebox.fragment;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,8 +33,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainFragment extends Fragment {
 
     private View view;
+    private Context context;
     private RequestManager glide;
     private String tag = "MainFragment";
+    private boolean loading;
 
     @BindView(R.id.main_recyclerview)
     RecyclerView main_recyclerview;
@@ -45,14 +45,15 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
-        glide = Glide.with(getActivity());
+        context = getActivity();
+        glide = Glide.with(context);
         requestRetrofit("chart", MainActivity.today);
         return view;
     }
 
     // today의 값이 없으면 today의 값을, 있으면 차트의 값을 받아옴
     public void requestRetrofit(String what, int index) {
-        Task task = new Task(getActivity(), 0);
+        Task task = new Task(context, 0);
         task.onPreExecute();
         Call<Repo> repos = new Retrofit.Builder()
                 .baseUrl(MainActivity.BASE)
@@ -63,12 +64,13 @@ public class MainFragment extends Fragment {
         repos.enqueue(new Callback<Repo>() {
             @Override
             public void onResponse(Call<Repo> call, Response<Repo> response) {
-                if (MainActivity.today == 688882) {
+                if (MainActivity.today == 688882 && loading) {
+                    loading = false;
                     MainActivity.today = Integer.parseInt(response.body().getNavigation().getPageCount());
                     requestRetrofit("chart", MainActivity.today);
                 } else {
                     main_recyclerview.setHasFixedSize(true);
-                    LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                    LinearLayoutManager llm = new LinearLayoutManager(context);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     main_recyclerview.setLayoutManager(llm);
                     ArrayList<MainData> mainData = new ArrayList<>();
@@ -77,7 +79,7 @@ public class MainFragment extends Fragment {
                         mainData.add(new MainData(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                                 e.get_sid(), e.get_aid()));
                     }
-                    MainAdapter mainAdapter = new MainAdapter(mainData, getActivity(), glide, getFragmentManager());
+                    MainAdapter mainAdapter = new MainAdapter(mainData, context, glide, getFragmentManager());
                     main_recyclerview.setAdapter(mainAdapter);
                 }
                 task.onPostExecute(null);
@@ -90,4 +92,9 @@ public class MainFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onStart() {
+        loading = true;
+        super.onStart();
+    }
 }
