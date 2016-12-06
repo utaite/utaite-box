@@ -16,7 +16,7 @@ public class Repo {
     private String ribbon;
 
     @SerializedName("sidebar")
-    private Sidebar sidebar;
+    private Service sidebar;
 
     @SerializedName("tags")
     private ArrayList<Tags> tags;
@@ -48,6 +48,15 @@ public class Repo {
     @SerializedName("artist")
     private ArrayList<Artist> aritst;
 
+    @SerializedName("status")
+    private String status;
+
+    @SerializedName("timestamp")
+    private String timestamp;
+
+    @SerializedName("data")
+    private Data data;
+
     public Song getSong() {
         return song;
     }
@@ -72,11 +81,11 @@ public class Repo {
         this.ribbon = ribbon;
     }
 
-    public Sidebar getSidebar() {
+    public Service getSidebar() {
         return sidebar;
     }
 
-    public void setSidebar(Sidebar sidebar) {
+    public void setSidebar(Service sidebar) {
         this.sidebar = sidebar;
     }
 
@@ -158,5 +167,29 @@ public class Repo {
 
     public void setAritst(ArrayList<Artist> aritst) {
         this.aritst = aritst;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 }

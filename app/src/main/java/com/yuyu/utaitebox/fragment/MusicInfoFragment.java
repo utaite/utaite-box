@@ -54,7 +54,7 @@ public class MusicInfoFragment extends Fragment {
     private Task task;
     private MediaPlayer mediaPlayer;
     private ArrayList<MainData> mainDataSet;
-    private String str2Check, tag = "MusicInfoFragment";
+    private String str2Check, tag = MusicInfoFragment.class.getSimpleName();
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
 
     @BindView(R.id.musicinfo_recyclerview)

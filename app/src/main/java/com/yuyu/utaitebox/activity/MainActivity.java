@@ -49,11 +49,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public static final String BASE = "http://utaitebox.com", PROFILE = "1083_1477456743726.jpeg";
-    public static String tempCover;
+    public static String tempCover, token;
     public static int _mid, today = 688882;
     private RequestManager glide;
     private long currentTime;
-    private String tag = "MainActivity";
+    private String tag = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
         nav_view.getMenu().getItem(0).setChecked(true);
-        _mid = 1;
         requestRetrofit("member", _mid);
         getFragmentManager().beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
     }
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // 뒤로가기 두 번 눌러서 종료
     @Override
     public void onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {

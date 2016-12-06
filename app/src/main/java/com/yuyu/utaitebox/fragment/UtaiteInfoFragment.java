@@ -51,7 +51,7 @@ public class UtaiteInfoFragment extends Fragment {
     private RequestManager glide;
     private Utaite utaite;
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
-    private String str1Check, tag = "UtaiteInfoFragment";
+    private String str1Check, tag = UtaiteInfoFragment.class.getSimpleName();
 
     @BindView(R.id.utaiteinfo_bg1)
     ImageView utaiteinfo_bg1;

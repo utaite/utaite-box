@@ -14,6 +14,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.activity.MainActivity;
+import com.yuyu.utaitebox.retrofit.Song;
+import com.yuyu.utaitebox.view.MainAdapter;
+import com.yuyu.utaitebox.view.MainData;
+import com.yuyu.utaitebox.view.Task;
 
 import java.util.ArrayList;
 
@@ -26,13 +32,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-
-import com.yuyu.utaitebox.activity.MainActivity;
-import com.yuyu.utaitebox.R;
-import com.yuyu.utaitebox.retrofit.Song;
-import com.yuyu.utaitebox.view.MainAdapter;
-import com.yuyu.utaitebox.view.MainData;
-import com.yuyu.utaitebox.view.Task;
 
 public class MusicListFragment extends Fragment {
 
@@ -47,7 +46,7 @@ public class MusicListFragment extends Fragment {
     private ArrayList<MainData> mainDataSet;
     private MainAdapter mainAdapter;
     private final int PAGE = 5;
-    private String tag = "MusicListFragment";
+    private String tag = MusicListFragment.class.getSimpleName();
     private boolean loading = true;
     private int count;
 

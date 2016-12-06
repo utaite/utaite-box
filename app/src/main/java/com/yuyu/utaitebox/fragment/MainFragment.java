@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
 
     private Context context;
     private RequestManager glide;
-    private String tag = "MainFragment";
+    private String tag = MainFragment.class.getSimpleName();
     private boolean loading;
 
     @BindView(R.id.main_recyclerview)

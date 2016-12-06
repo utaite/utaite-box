@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class Sidebar {
+public class Service {
 
     @SerializedName("other")
     private ArrayList<Other> other;
