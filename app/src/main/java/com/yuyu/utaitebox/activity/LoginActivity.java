@@ -2,6 +2,8 @@ package com.yuyu.utaitebox.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -129,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<Repo> call, Response<Repo> response) {
                     task.onPostExecute(null);
                     Repo repo = response.body();
-                    if(repo.getStatus().equals("false")) {
+                    if (repo.getStatus().equals("false")) {
                         Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
                     } else {
                         MainActivity._mid = Integer.parseInt(repo.getData().get_mid());
