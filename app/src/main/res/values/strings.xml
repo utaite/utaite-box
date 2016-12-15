@@ -10,6 +10,7 @@
     <string name="find_btn">아이디 / 비밀번호 찾기</string>
     <string name="remember_me">자동 로그인</string>
     <string name="error_field_required">값을 입력해주세요</string>
+    <string name="error_login">로그인 실패</string>
     <string name="action_settings">Settings</string>
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
     <string name="musicinfo_txt1">%1$s&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>

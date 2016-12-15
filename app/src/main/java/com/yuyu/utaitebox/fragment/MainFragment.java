@@ -32,9 +32,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment {
 
+    private static final String TAG = MainFragment.class.getSimpleName();
+
     private Context context;
     private RequestManager glide;
-    private String tag = MainFragment.class.getSimpleName();
     private boolean loading;
 
     @BindView(R.id.main_recyclerview)
@@ -50,7 +51,6 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    // today의 값이 없으면 today의 값을, 있으면 chart의 값을 받아옴
     public void requestRetrofit(String what, int index) {
         Task task = new Task(context, 0);
         task.onPreExecute();
@@ -85,14 +85,14 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Repo> call, Throwable t) {
-                Log.e(tag, String.valueOf(t));
+                Log.e(TAG, String.valueOf(t));
             }
         });
     }
 
     @Override
     public void onStart() {
-        loading = true;
         super.onStart();
+        loading = true;
     }
 }

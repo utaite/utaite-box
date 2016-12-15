@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,18 +36,18 @@ import retrofit2.http.Path;
 
 public class MusicListFragment extends Fragment {
 
-    // ArrayList<Song> 타입으로 retrofit 통신
     public interface UtaiteBoxGetArrSong {
         @GET("/api/{what}/{index}")
         Call<ArrayList<Song>> listRepos(@Path("what") String what,
                                         @Path("index") int index);
     }
 
+    private static final String TAG = MusicListFragment.class.getSimpleName();
+
     private Context context;
     private ArrayList<MainData> mainDataSet;
     private MainAdapter mainAdapter;
     private final int PAGE = 5;
-    private String tag = MusicListFragment.class.getSimpleName();
     private boolean loading = true;
     private int count;
 
@@ -70,7 +71,6 @@ public class MusicListFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         musiclist_recyclerview.setLayoutManager(llm);
         mainDataSet = new ArrayList<>();
-        count = 1;
         requestRetrofit("songlist", count);
         mainAdapter = new MainAdapter(mainDataSet, context, glide, getFragmentManager());
         musiclist_recyclerview.setAdapter(mainAdapter);
@@ -81,37 +81,46 @@ public class MusicListFragment extends Fragment {
                 loading = false;
                 ++count;
                 if ((count - 1) % PAGE != 0) {
-                    if ((count - 1) % PAGE == 4) {
-                        musiclist_next.setVisibility(View.VISIBLE);
-                    }
+                    musiclist_next.setVisibility((count - 1) % PAGE == 4 ? View.VISIBLE : View.INVISIBLE);
                     requestRetrofit("songlist", count);
-                } else if ((count - 1) % PAGE == 0) {
-                    musiclist_next.setOnClickListener(v1 -> {
-                        musiclist_next.setVisibility(View.GONE);
-                        mainDataSet.clear();
-                        mainAdapter.notifyDataSetChanged();
-                        requestRetrofit("songlist", count);
-                        musiclist_prev.setText(getString(R.string.musiclist_txt2));
-                    });
-                }
-            }
-        });
-        musiclist_prev.setOnClickListener(v12 -> {
-            if (count > PAGE) {
-                loading = false;
-                count = count / 5 * 5 - 4;
-                mainDataSet.clear();
-                mainAdapter.notifyDataSetChanged();
-                requestRetrofit("songlist", count);
-                if (count == 1) {
-                    musiclist_prev.setText(getString(R.string.musiclist_txt1));
                 }
             }
         });
         return view;
     }
 
-    // 스크롤을 밑으로 내리면 최신 순으로 추가적으로 노래 정보를 받아옴
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        count = 1;
+    }
+
+    @OnClick(R.id.musiclist_prev)
+    public void listPrev() {
+        if (count > PAGE) {
+            loading = false;
+            count = count / 5 * 5 - 4;
+            mainDataSet.clear();
+            mainAdapter.notifyDataSetChanged();
+            requestRetrofit("songlist", count);
+            if (count == 1) {
+                musiclist_prev.setText(getString(R.string.musiclist_txt1));
+            }
+        }
+    }
+
+    @OnClick(R.id.musiclist_next)
+    public void listNext() {
+        if ((count - 1) % PAGE == 0) {
+            musiclist_next.setVisibility(View.GONE);
+            mainDataSet.clear();
+            mainAdapter.notifyDataSetChanged();
+            requestRetrofit("songlist", count);
+            musiclist_prev.setText(getString(R.string.musiclist_txt2));
+        }
+    }
+
     public void requestRetrofit(String what, int index) {
         Task task = new Task(context, 0);
         task.onPreExecute();
@@ -135,7 +144,7 @@ public class MusicListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<Song>> call, Throwable t) {
-                Log.e(tag, String.valueOf(t));
+                Log.e(TAG, String.valueOf(t));
             }
         });
     }

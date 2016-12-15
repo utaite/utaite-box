@@ -2,12 +2,9 @@ package com.yuyu.utaitebox.view;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +13,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.fragment.MusicInfoFragment;
-import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.fragment.UtaiteInfoFragment;
-import com.yuyu.utaitebox.retrofit.Artist;
-import com.yuyu.utaitebox.retrofit.Repo;
-import com.yuyu.utaitebox.retrofit.Utaite;
 
 import java.util.ArrayList;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
@@ -82,7 +69,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             fragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         });
-        glide.load((mDataset.get(position).getImg() == null) ? MainActivity.BASE + "/images/artist.jpg" : MainActivity.BASE + "/res/artist/image/" + mDataset.get(position).getImg())
+        glide.load(MainActivity.BASE + (mDataset.get(position).getImg() == null ? "/images/artist.jpg" : "/res/artist/image/" + mDataset.get(position).getImg()))
                 .bitmapTransform(new CropCircleTransformation(context))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.img);

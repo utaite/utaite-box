@@ -23,12 +23,14 @@ import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.retrofit.Comment;
 import com.yuyu.utaitebox.retrofit.Utaite;
+import com.yuyu.utaitebox.view.Custom;
 import com.yuyu.utaitebox.view.Task;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,11 +49,14 @@ public class UtaiteInfoFragment extends Fragment {
                                @Path("index") int index);
     }
 
+    private static final String TAG = UtaiteInfoFragment.class.getSimpleName();
+
     private Context context;
     private RequestManager glide;
+    private Custom custom;
     private Utaite utaite;
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
-    private String str1Check, tag = UtaiteInfoFragment.class.getSimpleName();
+    private String str1Check;
 
     @BindView(R.id.utaiteinfo_bg1)
     ImageView utaiteinfo_bg1;
@@ -82,14 +87,176 @@ public class UtaiteInfoFragment extends Fragment {
         ButterKnife.bind(this, view);
         context = getActivity();
         glide = Glide.with(context);
-        utaiteinfo_text1src.setVisibility(View.GONE);
-        utaiteinfo_ribbonimg.setVisibility(View.GONE);
-        utaiteinfo_timeline.setVisibility(View.GONE);
+        custom = new Custom();
+        custom.viewVisibilities(new View[]{utaiteinfo_text1src, utaiteinfo_ribbonimg, utaiteinfo_timeline}, false);
         requestRetrofit("artist", getArguments().getInt("aid"));
         return view;
     }
 
-    // bundle로 받은 aid로 해당 우타이테의 정보를 받아옴
+    @Override
+    public void onStart() {
+        super.onStart();
+        ribbonCheck = text1Check = img1Check = text2Check = img2Check = false;
+    }
+
+    @OnClick(R.id.utaiteinfo_text1)
+    public void utaiteInfo1() {
+        if (!text1Check && !img1Check) {
+            ArrayList<Comment> ribbon1 = utaite.getHearter();
+            int temp = ribbon1.size();
+            if (temp != 0) {
+                ImageView img[] = new ImageView[temp];
+                TextView iv[] = new TextView[temp];
+                LinearLayout rAbsolute, rHorizontal = null;
+                RelativeLayout rRelative;
+                for (int i = 0; i < temp; i++) {
+                    if (i % 4 == 0) {
+                        rHorizontal = new LinearLayout(context);
+                        rHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        rHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+                        utaiteinfo_ribbonimg.addView(rHorizontal);
+                    }
+                    img[i] = new ImageView(context);
+                    img[i].setScaleType(ImageView.ScaleType.FIT_XY);
+                    String avatar = ribbon1.get(i).getAvatar();
+                    glide.load(MainActivity.BASE + (avatar == null ? "/res/profile/image/" + MainActivity.PROFILE : "/res/profile/image/" + avatar))
+                            .bitmapTransform(new CropCircleTransformation(context))
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .into(img[i]);
+
+                    iv[i] = new TextView(context);
+                    String nickname = ribbon1.get(i).getNickname();
+                    iv[i].setText(nickname.length() <= 10 ? nickname : nickname.substring(0, 10) + "...");
+                    iv[i].setTextColor(Color.BLACK);
+                    rAbsolute = new LinearLayout(context);
+                    rAbsolute.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    rAbsolute.setOrientation(LinearLayout.VERTICAL);
+                    final LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    param1.setMargins(23, 10, 23, 10);
+                    rAbsolute.addView(img[i], param1);
+                    rAbsolute.setId(i + 1);
+
+                    rRelative = new RelativeLayout(context);
+                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    p.addRule(RelativeLayout.BELOW, rAbsolute.getId());
+                    rRelative.setLayoutParams(p);
+                    rRelative.addView(iv[i]);
+                    rAbsolute.addView(rRelative);
+                    rAbsolute.setGravity(Gravity.CENTER);
+                    rHorizontal.addView(rAbsolute);
+                }
+            } else {
+                TextView iv = new TextView(context);
+                iv.setText(getString(R.string.not_ribbon));
+                iv.setTextColor(Color.BLACK);
+                iv.setTextSize(20);
+                iv.setGravity(Gravity.CENTER);
+                utaiteinfo_ribbonimg.addView(iv);
+            }
+            img1Check = true;
+        }
+        utaiteinfo_ribbonimg.setVisibility(!text1Check ? View.VISIBLE : View.GONE);
+        utaiteinfo_text1src.setVisibility(!text1Check ? View.VISIBLE : View.GONE);
+        utaiteinfo_text1.setText((!text1Check ? "▲" : "▼") + str1Check);
+        text1Check = !text1Check;
+    }
+
+    @OnClick(R.id.utaiteinfo_text2)
+    public void utaiteInfo2() {
+        int nickInt = 1, contInt = 100, dateInt = 10000;
+        if (!text2Check && !img2Check) {
+            glide.load(MainActivity.tempCover == null ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
+                    .bitmapTransform(new CropCircleTransformation(context))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .override(300, 300)
+                    .into(utaiteinfo_avatar);
+            ArrayList<Comment> comment = utaite.getComment();
+            int temp = comment.size();
+            if (temp != 0) {
+                LinearLayout rAbsolute;
+                rAbsolute = new LinearLayout(context);
+                rAbsolute.setOrientation(LinearLayout.VERTICAL);
+                RelativeLayout rRelativeNick, rRelativeCont, rRelativeImg, rRelativeDate;
+                ImageView img[] = new ImageView[temp];
+                TextView nick[] = new TextView[temp];
+                TextView cont[] = new TextView[temp];
+                TextView date[] = new TextView[temp];
+                for (int i = 0; i < temp; i++) {
+                    img[i] = new ImageView(context);
+                    img[i].setScaleType(ImageView.ScaleType.FIT_XY);
+                    String avatar = comment.get(i).getAvatar();
+                    glide.load(MainActivity.BASE + (avatar == null ? "/res/profile/image/" + MainActivity.PROFILE : "/res/profile/image/" + avatar))
+                            .bitmapTransform(new CropCircleTransformation(context))
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .into(img[i]);
+
+                    rRelativeImg = new RelativeLayout(context);
+                    RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    rRelativeImg.setLayoutParams(pImg);
+                    rRelativeImg.setPadding(10, 10, 0, 10);
+                    rRelativeImg.addView(img[i]);
+                    rAbsolute.addView(rRelativeImg);
+                    nick[i] = new TextView(context);
+                    String nickname = comment.get(i).getNickname();
+                    nick[i].setText(nickname.length() <= 10 ? nickname : nickname.substring(0, 10) + "...");
+                    nick[i].setTextColor(Color.BLACK);
+                    nick[i].setTextSize(20);
+
+                    rRelativeNick = new RelativeLayout(context);
+                    rRelativeNick.setId(i + nickInt);
+                    RelativeLayout.LayoutParams pNick = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    pNick.setMargins(250, 0, 0, 0);
+                    rRelativeNick.setLayoutParams(pNick);
+                    rRelativeNick.addView(nick[i]);
+                    rRelativeNick.setPadding(0, 10, 10, 0);
+                    rRelativeImg.addView(rRelativeNick);
+
+                    cont[i] = new TextView(context);
+                    cont[i].setText(comment.get(i).getContent());
+                    cont[i].setTextColor(Color.BLACK);
+                    cont[i].setTextSize(12);
+                    rRelativeCont = new RelativeLayout(context);
+                    RelativeLayout.LayoutParams pCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    pCont.setMargins(250, 0, 0, 0);
+                    pCont.addRule(RelativeLayout.BELOW, rRelativeNick.getId());
+                    rRelativeCont.setId(i + contInt);
+                    rRelativeCont.setPadding(0, 0, 10, 10);
+                    rRelativeCont.setLayoutParams(pCont);
+                    rRelativeCont.addView(cont[i]);
+                    rRelativeImg.addView(rRelativeCont);
+
+                    date[i] = new TextView(context);
+                    String dateStr = comment.get(i).getDate();
+                    date[i].setText(dateStr.substring(0, dateStr.indexOf("T")));
+                    date[i].setTextColor(Color.BLACK);
+                    date[i].setTextSize(10);
+                    rRelativeDate = new RelativeLayout(context);
+                    rRelativeDate.setId(i + dateInt);
+                    RelativeLayout.LayoutParams pDate = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    pDate.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    pDate.setMargins(0, 0, 20, 0);
+                    rRelativeDate.setLayoutParams(pDate);
+                    rRelativeDate.addView(date[i]);
+                    rRelativeImg.addView(rRelativeDate);
+                    GradientDrawable drawable = new GradientDrawable();
+                    drawable.setShape(GradientDrawable.RECTANGLE);
+                    drawable.setStroke(3, Color.BLACK);
+                    rRelativeImg.setBackground(drawable);
+                }
+                utaiteinfo_timeline.addView(rAbsolute);
+            }
+            img2Check = true;
+        }
+        utaiteinfo_timeline.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
+        utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, !text2Check ? "▲" : "▼"));
+        text2Check = !text2Check;
+    }
+
     public void requestRetrofit(String what, int index) {
         Task task = new Task(context, 1);
         task.onPreExecute();
@@ -106,7 +273,7 @@ public class UtaiteInfoFragment extends Fragment {
                 task.onPostExecute(null);
                 utaiteinfo_id.setText(utaite.getAritst().getAritst_en());
                 String cover = utaite.getAritst().getArtist_cover();
-                glide.load((cover == null) ? MainActivity.BASE + "/images/artist.jpg" : MainActivity.BASE + "/res/artist/image/" + utaite.getAritst().getArtist_cover())
+                glide.load(MainActivity.BASE + (cover == null ? "/images/artist.jpg" : "/res/artist/image/" + utaite.getAritst().getArtist_cover()))
                         .bitmapTransform(new CropCircleTransformation(context))
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(utaiteinfo_img);
@@ -119,202 +286,21 @@ public class UtaiteInfoFragment extends Fragment {
                             .into(utaiteinfo_bg1);
                 }
                 for (Comment e : utaite.getHearter()) {
-                    if (MainActivity._mid == Integer.parseInt(e.get_mid())) {
-                        ribbonCheck = true;
-                        break;
-                    } else {
-                        ribbonCheck = false;
+                    if (!ribbonCheck) {
+                        ribbonCheck = MainActivity._mid == Integer.parseInt(e.get_mid());
                     }
                 }
-                if (ribbonCheck) {
-                    utaiteinfo_text1src.setBackground(getResources().getDrawable(R.drawable.circle_yellow));
-                    str1Check = getString(R.string.utaiteinfo_txt1_1);
-                } else {
-                    utaiteinfo_text1src.setBackground(getResources().getDrawable(R.drawable.circle_black));
-                    str1Check = getString(R.string.utaiteinfo_txt1_2);
-                }
-                utaiteinfo_text1.setText("▼" + str1Check);
-                final LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                param1.setMargins(23, 10, 23, 10);
-                utaiteinfo_text1.setOnClickListener(view1 -> {
-                    if (!text1Check) {
-                        if (!img1Check) {
-                            ArrayList<Comment> ribbon1 = utaite.getHearter();
-                            int temp = ribbon1.size();
-                            if (temp != 0) {
-                                ImageView img[] = new ImageView[temp];
-                                TextView iv[] = new TextView[temp];
-                                LinearLayout rHorizontal = null, rAbsolute;
-                                RelativeLayout rRelative;
-                                for (int i = 0; i < temp; i++) {
-                                    if (i % 4 == 0) {
-                                        rHorizontal = new LinearLayout(context);
-                                        rHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                                        rHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-                                        utaiteinfo_ribbonimg.addView(rHorizontal);
-                                    }
-                                    img[i] = new ImageView(context);
-                                    img[i].setScaleType(ImageView.ScaleType.FIT_XY);
-                                    String avatar = ribbon1.get(i).getAvatar();
-                                    glide.load((avatar == null) ? MainActivity.BASE + "/res/profile/image/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + avatar)
-                                            .bitmapTransform(new CropCircleTransformation(context))
-                                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                            .into(img[i]);
-                                    iv[i] = new TextView(context);
-                                    String nickname = ribbon1.get(i).getNickname();
-                                    iv[i].setText((nickname.length() <= 10) ? nickname : nickname.substring(0, 10) + "...");
-                                    iv[i].setTextColor(Color.BLACK);
-                                    rAbsolute = new LinearLayout(context);
-                                    rAbsolute.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                    rAbsolute.setOrientation(LinearLayout.VERTICAL);
-                                    rAbsolute.addView(img[i], param1);
-                                    rAbsolute.setId(i + 1);
-                                    rRelative = new RelativeLayout(context);
-                                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    p.addRule(RelativeLayout.BELOW, rAbsolute.getId());
-                                    rRelative.setLayoutParams(p);
-                                    rRelative.addView(iv[i]);
-                                    rAbsolute.addView(rRelative);
-                                    rAbsolute.setGravity(Gravity.CENTER);
-                                    rHorizontal.addView(rAbsolute);
-                                }
-                            } else {
-                                TextView iv = new TextView(context);
-                                iv.setText(getString(R.string.not_ribbon));
-                                iv.setTextColor(Color.BLACK);
-                                iv.setTextSize(20);
-                                iv.setGravity(Gravity.CENTER);
-                                utaiteinfo_ribbonimg.addView(iv);
-                            }
-                            img1Check = true;
-                        }
-                        utaiteinfo_ribbonimg.setVisibility(View.VISIBLE);
-                        utaiteinfo_text1src.setVisibility(View.VISIBLE);
-                        utaiteinfo_text1.setText("▲" + str1Check);
-                    } else {
-                        utaiteinfo_ribbonimg.setVisibility(View.GONE);
-                        utaiteinfo_text1src.setVisibility(View.GONE);
-                        utaiteinfo_text1.setText("▼" + str1Check);
-                    }
-                    text1Check = !text1Check;
-                });
-                final int nickInt = 1, contInt = 100, dateInt = 10000;
-                utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, "▼"));
-                utaiteinfo_text2.setOnClickListener(view12 -> {
-                    if (!text2Check) {
-                        if (!img2Check) {
-                            glide.load((MainActivity.tempCover == null) ? MainActivity.BASE + "/res/profile/cover/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + MainActivity.tempCover)
-                                    .bitmapTransform(new CropCircleTransformation(context))
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .override(300, 300)
-                                    .into(utaiteinfo_avatar);
-                            ArrayList<Comment> comment = utaite.getComment();
-                            int temp = comment.size();
-                            if (temp != 0) {
-                                LinearLayout rAbsolute;
-                                rAbsolute = new LinearLayout(context);
-                                rAbsolute.setOrientation(LinearLayout.VERTICAL);
-                                RelativeLayout rRelativeNick, rRelativeCont, rRelativeImg, rRelativeDate;
-                                ImageView img[] = new ImageView[temp];
-                                TextView nick[] = new TextView[temp];
-                                TextView cont[] = new TextView[temp];
-                                TextView date[] = new TextView[temp];
-                                for (int i = 0; i < temp; i++) {
-                                    img[i] = new ImageView(context);
-                                    img[i].setScaleType(ImageView.ScaleType.FIT_XY);
-                                    String avatar = comment.get(i).getAvatar();
-                                    glide.load((avatar == null) ? MainActivity.BASE + "/res/profile/image/" + MainActivity.PROFILE : MainActivity.BASE + "/res/profile/image/" + avatar)
-                                            .bitmapTransform(new CropCircleTransformation(context))
-                                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                            .into(img[i]);
-                                    rRelativeImg = new RelativeLayout(context);
-                                    RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    rRelativeImg.setLayoutParams(pImg);
-                                    rRelativeImg.setPadding(10, 10, 0, 10);
-                                    rRelativeImg.addView(img[i]);
-                                    rAbsolute.addView(rRelativeImg);
-                                    nick[i] = new TextView(context);
-                                    String nickname = comment.get(i).getNickname();
-                                    nick[i].setText((nickname.length() <= 10) ? nickname : nickname.substring(0, 10) + "...");
-                                    nick[i].setTextColor(Color.BLACK);
-                                    nick[i].setTextSize(20);
-                                    rRelativeNick = new RelativeLayout(context);
-                                    rRelativeNick.setId(i + nickInt);
-                                    RelativeLayout.LayoutParams pNick = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    pNick.setMargins(250, 0, 0, 0);
-                                    rRelativeNick.setLayoutParams(pNick);
-                                    rRelativeNick.addView(nick[i]);
-                                    rRelativeNick.setPadding(0, 10, 10, 0);
-                                    rRelativeImg.addView(rRelativeNick);
-                                    cont[i] = new TextView(context);
-                                    cont[i].setText(comment.get(i).getContent());
-                                    cont[i].setTextColor(Color.BLACK);
-                                    cont[i].setTextSize(12);
-                                    rRelativeCont = new RelativeLayout(context);
-                                    RelativeLayout.LayoutParams pCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    pCont.setMargins(250, 0, 0, 0);
-                                    pCont.addRule(RelativeLayout.BELOW, rRelativeNick.getId());
-                                    rRelativeCont.setId(i + contInt);
-                                    rRelativeCont.setPadding(0, 0, 10, 10);
-                                    rRelativeCont.setLayoutParams(pCont);
-                                    rRelativeCont.addView(cont[i]);
-                                    rRelativeImg.addView(rRelativeCont);
-                                    date[i] = new TextView(context);
-                                    String dateStr = comment.get(i).getDate();
-                                    date[i].setText(dateStr.substring(0, dateStr.indexOf("T")));
-                                    date[i].setTextColor(Color.BLACK);
-                                    date[i].setTextSize(10);
-                                    rRelativeDate = new RelativeLayout(context);
-                                    rRelativeDate.setId(i + dateInt);
-                                    RelativeLayout.LayoutParams pDate = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                                    pDate.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                                    pDate.setMargins(0, 0, 20, 0);
-                                    rRelativeDate.setLayoutParams(pDate);
-                                    rRelativeDate.addView(date[i]);
-                                    rRelativeImg.addView(rRelativeDate);
-                                    GradientDrawable drawable = new GradientDrawable();
-                                    drawable.setShape(GradientDrawable.RECTANGLE);
-                                    drawable.setStroke(3, Color.BLACK);
-                                    rRelativeImg.setBackground(drawable);
-                                }
-                                utaiteinfo_timeline.addView(rAbsolute);
-                            }
-                            img2Check = true;
-                        }
-                        utaiteinfo_timeline.setVisibility(View.VISIBLE);
-                        utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, "▲"));
-                    } else {
-                        utaiteinfo_timeline.setVisibility(View.GONE);
-                        utaiteinfo_text2.setText(getString(R.string.utaiteinfo_txt2, "▼"));
-                    }
-                    text2Check = !text2Check;
-                });
-                utaiteinfo_text3.setText(getString(R.string.utaiteinfo_txt3, "▼"));
-                utaiteinfo_text3.setOnClickListener(view12 -> {
-
-                });
+                utaiteinfo_text1src.setBackground(getResources().getDrawable(ribbonCheck ? R.drawable.circle_yellow : R.drawable.circle_black));
+                str1Check = ribbonCheck ? getString(R.string.utaiteinfo_txt1_1) : getString(R.string.utaiteinfo_txt1_2);
+                custom.viewTexts(new TextView[]{utaiteinfo_text1, utaiteinfo_text2, utaiteinfo_text3},
+                        new String[]{"▼" + str1Check, getString(R.string.utaiteinfo_txt2, "▼"), getString(R.string.utaiteinfo_txt3, "▼")});
             }
 
             @Override
             public void onFailure(Call<Utaite> call, Throwable t) {
-                Log.e(tag, String.valueOf(t));
+                Log.e(TAG, String.valueOf(t));
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        ribbonCheck = false;
-        text1Check = false;
-        img1Check = false;
-        text2Check = false;
-        img2Check = false;
-        super.onStart();
     }
 
 }

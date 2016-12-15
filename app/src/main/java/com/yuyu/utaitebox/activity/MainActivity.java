@@ -2,6 +2,7 @@ package com.yuyu.utaitebox.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -21,9 +22,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
-import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.retrofit.Repo;
 
 import butterknife.BindView;
@@ -40,8 +41,6 @@ import retrofit2.http.Path;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
-    // Repo 타입으로 retrofit 통신
     public interface UtaiteBoxGetRepo {
         @GET("/api/{what}/{index}")
         Call<Repo> listRepos(@Path("what") String what,
@@ -51,9 +50,12 @@ public class MainActivity extends AppCompatActivity
     public static final String BASE = "http://utaitebox.com", PROFILE = "1083_1477456743726.jpeg";
     public static String tempCover, token;
     public static int _mid, today = 688882;
+    private static final String tag = MainActivity.class.getSimpleName();
+
     private RequestManager glide;
+    private Context context;
+    private Toast toast;
     private long currentTime;
-    private String tag = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         glide = Glide.with(this);
+        context = this;
+        toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -79,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         getFragmentManager().beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
     }
 
-    // 로그인 한 멤버의 정보를 받아옴
     public void requestRetrofit(String what, int index) {
         Call<Repo> repos = new Retrofit.Builder()
                 .baseUrl(MainActivity.BASE)
@@ -97,12 +100,12 @@ public class MainActivity extends AppCompatActivity
                 tempCover = response.body().getProfile().getAvatar();
                 String avatar = response.body().getProfile().getAvatar();
                 String url = BASE + "/res/profile/image/";
-                String cover = response.body().getProfile().getCover();
                 nav_id.setText(response.body().getMember().getUsername());
-                glide.load((avatar == null) ? url + PROFILE : url + avatar)
+                glide.load(avatar == null ? url + PROFILE : url + avatar)
                         .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(nav_img);
+                String cover = response.body().getProfile().getCover();
                 if (cover == null) {
                     nav_bg1.setImageResource(android.R.color.transparent);
                     nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
@@ -129,7 +132,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (currentTime + 2000 < System.currentTimeMillis()) {
                 currentTime = System.currentTimeMillis();
-                Toast.makeText(this, getString(R.string.onBackPressed), Toast.LENGTH_SHORT).show();
+                toast.setText(getString(R.string.onBackPressed));
+                toast.show();
             } else {
                 super.onBackPressed();
             }

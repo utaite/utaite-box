@@ -2,8 +2,6 @@ package com.yuyu.utaitebox.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -33,7 +31,6 @@ import retrofit2.http.POST;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // retrofit 통신으로 login의 token 값을 받아옴
     public interface UtaiteBoxPostLogin {
         @FormUrlEncoded
         @POST("/api/login")
@@ -48,15 +45,20 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.check_btn)
     AppCompatCheckBox check_btn;
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
+    private Toast toast;
+    private Context context;
     private String id, pw;
     private long currentTime;
-    private String tag = LoginActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        context = this;
+        toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
         id = getSharedPreferences("login", MODE_PRIVATE).getString("id", null);
         pw = getSharedPreferences("login", MODE_PRIVATE).getString("pw", null);
         if (id != null && pw != null) {
@@ -66,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
             loginMethod();
         }
         check_btn.setOnCheckedChangeListener((compoundButton, b) -> {
-            getSharedPreferences("login", MODE_PRIVATE).edit().putString("id", (check_btn.isChecked()) ? id : null).apply();
-            getSharedPreferences("login", MODE_PRIVATE).edit().putString("pw", (check_btn.isChecked()) ? pw : null).apply();
+            getSharedPreferences("login", MODE_PRIVATE).edit().putString("id", check_btn.isChecked() ? id : null).apply();
+            getSharedPreferences("login", MODE_PRIVATE).edit().putString("pw", check_btn.isChecked() ? pw : null).apply();
         });
         id_edit.setOnEditorActionListener((v, actionId, event) -> {
             pw_edit.requestFocus();
@@ -93,7 +95,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (currentTime + 2000 < System.currentTimeMillis()) {
             currentTime = System.currentTimeMillis();
-            Toast.makeText(this, getString(R.string.onBackPressed), Toast.LENGTH_SHORT).show();
+            toast.setText(getString(R.string.onBackPressed));
+            toast.show();
         } else {
             super.onBackPressed();
         }
@@ -131,8 +134,9 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<Repo> call, Response<Repo> response) {
                     task.onPostExecute(null);
                     Repo repo = response.body();
-                    if (repo.getStatus().equals("false")) {
-                        Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                    if (!Boolean.valueOf(repo.getStatus())) {
+                        toast.setText(getString(R.string.error_login));
+                        toast.show();
                     } else {
                         MainActivity._mid = Integer.parseInt(repo.getData().get_mid());
                         MainActivity.token = repo.getData().getToken();
@@ -143,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Repo> call, Throwable t) {
-                    Log.e(tag, String.valueOf(t));
+                    Log.e(TAG, String.valueOf(t));
                 }
             });
         }
