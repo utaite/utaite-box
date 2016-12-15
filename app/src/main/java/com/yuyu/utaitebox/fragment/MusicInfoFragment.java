@@ -110,7 +110,7 @@ public class MusicInfoFragment extends Fragment {
         task = new Task(context, 1);
         custom = new Custom();
         task.onPreExecute();
-        custom.viewVisibilities(new View[]{musicinfo_text2src, musicinfo_text2src, musicinfo_ribbonimg, musicinfo_timeline, musicinfo_status}, false);
+        custom.viewVisibilities(false, musicinfo_text2src, musicinfo_text2src, musicinfo_ribbonimg, musicinfo_timeline, musicinfo_status);
         requestRetrofit("song", getArguments().getInt("sid"));
         return view;
     }
@@ -348,7 +348,7 @@ public class MusicInfoFragment extends Fragment {
                     mainDataSet = new ArrayList<>();
                     custom.viewTexts(new TextView[]{musicinfo_text1, musicinfo_text2, musicinfo_text3, musicinfo_utaite, musicinfo_song, musicinfo_songkr, musicinfo_ribbonright, musicinfo_commentright},
                             new String[]{getString(R.string.musicinfo_txt1, "▼"), "▼" + str2Check, getString(R.string.musicinfo_txt3, "▼"), repo.getSong().getArtist_en(), repo.getSong().getSong_original(), repo.getSong().getSong_kr(), repo.getSong().getRibbon(), repo.getSong().getComment()});
-                    custom.viewPaints(new TextView[]{musicinfo_ribbonright, musicinfo_songkr, musicinfo_ribbon, musicinfo_addlist, musicinfo_utaite, musicinfo_song, musicinfo_playedright, musicinfo_commentright});
+                    custom.viewPaints(musicinfo_ribbonright, musicinfo_songkr, musicinfo_ribbon, musicinfo_addlist, musicinfo_utaite, musicinfo_song, musicinfo_playedright, musicinfo_commentright);
                 } else {
                     Song song = response.body().getSong();
                     mainDataSet.add(new MainData(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),

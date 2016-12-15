@@ -88,7 +88,7 @@ public class UtaiteInfoFragment extends Fragment {
         context = getActivity();
         glide = Glide.with(context);
         custom = new Custom();
-        custom.viewVisibilities(new View[]{utaiteinfo_text1src, utaiteinfo_ribbonimg, utaiteinfo_timeline}, false);
+        custom.viewVisibilities(false, utaiteinfo_text1src, utaiteinfo_ribbonimg, utaiteinfo_timeline);
         requestRetrofit("artist", getArguments().getInt("aid"));
         return view;
     }
