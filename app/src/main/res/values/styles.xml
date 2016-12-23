@@ -15,11 +15,19 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Button.Login" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#FFBB00</item>
+    </style>
+
+    <style name="AppTheme.Button.Register" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#6799FF</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="musicinfo">
+    <style name="MusicInfo">
         <item name="android:textColor">#fff</item>
         <item name="android:shadowColor">#000</item>
         <item name="android:shadowDx">0</item>
@@ -27,7 +35,7 @@
         <item name="android:shadowRadius">5</item>
     </style>
 
-    <style name="listtext">
+    <style name="ListText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">1dp</item>
@@ -35,6 +43,14 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">#000</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="LoginButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

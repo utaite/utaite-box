@@ -2,6 +2,9 @@ package com.yuyu.utaitebox.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.yuyu.utaitebox.R;
@@ -44,12 +48,17 @@ public class LoginActivity extends AppCompatActivity {
     EditText pw_edit;
     @BindView(R.id.check_btn)
     AppCompatCheckBox check_btn;
+    @BindView(R.id.save_btn)
+    AppCompatCheckBox save_btn;
+    @BindView(R.id.login_logo)
+    ImageView login_logo;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String CHECK = "CHECK", SAVE = "SAVE", NONE = "NONE";
 
     private Toast toast;
     private Context context;
-    private String id, pw;
+    private String id, pw, status;
     private long currentTime;
 
     @Override
@@ -59,18 +68,19 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+        login_logo.getDrawable().setAlpha(120);
+        status = getSharedPreferences("login", MODE_PRIVATE).getString("status", NONE);
         id = getSharedPreferences("login", MODE_PRIVATE).getString("id", null);
         pw = getSharedPreferences("login", MODE_PRIVATE).getString("pw", null);
-        if (id != null && pw != null) {
+        if (status.equals(CHECK)) {
             id_edit.setText(id);
             pw_edit.setText(pw);
             check_btn.setChecked(true);
             loginMethod();
+        } else if (status.equals(SAVE)) {
+            id_edit.setText(id);
+            save_btn.setChecked(true);
         }
-        check_btn.setOnCheckedChangeListener((compoundButton, b) -> {
-            getSharedPreferences("login", MODE_PRIVATE).edit().putString("id", check_btn.isChecked() ? id : null).apply();
-            getSharedPreferences("login", MODE_PRIVATE).edit().putString("pw", check_btn.isChecked() ? pw : null).apply();
-        });
         id_edit.setOnEditorActionListener((v, actionId, event) -> {
             pw_edit.requestFocus();
             return true;
@@ -81,13 +91,42 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick({R.id.login_btn, R.id.check_txt})
+    @OnClick({R.id.login_btn, R.id.register_btn})
     public void onClickMethod(View view) {
         int vid = view.getId();
         if (vid == R.id.login_btn) {
             loginMethod();
-        } else if (vid == R.id.check_txt) {
+        } else if (vid == R.id.register_btn) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork == null) {
+                toast.setText(getString(R.string.internet_error));
+                toast.show();
+            } else {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://utaitebox.com/register")));
+            }
+        }
+    }
+
+    // 아이디 저장 설정 / 자동 로그인과 중복되지 않음
+    @OnClick({R.id.check_btn, R.id.check_txt})
+    public void onCheckMethod(View view) {
+        if (view.getId() == R.id.check_txt) {
             check_btn.setChecked(!check_btn.isChecked());
+        }
+        if (check_btn.isChecked()) {
+            save_btn.setChecked(false);
+        }
+    }
+
+    // 자동 로그인 설정 / 아이디 저장과 중복되지 않음
+    @OnClick({R.id.save_btn, R.id.save_txt})
+    public void onSaveMethod(View view) {
+        if (view.getId() == R.id.save_txt) {
+            save_btn.setChecked(!save_btn.isChecked());
+        }
+        if (save_btn.isChecked()) {
+            check_btn.setChecked(false);
         }
     }
 
@@ -109,18 +148,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginMethod() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        keyboardDown();
         id_edit.setError(null);
         pw_edit.setError(null);
         id = id_edit.getText().toString();
         pw = pw_edit.getText().toString();
+        getSharedPreferences("login", MODE_PRIVATE).edit().putString("status", check_btn.isChecked() ? CHECK : save_btn.isChecked() ? SAVE : null).apply();
+        getSharedPreferences("login", MODE_PRIVATE).edit().putString("id", check_btn.isChecked() ? id : save_btn.isChecked() ? id : null).apply();
+        getSharedPreferences("login", MODE_PRIVATE).edit().putString("pw", check_btn.isChecked() ? pw : null).apply();
         if (TextUtils.isEmpty(id)) {
             id_edit.setError(getString(R.string.error_field_required));
             id_edit.requestFocus();
         } else if (TextUtils.isEmpty(pw)) {
             pw_edit.setError(getString(R.string.error_field_required));
             pw_edit.requestFocus();
+        } else if (activeNetwork == null) {
+            toast.setText(getString(R.string.internet_error));
+            toast.show();
         } else {
-            keyboardDown();
             Task task = new Task(this, 1);
             task.onPreExecute();
             Call<Repo> repos = new Retrofit.Builder()

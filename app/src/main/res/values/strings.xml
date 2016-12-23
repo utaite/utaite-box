@@ -3,11 +3,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_main">Sign in</string>
+    <string name="internet_error">인터넷 접속에 실패했습니다.</string>
     <string name="prompt_id">아이디</string>
     <string name="prompt_password">비밀번호</string>
     <string name="login_btn">로그인</string>
     <string name="register_btn">회원가입</string>
-    <string name="find_btn">아이디 / 비밀번호 찾기</string>
+    <string name="remember_id">아이디 저장</string>
     <string name="remember_me">자동 로그인</string>
     <string name="error_field_required">값을 입력해주세요</string>
     <string name="error_login">로그인 실패</string>
@@ -25,7 +26,7 @@
     <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
     <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 다른 노래는 어때요?</string>
     <string name="task_0">리스트를 불러오는 중입니다 ...</string>
-    <string name="task_1">로딩 중입니다 ...</string>
+    <string name="task_1">로딩중입니다 ...</string>
     <string name="main_list">▼  어제 가장 많이 재생된 노래에요.</string>
     <string name="submit">Submit</string>
     <string name="addlist">ADDLIST</string>
