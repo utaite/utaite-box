@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/musiclist_prev"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/musiclist_recyclerview"
@@ -24,7 +24,7 @@
             android:id="@+id/musiclist_next"
             android:layout_weight="1"
             android:text="▼  다음 페이지로"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
     </LinearLayout>
 

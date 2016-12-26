@@ -26,10 +26,10 @@
         android:id="@+id/nav_img"
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:scaleType="fitXY"
-        android:layout_marginTop="45dp"/>
+        android:layout_centerVertical="true"
+        android:layout_marginTop="45dp"
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/nav_id"

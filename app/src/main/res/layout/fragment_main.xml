@@ -13,7 +13,7 @@
         <TextView
             android:id="@+id/main_text1"
             android:text="@string/main_list"
-            style="@style/listtext"/>
+            style="@style/ListText"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/main_recyclerview"

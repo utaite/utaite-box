@@ -55,7 +55,7 @@
 
         <TextView
             android:id="@+id/utaiteinfo_text1"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <ImageView
             android:id="@+id/utaiteinfo_text1src"
@@ -76,7 +76,7 @@
 
         <TextView
             android:id="@+id/utaiteinfo_text2"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <LinearLayout
             android:id="@+id/utaiteinfo_timeline"
@@ -127,7 +127,7 @@
 
         <TextView
             android:id="@+id/utaiteinfo_text3"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/utaiteinfo_recyclerview"

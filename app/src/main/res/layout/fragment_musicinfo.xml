@@ -63,7 +63,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_ribbonright"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
@@ -84,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_playedright"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
@@ -105,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_commentright"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -143,7 +143,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_ribbon"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -162,7 +162,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_addlist"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
@@ -172,7 +172,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_utaite"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="80dp"
@@ -181,7 +181,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_song"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="80dp"
@@ -190,7 +190,7 @@
 
                 <TextView
                     android:id="@+id/musicinfo_songkr"
-                    style="@style/musicinfo"
+                    style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/musicinfo_song"
@@ -203,7 +203,7 @@
 
         <TextView
             android:id="@+id/musicinfo_text1"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/musicinfo_recyclerview"
@@ -213,7 +213,7 @@
 
         <TextView
             android:id="@+id/musicinfo_text2"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <ImageView
             android:id="@+id/musicinfo_text2src"
@@ -234,7 +234,7 @@
 
         <TextView
             android:id="@+id/musicinfo_text3"
-            style="@style/listtext" />
+            style="@style/ListText" />
 
         <LinearLayout
             android:id="@+id/musicinfo_timeline"
