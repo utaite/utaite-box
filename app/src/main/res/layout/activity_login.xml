@@ -33,7 +33,7 @@
                 android:id="@+id/id_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_id"
+                android:hint="@string/_login_id"
                 android:imeOptions="actionNext"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -48,7 +48,7 @@
                 android:id="@+id/pw_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_password"
+                android:hint="@string/_login_pw"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:maxLines="1"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:checkMark="@+id/check_btn"
                 android:paddingRight="12dp"
-                android:text="@string/remember_id" />
+                android:text="@string/_login_remember_id" />
 
 
             <android.support.v7.widget.AppCompatCheckBox
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkMark="@+id/check_btn"
-                android:text="@string/remember_me" />
+                android:text="@string/_login_remember_me" />
 
         </LinearLayout>
 
@@ -93,14 +93,14 @@
             android:id="@+id/login_btn"
             style="@style/LoginButton"
             android:layout_marginTop="16dp"
-            android:text="@string/login_btn"
+            android:text="@string/_login_login_btn"
             android:theme="@style/AppTheme.Button.Login" />
 
         <Button
             android:id="@+id/register_btn"
             style="@style/LoginButton"
             android:layout_marginTop="8dp"
-            android:text="@string/register_btn"
+            android:text="@string/_login_register_btn"
             android:theme="@style/AppTheme.Button.Register" />
 
     </LinearLayout>

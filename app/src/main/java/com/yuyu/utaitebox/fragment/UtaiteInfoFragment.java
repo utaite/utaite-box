@@ -23,7 +23,7 @@ import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.retrofit.Comment;
 import com.yuyu.utaitebox.retrofit.Utaite;
-import com.yuyu.utaitebox.view.Custom;
+import com.yuyu.utaitebox.view.Constant;
 import com.yuyu.utaitebox.view.Task;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class UtaiteInfoFragment extends Fragment {
 
     private Context context;
     private RequestManager glide;
-    private Custom custom;
+    private Constant custom;
     private Utaite utaite;
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
     private String str1Check;
@@ -87,7 +87,7 @@ public class UtaiteInfoFragment extends Fragment {
         ButterKnife.bind(this, view);
         context = getActivity();
         glide = Glide.with(context);
-        custom = new Custom();
+        custom = new Constant();
         custom.viewVisibilities(false, utaiteinfo_text1src, utaiteinfo_ribbonimg, utaiteinfo_timeline);
         requestRetrofit("artist", getArguments().getInt("aid"));
         return view;

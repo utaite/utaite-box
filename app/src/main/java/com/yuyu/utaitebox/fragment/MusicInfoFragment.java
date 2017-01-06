@@ -29,7 +29,7 @@ import com.yuyu.utaitebox.retrofit.Other;
 import com.yuyu.utaitebox.retrofit.Repo;
 import com.yuyu.utaitebox.retrofit.Ribbon;
 import com.yuyu.utaitebox.retrofit.Song;
-import com.yuyu.utaitebox.view.Custom;
+import com.yuyu.utaitebox.view.Constant;
 import com.yuyu.utaitebox.view.MainAdapter;
 import com.yuyu.utaitebox.view.MainData;
 import com.yuyu.utaitebox.view.Task;
@@ -54,7 +54,7 @@ public class MusicInfoFragment extends Fragment {
     private RequestManager glide;
     private Repo repo;
     private Task task;
-    private Custom custom;
+    private Constant custom;
     private MediaPlayer mediaPlayer;
     private ArrayList<MainData> mainDataSet;
     private String str2Check;
@@ -108,7 +108,7 @@ public class MusicInfoFragment extends Fragment {
         context = getActivity();
         glide = Glide.with(context);
         task = new Task(context, 1);
-        custom = new Custom();
+        custom = new Constant();
         task.onPreExecute();
         custom.viewVisibilities(false, musicinfo_text2src, musicinfo_text2src, musicinfo_ribbonimg, musicinfo_timeline, musicinfo_status);
         requestRetrofit("song", getArguments().getInt("sid"));

@@ -2,18 +2,21 @@
     <string name="app_name">Utaite Box</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_main">Sign in</string>
-    <string name="internet_error">인터넷 접속에 실패했습니다.</string>
-    <string name="prompt_id">아이디</string>
-    <string name="prompt_password">비밀번호</string>
-    <string name="login_btn">로그인</string>
-    <string name="register_btn">회원가입</string>
-    <string name="remember_id">아이디 저장</string>
-    <string name="remember_me">자동 로그인</string>
-    <string name="error_field_required">값을 입력해주세요</string>
-    <string name="error_login">로그인 실패</string>
-    <string name="action_settings">Settings</string>
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
+
+    <string name="first_btn">Utaite Box 시작하기</string>
+    <string name="first_1_1">시작하기에 앞서</string>
+    <string name="first_1_2">본 어플은 우타이테 커뮤니티 \'Utaite Box\'의 모바일 버전의 어플입니다.</string>
+    <string name="first_2_1">아직 회원이 아니라면?</string>
+    <string name="first_2_2">튜토리얼이 끝난 후 \'회원가입\' 버튼을 클릭해 \'Utaite Box\'의 컨텐츠를 즐겨보세요!</string>
+
+    <string name="_login_id">아이디</string>
+    <string name="_login_pw">비밀번호</string>
+    <string name="_login_remember_id">아이디 저장</string>
+    <string name="_login_remember_me">자동 로그인</string>
+    <string name="_login_login_btn">로그인</string>
+    <string name="_login_register_btn">회원가입</string>
+
     <string name="musicinfo_txt1">%1$s&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
     <string name="musicinfo_txt2_1">&#160;&#160;노래에 좋아요를 눌러주셨어요.</string>
     <string name="musicinfo_txt2_2">&#160;&#160;노래에 좋아요를 눌러보세요.</string>
