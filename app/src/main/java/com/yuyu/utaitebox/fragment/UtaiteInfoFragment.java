@@ -41,20 +41,12 @@ import retrofit2.http.Path;
 
 public class UtaiteInfoFragment extends Fragment {
 
-    // Utaite 타입으로 retrofit 통신
-    public interface UtaiteBoxUtaite {
-        @GET("/api/{what}/{index}")
-        Call<Utaite> listRepos(@Path("what") String what,
-                               @Path("index") int index);
-    }
-
     private static final String TAG = UtaiteInfoFragment.class.getSimpleName();
 
     private Context context;
     private RequestManager glide;
-    private Constant custom;
     private Utaite utaite;
-    private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
+    private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check;
     private String str1Check;
 
     @BindView(R.id.utaiteinfo_bg1)

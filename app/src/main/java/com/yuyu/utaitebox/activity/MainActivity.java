@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity
 
     private final String TAG = MainActivity.class.getSimpleName();
 
+    public static int MID, TODAY = Constant.TODAY_DEFAULT;
+    public static String TEMP_COVER;
+
     private Context context;
     private ChainedToast toast;
     private RequestManager requestManager;
@@ -149,11 +152,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void initialize() {
+        int size = nav_view.getMenu().size();
         items = (ArrayList<Integer>) new ChainedArrayList()
-                .addMenu(nav_view.getMenu(), 0, nav_view.getMenu().size());
+                .addMenu(nav_view.getMenu(), 0, size);
         setTitle(getString(R.string.nav_home));
-        requestRetrofit(getString(R.string.rest_member), 53);
-//        requestRetrofit(getString(R.string.rest_member), _mid);
+        requestRetrofit(getString(R.string.rest_member), MID = 53);
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_main, new MainFragment())
                 .commit();
@@ -181,6 +184,7 @@ public class MainActivity extends AppCompatActivity
 
                         String avatar = repo.getProfile().getAvatar();
                         String cover = repo.getProfile().getCover();
+                        TEMP_COVER = cover;
                         String url = RestUtils.BASE + getString(R.string.rest_profile_image);
 
                         nav_id.setText(repo.getMember().getUsername());

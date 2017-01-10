@@ -14,27 +14,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.rest.Music;
 import com.yuyu.utaitebox.rest.Repo;
+import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.utils.Constant;
+import com.yuyu.utaitebox.utils.MainVO;
 import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Subscriber;
 
 public class MainFragment extends Fragment {
 
     private static final String TAG = MainFragment.class.getSimpleName();
 
     private Context context;
-    private RequestManager glide;
-    private boolean loading;
 
     @BindView(R.id.main_recyclerview)
     RecyclerView main_recyclerview;
@@ -44,53 +42,57 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
-        glide = Glide.with(context);
-        requestRetrofit("chart", MainActivity.today);
         return view;
-    }
-
-    public void requestRetrofit(String what, int index) {
-        Task task = new Task(context, 0);
-        task.onPreExecute();
-        Call<Repo> repos = new Retrofit.Builder()
-                .baseUrl(MainActivity.BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(MainActivity.UtaiteBoxGetRepo.class)
-                .listRepos(what, index);
-        repos.enqueue(new Callback<Repo>() {
-            @Override
-            public void onResponse(Call<Repo> call, Response<Repo> response) {
-                if (MainActivity.today == 688882) {
-                    MainActivity.today = Integer.parseInt(response.body().getNavigation().getPageCount());
-                    requestRetrofit("chart", MainActivity.today);
-                } else if (loading) {
-                    loading = false;
-                    main_recyclerview.setHasFixedSize(true);
-                    LinearLayoutManager llm = new LinearLayoutManager(context);
-                    llm.setOrientation(LinearLayoutManager.VERTICAL);
-                    main_recyclerview.setLayoutManager(llm);
-                    ArrayList<MainVO> mainVO = new ArrayList<>();
-                    for (Music e : response.body().getMusic()) {
-                        mainVO.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
-                                e.get_sid(), e.get_aid()));
-                    }
-                    MainAdapter mainAdapter = new MainAdapter(mainVO, context, glide, getFragmentManager());
-                    main_recyclerview.setAdapter(mainAdapter);
-                }
-                task.onPostExecute(null);
-            }
-
-            @Override
-            public void onFailure(Call<Repo> call, Throwable t) {
-                Log.e(TAG, String.valueOf(t));
-            }
-        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        loading = true;
+        requestRetrofit(getString(R.string.rest_chart), MainActivity.TODAY);
     }
+
+    public void requestRetrofit(String what, int index) {
+        Task task = new Task(context, 0);
+        task.onPreExecute();
+
+        RestUtils.getRetrofit()
+                .create(RestUtils.DefaultApi.class)
+                .defaultApi(what, index)
+                .subscribe(new Subscriber<Repo>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.getMessage());
+                        ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
+                        task.onPostExecute(null);
+                    }
+
+                    @Override
+                    public void onNext(Repo repo) {
+                        if (MainActivity.TODAY == Constant.TODAY_DEFAULT) {
+                            MainActivity.TODAY = Integer.parseInt(repo.getNavigation().getPageCount());
+                            requestRetrofit(getString(R.string.rest_chart), MainActivity.TODAY);
+                        } else {
+                            LinearLayoutManager llm = new LinearLayoutManager(context);
+                            llm.setOrientation(LinearLayoutManager.VERTICAL);
+                            main_recyclerview.setHasFixedSize(true);
+                            main_recyclerview.setLayoutManager(llm);
+
+                            ArrayList<MainVO> vo = new ArrayList<>();
+                            for (Music e : repo.getMusic()) {
+                                vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                        e.get_sid(), e.get_aid()));
+                            }
+
+                            MainAdapter mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
+                            main_recyclerview.setAdapter(mainAdapter);
+                            task.onPostExecute(null);
+                        }
+                    }
+                });
+    }
+
 }

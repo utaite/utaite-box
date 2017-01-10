@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_musicinfo"
+    android:id="@+id/fragment_musicInfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingRight="5px">
+        android:paddingRight="5dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/musicinfo_cover"
+                android:id="@+id/musicInfo_cover"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_alignParentStart="true"
@@ -23,7 +23,7 @@
                 android:scaleType="fitXY" />
 
             <RelativeLayout
-                android:id="@+id/musicinfo_status"
+                android:id="@+id/musicInfo_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -32,7 +32,7 @@
                     android:layout_height="25dp"
                     android:layout_marginRight="7dp"
                     android:layout_marginTop="317dp"
-                    android:layout_toLeftOf="@+id/musicinfo_commentright"
+                    android:layout_toLeftOf="@+id/musicInfo_comment_right"
                     android:background="@drawable/circle_black" />
 
                 <ImageView
@@ -40,7 +40,7 @@
                     android:layout_height="25dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="316dp"
-                    android:layout_toLeftOf="@+id/musicinfo_ribbonright"
+                    android:layout_toLeftOf="@+id/musicInfo_ribbon_right"
                     android:background="@drawable/circle_black" />
 
                 <ImageView
@@ -48,63 +48,63 @@
                     android:layout_height="25dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="316dp"
-                    android:layout_toLeftOf="@+id/musicinfo_playedright"
+                    android:layout_toLeftOf="@+id/musicInfo_played_right"
                     android:background="@drawable/circle_black" />
 
                 <ImageView
-                    android:id="@+id/musicinfo_ribbonsrcright"
+                    android:id="@+id/musicInfo_ribbon_src_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="310dp"
-                    android:layout_toLeftOf="@+id/musicinfo_ribbonright"
+                    android:layout_toLeftOf="@+id/musicInfo_ribbon_right"
                     android:src="@drawable/ic_ribbon"
                     android:tint="#fff" />
 
                 <TextView
-                    android:id="@+id/musicinfo_ribbonright"
+                    android:id="@+id/musicInfo_ribbon_right"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="310dp"
-                    android:layout_toLeftOf="@+id/musicinfo_playedrightsrc"
+                    android:layout_toLeftOf="@+id/musicInfo_played_right_src"
                     android:textSize="25sp" />
 
                 <ImageView
-                    android:id="@+id/musicinfo_playedrightsrc"
+                    android:id="@+id/musicInfo_played_right_src"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="310dp"
-                    android:layout_toLeftOf="@+id/musicinfo_playedright"
+                    android:layout_toLeftOf="@+id/musicInfo_played_right"
                     android:src="@drawable/ic_music"
                     android:tint="#fff" />
 
                 <TextView
-                    android:id="@+id/musicinfo_playedright"
+                    android:id="@+id/musicInfo_played_right"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="310dp"
-                    android:layout_toLeftOf="@+id/musicinfo_commentsrcright"
+                    android:layout_toLeftOf="@+id/musicInfo_comment_src_right"
                     android:textSize="25sp" />
 
                 <ImageView
-                    android:id="@+id/musicinfo_commentsrcright"
+                    android:id="@+id/musicInfo_comment_src_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="310dp"
-                    android:layout_toLeftOf="@+id/musicinfo_commentright"
+                    android:layout_toLeftOf="@+id/musicInfo_comment_right"
                     android:src="@drawable/ic_comment"
                     android:tint="#fff" />
 
                 <TextView
-                    android:id="@+id/musicinfo_commentright"
+                    android:id="@+id/musicInfo_comment_right"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 android:layout_marginTop="15dp">
 
                 <ImageView
-                    android:id="@+id/musicinfo_play"
+                    android:id="@+id/musicInfo_play"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginTop="20dp"
@@ -134,7 +134,7 @@
                     android:tint="@color/cardview_light_background" />
 
                 <ImageView
-                    android:id="@+id/musicinfo_ribbonsrc"
+                    android:id="@+id/musicInfo_ribbon_src"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
@@ -142,7 +142,7 @@
                     android:src="@drawable/ic_ribbon" />
 
                 <TextView
-                    android:id="@+id/musicinfo_ribbon"
+                    android:id="@+id/musicInfo_ribbon"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                     android:textSize="15sp" />
 
                 <ImageView
-                    android:id="@+id/musicinfo_addlistsrc"
+                    android:id="@+id/musicInfo_addlistsrc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
@@ -161,7 +161,7 @@
                     android:src="@drawable/ic_addlist" />
 
                 <TextView
-                    android:id="@+id/musicinfo_addlist"
+                    android:id="@+id/musicInfo_addlist"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/musicinfo_utaite"
+                    android:id="@+id/musicInfo_utaite"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
                     android:textSize="25sp" />
 
                 <TextView
-                    android:id="@+id/musicinfo_song"
+                    android:id="@+id/musicInfo_song"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -189,11 +189,11 @@
                     android:textSize="25sp" />
 
                 <TextView
-                    android:id="@+id/musicinfo_songkr"
+                    android:id="@+id/musicInfo_songkr"
                     style="@style/MusicInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/musicinfo_song"
+                    android:layout_below="@+id/musicInfo_song"
                     android:layout_marginLeft="80dp"
                     android:textSize="15sp" />
 
@@ -202,21 +202,21 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/musicinfo_text1"
+            android:id="@+id/musicInfo_text1"
             style="@style/ListText" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/musicinfo_recyclerview"
+            android:id="@+id/musicInfo_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
 
         <TextView
-            android:id="@+id/musicinfo_text2"
+            android:id="@+id/musicInfo_text2"
             style="@style/ListText" />
 
         <ImageView
-            android:id="@+id/musicinfo_text2src"
+            android:id="@+id/musicInfo_text2_src"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -225,7 +225,7 @@
             android:tint="#fff" />
 
         <LinearLayout
-            android:id="@+id/musicinfo_ribbonimg"
+            android:id="@+id/musicInfo_ribbon_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -233,11 +233,11 @@
             android:orientation="vertical" />
 
         <TextView
-            android:id="@+id/musicinfo_text3"
+            android:id="@+id/musicInfo_text3"
             style="@style/ListText" />
 
         <LinearLayout
-            android:id="@+id/musicinfo_timeline"
+            android:id="@+id/musicInfo_timeline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -250,11 +250,11 @@
                 android:paddingBottom="10dp">
 
                 <EditText
-                    android:id="@+id/musicinfo_timeline_edittext"
+                    android:id="@+id/musicInfo_timeline_editText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
-                    android:layout_toLeftOf="@+id/musicinfo_timeline_button"
+                    android:layout_toLeftOf="@+id/musicInfo_timeline_button"
                     android:background="@drawable/border_full"
                     android:gravity="top|left"
                     android:inputType="textMultiLine"
@@ -262,7 +262,7 @@
                     android:scrollHorizontally="false" />
 
                 <Button
-                    android:id="@+id/musicinfo_timeline_button"
+                    android:id="@+id/musicInfo_timeline_button"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="80dp"
                     android:layout_height="40dp"
@@ -273,11 +273,11 @@
                     android:theme="@style/AppTheme.Button" />
 
                 <ImageView
-                    android:id="@+id/musicinfo_avatar"
+                    android:id="@+id/musicInfo_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_toEndOf="@+id/musicinfo_timeline_edittext" />
+                    android:layout_toEndOf="@+id/musicInfo_timeline_editText" />
 
             </RelativeLayout>
 

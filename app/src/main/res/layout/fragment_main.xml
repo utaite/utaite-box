@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_musicinfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,7 +11,7 @@
 
         <TextView
             android:id="@+id/main_text1"
-            android:text="@string/main_list"
+            android:text="@string/main_text1"
             style="@style/ListText"/>
 
         <android.support.v7.widget.RecyclerView

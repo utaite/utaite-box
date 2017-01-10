@@ -8,10 +8,14 @@
 
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
 
+
     <string name="rest_profile">1083_1477456743726.jpeg</string>
     <string name="rest_member">member</string>
     <string name="rest_sid">sid</string>
     <string name="rest_aid">aid</string>
+    <string name="rest_chart">chart</string>
+    <string name="rest_song">song</string>
+    <string name="rest_songlist">songlist</string>
 
     <string name="rest_profile_image">/res/profile/image/</string>
     <string name="rest_profile_cover">/res/profile/cover/</string>
@@ -20,12 +24,20 @@
     <string name="rest_cover">/res/cover/</string>
     <string name="rest_artist_image">/res/artist/image/</string>
 
+    <string name="rest_stream">/api/play/stream/</string>
+
+    <string name="rest_error">네트워크 접속에 실패했습니다.</string>
+
+
     <string name="nav_home">HOME</string>
     <string name="nav_music">MUSIC</string>
     <string name="nav_chart">CHART</string>
     <string name="nav_upload">UPLOAD</string>
     <string name="nav_timeline">TIMELINE</string>
     <string name="nav_search">SEARCH</string>
+
+
+    <string name="main_text1">▼  어제 가장 많이 재생된 노래에요.</string>
 
 
     <string name="musicinfo_txt1">%1$s&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
@@ -39,10 +51,11 @@
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>
     <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
     <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 다른 노래는 어때요?</string>
+
     <string name="task_0">리스트를 불러오는 중입니다 ...</string>
     <string name="task_1">로딩중입니다 ...</string>
-    <string name="main_list">▼  어제 가장 많이 재생된 노래에요.</string>
     <string name="submit">Submit</string>
+
     <string name="addlist">ADDLIST</string>
     <string name="like">LIKE</string>
 </resources>

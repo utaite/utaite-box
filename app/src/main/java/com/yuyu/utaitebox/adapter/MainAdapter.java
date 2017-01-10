@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
@@ -25,14 +26,14 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
+    private final String TAG = MainAdapter.class.getSimpleName();
+
     private Context context;
-    private RequestManager requestManager;
     private FragmentManager fragmentManager;
     private ArrayList<MainVO> vo;
 
-    public MainAdapter(Context context, RequestManager requestManager, FragmentManager fragmentManager, ArrayList<MainVO> vo) {
+    public MainAdapter(Context context, FragmentManager fragmentManager, ArrayList<MainVO> vo) {
         this.context = context;
-        this.requestManager = requestManager;
         this.fragmentManager = fragmentManager;
         this.vo = vo;
     }
@@ -45,6 +46,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        RequestManager requestManager = Glide.with(context);
         requestManager.load(RestUtils.BASE + (vo.get(position).getBg() == null ?
                 context.getString(R.string.rest_images_cover) : context.getString(R.string.rest_cover) + vo.get(position).getBg()))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)

@@ -12,11 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
+import com.yuyu.utaitebox.adapter.MainAdapter;
+import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Song;
+import com.yuyu.utaitebox.utils.MainVO;
 import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
@@ -24,30 +25,20 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
+import rx.Subscriber;
 
 public class MusicListFragment extends Fragment {
 
-    public interface UtaiteBoxGetArrSong {
-        @GET("/api/{what}/{index}")
-        Call<ArrayList<Song>> listRepos(@Path("what") String what,
-                                        @Path("index") int index);
-    }
-
     private static final String TAG = MusicListFragment.class.getSimpleName();
 
-    private Context context;
-    private ArrayList<MainVO> mainVOSet;
-    private MainAdapter mainAdapter;
     private final int PAGE = 5;
-    private boolean loading = true;
+
+    private Context context;
+    private ArrayList<MainVO> vo;
+    private MainAdapter mainAdapter;
+
     private int count;
+    private boolean loading = true;
 
     @BindView(R.id.musiclist_recyclerview)
     RecyclerView musiclist_recyclerview;
@@ -63,14 +54,15 @@ public class MusicListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_musiclist, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
-        RequestManager glide = Glide.with(context);
+
         musiclist_recyclerview.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         musiclist_recyclerview.setLayoutManager(llm);
-        mainVOSet = new ArrayList<>();
-        requestRetrofit("songlist", count);
-        mainAdapter = new MainAdapter(mainVOSet, context, glide, getFragmentManager());
+        vo = new ArrayList<>();
+
+        requestRetrofit(getString(R.string.rest_songlist), count);
+        mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_next.setVisibility(View.GONE);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));
@@ -80,7 +72,7 @@ public class MusicListFragment extends Fragment {
                 ++count;
                 if ((count - 1) % PAGE != 0) {
                     musiclist_next.setVisibility((count - 1) % PAGE == 4 ? View.VISIBLE : View.INVISIBLE);
-                    requestRetrofit("songlist", count);
+                    requestRetrofit(getString(R.string.rest_songlist), count);
                 }
             }
         });
@@ -95,13 +87,13 @@ public class MusicListFragment extends Fragment {
     }
 
     @OnClick(R.id.musiclist_prev)
-    public void listPrev() {
+    public void musiclist_prev() {
         if (count > PAGE) {
             loading = false;
             count = count / 5 * 5 - 4;
-            mainVOSet.clear();
+            vo.clear();
             mainAdapter.notifyDataSetChanged();
-            requestRetrofit("songlist", count);
+            requestRetrofit(getString(R.string.rest_songlist), count);
             if (count == 1) {
                 musiclist_prev.setText(getString(R.string.musiclist_txt1));
             }
@@ -109,12 +101,12 @@ public class MusicListFragment extends Fragment {
     }
 
     @OnClick(R.id.musiclist_next)
-    public void listNext() {
+    public void musiclist_next() {
         if ((count - 1) % PAGE == 0) {
             musiclist_next.setVisibility(View.GONE);
-            mainVOSet.clear();
+            vo.clear();
             mainAdapter.notifyDataSetChanged();
-            requestRetrofit("songlist", count);
+            requestRetrofit(getString(R.string.rest_songlist), count);
             musiclist_prev.setText(getString(R.string.musiclist_txt2));
         }
     }
@@ -122,29 +114,32 @@ public class MusicListFragment extends Fragment {
     public void requestRetrofit(String what, int index) {
         Task task = new Task(context, 0);
         task.onPreExecute();
-        Call<ArrayList<Song>> repos = new Retrofit.Builder()
-                .baseUrl(MainActivity.BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(UtaiteBoxGetArrSong.class)
-                .listRepos(what, index);
-        repos.enqueue(new Callback<ArrayList<Song>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Song>> call, Response<ArrayList<Song>> response) {
-                for (Song e : response.body()) {
-                    mainVOSet.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
-                            e.get_sid(), e.get_aid()));
-                }
-                mainAdapter.notifyDataSetChanged();
-                task.onPostExecute(null);
-                loading = true;
-            }
+        RestUtils.getRetrofit()
+                .create(RestUtils.ArraySongApi.class)
+                .arraySongApi(what, index)
+                .subscribe(new Subscriber<ArrayList<Song>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-            @Override
-            public void onFailure(Call<ArrayList<Song>> call, Throwable t) {
-                Log.e(TAG, String.valueOf(t));
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.getMessage());
+                        ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
+                        task.onPostExecute(null);
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<Song> songs) {
+                        for (Song e : songs) {
+                            vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                    e.get_sid(), e.get_aid()));
+                        }
+                        mainAdapter.notifyDataSetChanged();
+                        task.onPostExecute(null);
+                        loading = true;
+                    }
+                });
     }
 
 }
