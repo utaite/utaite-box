@@ -5,10 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
 public class Repo {
 
     @SerializedName("song")
@@ -51,7 +49,7 @@ public class Repo {
     private ArrayList<Music> music;
 
     @SerializedName("artist")
-    private ArrayList<Artist> aritst;
+    private ArrayList<Artist> artist;
 
     @SerializedName("status")
     private String status;
@@ -60,6 +58,6 @@ public class Repo {
     private String timestamp;
 
     @SerializedName("data")
-    private Data data;
+    private Data_ data;
 
 }

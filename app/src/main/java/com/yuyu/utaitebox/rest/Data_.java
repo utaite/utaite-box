@@ -2,12 +2,12 @@ package com.yuyu.utaitebox.rest;
 
 import com.google.gson.annotations.SerializedName;
 
+import lombok.Data;
 import lombok.experimental.Accessors;
 
-@lombok.Data
+@Data
 @Accessors(chain = true)
-public class Data {
-
+public class Data_ {
 
     @SerializedName("_mid")
     private String _mid;

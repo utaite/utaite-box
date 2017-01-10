@@ -18,6 +18,6 @@ public class Navigation {
     private String pageCount;
 
     @SerializedName("data")
-    private ArrayList<Data> data;
+    private ArrayList<Data_> data;
 
 }

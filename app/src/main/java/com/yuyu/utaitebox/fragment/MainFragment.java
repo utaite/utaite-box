@@ -66,12 +66,14 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, e.getMessage());
+                        Log.e(TAG, String.valueOf(e));
                         ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
                         task.onPostExecute(null);
                     }
 
                     @Override
                     public void onNext(Repo repo) {
+                        task.onPostExecute(null);
                         if (MainActivity.TODAY == Constant.TODAY_DEFAULT) {
                             MainActivity.TODAY = Integer.parseInt(repo.getNavigation().getPageCount());
                             requestRetrofit(getString(R.string.rest_chart), MainActivity.TODAY);
@@ -89,7 +91,6 @@ public class MainFragment extends Fragment {
 
                             MainAdapter mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
                             main_recyclerview.setAdapter(mainAdapter);
-                            task.onPostExecute(null);
                         }
                     }
                 });

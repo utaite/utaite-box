@@ -15,14 +15,16 @@
     <string name="rest_aid">aid</string>
     <string name="rest_chart">chart</string>
     <string name="rest_song">song</string>
+    <string name="rest_artist">artist</string>
     <string name="rest_songlist">songlist</string>
 
     <string name="rest_profile_image">/res/profile/image/</string>
     <string name="rest_profile_cover">/res/profile/cover/</string>
+    <string name="rest_artist_image">/res/artist/image/</string>
+    <string name="rest_artist_cover">/res/artist/cover/</string>
+    <string name="rest_cover">/res/cover/</string>
     <string name="rest_images_cover">/images/cover.jpg</string>
     <string name="rest_images_artist">/images/artist.jpg</string>
-    <string name="rest_cover">/res/cover/</string>
-    <string name="rest_artist_image">/res/artist/image/</string>
 
     <string name="rest_stream">/api/play/stream/</string>
 
