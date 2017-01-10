@@ -1,21 +1,32 @@
 <resources>
     <string name="app_name">Utaite Box</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
 
-    <string name="first_btn">Utaite Box 시작하기</string>
-    <string name="first_1_1">시작하기에 앞서</string>
-    <string name="first_1_2">본 어플은 우타이테 커뮤니티 \'Utaite Box\'의 모바일 버전의 어플입니다.</string>
-    <string name="first_2_1">아직 회원이 아니라면?</string>
-    <string name="first_2_2">튜토리얼이 끝난 후 \'회원가입\' 버튼을 클릭해 \'Utaite Box\'의 컨텐츠를 즐겨보세요!</string>
+    <string name="rest_profile">1083_1477456743726.jpeg</string>
+    <string name="rest_member">member</string>
+    <string name="rest_sid">sid</string>
+    <string name="rest_aid">aid</string>
 
-    <string name="_login_id">아이디</string>
-    <string name="_login_pw">비밀번호</string>
-    <string name="_login_remember_id">아이디 저장</string>
-    <string name="_login_remember_me">자동 로그인</string>
-    <string name="_login_login_btn">로그인</string>
-    <string name="_login_register_btn">회원가입</string>
+    <string name="rest_profile_image">/res/profile/image/</string>
+    <string name="rest_profile_cover">/res/profile/cover/</string>
+    <string name="rest_images_cover">/images/cover.jpg</string>
+    <string name="rest_images_artist">/images/artist.jpg</string>
+    <string name="rest_cover">/res/cover/</string>
+    <string name="rest_artist_image">/res/artist/image/</string>
+
+    <string name="nav_home">HOME</string>
+    <string name="nav_music">MUSIC</string>
+    <string name="nav_chart">CHART</string>
+    <string name="nav_upload">UPLOAD</string>
+    <string name="nav_timeline">TIMELINE</string>
+    <string name="nav_search">SEARCH</string>
+
 
     <string name="musicinfo_txt1">%1$s&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
     <string name="musicinfo_txt2_1">&#160;&#160;노래에 좋아요를 눌러주셨어요.</string>

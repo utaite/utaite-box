@@ -1,30 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
+            android:checked="true"
             android:icon="@drawable/ic_home"
-            android:title="HOME"/>
+            android:title="@string/nav_home" />
+
         <item
             android:id="@+id/nav_music"
             android:icon="@drawable/ic_music"
-            android:title="MUSIC" />
+            android:title="@string/nav_music" />
+
         <item
             android:id="@+id/nav_chart"
             android:icon="@drawable/ic_chart"
-            android:title="CHART" />
+            android:title="@string/nav_chart" />
+
         <item
             android:id="@+id/nav_upload"
             android:icon="@drawable/ic_upload"
-            android:title="UPLOAD" />
+            android:title="@string/nav_upload" />
+
         <item
             android:id="@+id/nav_timeline"
             android:icon="@drawable/ic_timeline"
-            android:title="TIMELINE" />
+            android:title="@string/nav_timeline" />
+
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_search"
-            android:title="SEARCH" />
+            android:title="@string/nav_search" />
     </group>
 </menu>

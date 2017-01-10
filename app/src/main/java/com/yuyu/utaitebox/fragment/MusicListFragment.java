@@ -16,10 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
-import com.yuyu.utaitebox.retrofit.Song;
-import com.yuyu.utaitebox.view.MainAdapter;
-import com.yuyu.utaitebox.view.MainData;
-import com.yuyu.utaitebox.view.Task;
+import com.yuyu.utaitebox.rest.Song;
+import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -45,7 +43,7 @@ public class MusicListFragment extends Fragment {
     private static final String TAG = MusicListFragment.class.getSimpleName();
 
     private Context context;
-    private ArrayList<MainData> mainDataSet;
+    private ArrayList<MainVO> mainVOSet;
     private MainAdapter mainAdapter;
     private final int PAGE = 5;
     private boolean loading = true;
@@ -70,9 +68,9 @@ public class MusicListFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         musiclist_recyclerview.setLayoutManager(llm);
-        mainDataSet = new ArrayList<>();
+        mainVOSet = new ArrayList<>();
         requestRetrofit("songlist", count);
-        mainAdapter = new MainAdapter(mainDataSet, context, glide, getFragmentManager());
+        mainAdapter = new MainAdapter(mainVOSet, context, glide, getFragmentManager());
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_next.setVisibility(View.GONE);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));
@@ -101,7 +99,7 @@ public class MusicListFragment extends Fragment {
         if (count > PAGE) {
             loading = false;
             count = count / 5 * 5 - 4;
-            mainDataSet.clear();
+            mainVOSet.clear();
             mainAdapter.notifyDataSetChanged();
             requestRetrofit("songlist", count);
             if (count == 1) {
@@ -114,7 +112,7 @@ public class MusicListFragment extends Fragment {
     public void listNext() {
         if ((count - 1) % PAGE == 0) {
             musiclist_next.setVisibility(View.GONE);
-            mainDataSet.clear();
+            mainVOSet.clear();
             mainAdapter.notifyDataSetChanged();
             requestRetrofit("songlist", count);
             musiclist_prev.setText(getString(R.string.musiclist_txt2));
@@ -134,7 +132,7 @@ public class MusicListFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<Song>> call, Response<ArrayList<Song>> response) {
                 for (Song e : response.body()) {
-                    mainDataSet.add(new MainData(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                    mainVOSet.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                             e.get_sid(), e.get_aid()));
                 }
                 mainAdapter.notifyDataSetChanged();

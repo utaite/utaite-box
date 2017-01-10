@@ -23,9 +23,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.chain.ChainedArrayList;
+import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
-import com.yuyu.utaitebox.retrofit.Repo;
+import com.yuyu.utaitebox.rest.Repo;
+import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.utils.Constant;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,27 +41,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
+import rx.Subscriber;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public interface UtaiteBoxGetRepo {
-        @GET("/api/{what}/{index}")
-        Call<Repo> listRepos(@Path("what") String what,
-                             @Path("index") int index);
-    }
+    private final String TAG = MainActivity.class.getSimpleName();
 
-    public static final String BASE = "http://utaitebox.com", PROFILE = "1083_1477456743726.jpeg";
-    public static String tempCover, token;
-    public static int _mid, today = 688882;
-    private static final String tag = MainActivity.class.getSimpleName();
-
-    private RequestManager glide;
     private Context context;
-    private Toast toast;
-    private long currentTime;
+    private ChainedToast toast;
+    private RequestManager requestManager;
+    private ArrayList<Integer> items;
+
+    private int index;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -69,74 +67,44 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        glide = Glide.with(this);
         context = this;
-        toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+        requestManager = Glide.with(context);
+        toast = new ChainedToast(context).makeTextTo(this, "", Toast.LENGTH_SHORT);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer_layout.addDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
-        nav_view.getMenu().getItem(0).setChecked(true);
-        requestRetrofit("member", _mid);
-        getFragmentManager().beginTransaction().replace(R.id.content_main, new MainFragment()).commit();
+        initialize();
     }
 
-    public void requestRetrofit(String what, int index) {
-        Call<Repo> repos = new Retrofit.Builder()
-                .baseUrl(MainActivity.BASE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(UtaiteBoxGetRepo.class)
-                .listRepos(what, index);
-        repos.enqueue(new Callback<Repo>() {
-            @Override
-            public void onResponse(Call<Repo> call, Response<Repo> response) {
-                View view = nav_view.getHeaderView(0);
-                TextView nav_id = (TextView) view.findViewById(R.id.nav_id);
-                ImageView nav_bg1 = (ImageView) view.findViewById(R.id.nav_bg1);
-                ImageView nav_img = (ImageView) view.findViewById(R.id.nav_img);
-                tempCover = response.body().getProfile().getAvatar();
-                String avatar = response.body().getProfile().getAvatar();
-                String url = BASE + "/res/profile/image/";
-                nav_id.setText(response.body().getMember().getUsername());
-                glide.load(avatar == null ? url + PROFILE : url + avatar)
-                        .bitmapTransform(new CropCircleTransformation(getApplicationContext()))
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .into(nav_img);
-                String cover = response.body().getProfile().getCover();
-                if (cover == null) {
-                    nav_bg1.setImageResource(android.R.color.transparent);
-                    nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
-                } else {
-                    glide.load(MainActivity.BASE + "/res/profile/cover/" + cover)
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(nav_bg1);
-                }
-            }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        nav_view.getMenu().getItem(index).setChecked(true);
+    }
 
-            @Override
-            public void onFailure(Call<Repo> call, Throwable t) {
-                Log.e(tag, String.valueOf(t));
-            }
-        });
+    @Override
+    protected void onStop() {
+        super.onStop();
+        nav_view.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
     public void onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START);
+
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
+
+        } else if (Constant.CURRENT_TIME + Constant.BACK_TIME < System.currentTimeMillis()) {
+            Constant.CURRENT_TIME = System.currentTimeMillis();
+            toast.setTextShow(getString(R.string.onBackPressed));
+
         } else {
-            if (currentTime + 2000 < System.currentTimeMillis()) {
-                currentTime = System.currentTimeMillis();
-                toast.setText(getString(R.string.onBackPressed));
-                toast.show();
-            } else {
-                super.onBackPressed();
-            }
+            super.onBackPressed();
         }
     }
 
@@ -148,8 +116,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        int iid = item.getItemId();
+        if (iid == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -157,22 +125,83 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Fragment fragment = null;
-        if (id == R.id.nav_home) {
-            fragment = new MainFragment();
-        } else if (id == R.id.nav_music) {
-            fragment = new MusicListFragment();
-        } else if (id == R.id.nav_chart) {
-        } else if (id == R.id.nav_upload) {
-        } else if (id == R.id.nav_timeline) {
-        }
-        if (fragment != null) {
-            getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
-        }
+        getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_main, getFragment(item.getItemId()))
+                .commit();
         drawer_layout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public Fragment getFragment(int iid) {
+        index = items.indexOf(iid);
+        Fragment fragment = null;
+
+        if (iid == R.id.nav_home) {
+            fragment = new MainFragment();
+        } else if (iid == R.id.nav_music) {
+            fragment = new MusicListFragment();
+        } else if (iid == R.id.nav_chart) {
+        } else if (iid == R.id.nav_upload) {
+        } else if (iid == R.id.nav_timeline) {
+        }
+        return fragment;
+    }
+
+    public void initialize() {
+        items = (ArrayList<Integer>) new ChainedArrayList()
+                .addMenu(nav_view.getMenu(), 0, nav_view.getMenu().size());
+        setTitle(getString(R.string.nav_home));
+        requestRetrofit(getString(R.string.rest_member), 53);
+//        requestRetrofit(getString(R.string.rest_member), _mid);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_main, new MainFragment())
+                .commit();
+    }
+
+    public void requestRetrofit(String what, int index) {
+        RestUtils.getRetrofit()
+                .create(RestUtils.DefaultApi.class)
+                .defaultApi(what, index)
+                .subscribe(new Subscriber<Repo>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Repo repo) {
+                        TextView nav_id = (TextView) nav_view.getHeaderView(0).findViewById(R.id.nav_id);
+                        ImageView nav_bg1 = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_bg1);
+                        ImageView nav_img = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_img);
+
+                        String avatar = repo.getProfile().getAvatar();
+                        String cover = repo.getProfile().getCover();
+                        String url = RestUtils.BASE + getString(R.string.rest_profile_image);
+
+                        nav_id.setText(repo.getMember().getUsername());
+                        requestManager.load(url + (avatar == null ? getString(R.string.rest_profile) : avatar))
+                                .bitmapTransform(new CropCircleTransformation(context))
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .into(nav_img);
+                        if (cover == null) {
+                            nav_bg1.setImageResource(android.R.color.transparent);
+                            nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
+                        } else {
+                            requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_cover))
+                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                    .into(nav_bg1);
+                        }
+                    }
+                });
+    }
+
+    public ChainedToast getToast() {
+        return toast;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.yuyu.utaitebox.retrofit;
+package com.yuyu.utaitebox.rest;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

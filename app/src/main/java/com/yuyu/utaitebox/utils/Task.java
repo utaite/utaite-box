@@ -1,4 +1,4 @@
-package com.yuyu.utaitebox.view;
+package com.yuyu.utaitebox.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;

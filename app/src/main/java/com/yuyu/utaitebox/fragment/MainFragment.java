@@ -14,11 +14,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.R;
-import com.yuyu.utaitebox.retrofit.Music;
-import com.yuyu.utaitebox.retrofit.Repo;
-import com.yuyu.utaitebox.view.MainAdapter;
-import com.yuyu.utaitebox.view.MainData;
-import com.yuyu.utaitebox.view.Task;
+import com.yuyu.utaitebox.rest.Music;
+import com.yuyu.utaitebox.rest.Repo;
+import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -72,12 +70,12 @@ public class MainFragment extends Fragment {
                     LinearLayoutManager llm = new LinearLayoutManager(context);
                     llm.setOrientation(LinearLayoutManager.VERTICAL);
                     main_recyclerview.setLayoutManager(llm);
-                    ArrayList<MainData> mainData = new ArrayList<>();
+                    ArrayList<MainVO> mainVO = new ArrayList<>();
                     for (Music e : response.body().getMusic()) {
-                        mainData.add(new MainData(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                        mainVO.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                                 e.get_sid(), e.get_aid()));
                     }
-                    MainAdapter mainAdapter = new MainAdapter(mainData, context, glide, getFragmentManager());
+                    MainAdapter mainAdapter = new MainAdapter(mainVO, context, glide, getFragmentManager());
                     main_recyclerview.setAdapter(mainAdapter);
                 }
                 task.onPostExecute(null);

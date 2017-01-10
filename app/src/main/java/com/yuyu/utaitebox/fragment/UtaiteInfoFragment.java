@@ -21,10 +21,9 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
-import com.yuyu.utaitebox.retrofit.Comment;
-import com.yuyu.utaitebox.retrofit.Utaite;
-import com.yuyu.utaitebox.view.Constant;
-import com.yuyu.utaitebox.view.Task;
+import com.yuyu.utaitebox.rest.Comment;
+import com.yuyu.utaitebox.rest.Utaite;
+import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
