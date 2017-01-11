@@ -2,7 +2,9 @@ package com.yuyu.utaitebox.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +22,9 @@ import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.utils.MainVO;
 import com.yuyu.utaitebox.utils.Task;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -55,13 +60,35 @@ public class MusicListFragment extends Fragment {
         ButterKnife.bind(this, view);
         context = getActivity();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        String msg = "msg";
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView tv = new TextView(getActivity());
+                                tv.setTextSize(30);
+                                tv.setTextColor(Color.GREEN);
+                                tv.setText(msg);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         musiclist_recyclerview.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         musiclist_recyclerview.setLayoutManager(llm);
         vo = new ArrayList<>();
 
-        requestRetrofit(getString(R.string.rest_songlist), count);
+        requestRetrofit(getString(R.string.rest_songlist), count = 1);
         mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_next.setVisibility(View.GONE);

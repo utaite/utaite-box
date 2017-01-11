@@ -53,6 +53,7 @@ public class MusicInfoFragment extends Fragment {
     private RequestManager requestManager;
     private MediaPlayer mediaPlayer;
 
+    private ArrayList<MainVO> vo;
     private String str2Check;
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
 
@@ -176,7 +177,7 @@ public class MusicInfoFragment extends Fragment {
                             ViewGroup.LayoutParams.WRAP_CONTENT);
                     p.addRule(RelativeLayout.BELOW, rAbsolute.getId());
                     rRelative.setLayoutParams(p);
-                    rRelative.addView(iv[i]);
+                    rRelative.addView(tv[i]);
                     rAbsolute.addView(rRelative);
                     rAbsolute.setGravity(Gravity.CENTER);
                     rHorizontal.addView(rAbsolute);
@@ -346,6 +347,7 @@ public class MusicInfoFragment extends Fragment {
                             musicInfo_text2_src.setBackground(getResources().getDrawable(ribbonCheck ? R.drawable.circle_yellow : R.drawable.circle_black));
                             str2Check = getString(ribbonCheck ? R.string.musicinfo_txt2_1 : R.string.musicinfo_txt2_2);
 
+                            vo = new ArrayList<>();
                             String played = repo.getSong().getPlayed();
                             if (Integer.parseInt(played) >= 1000) {
                                 played = String.valueOf(Integer.parseInt(played) / 1000) + "." + String.valueOf(Integer.parseInt(played) % 1000).substring(0, 1) + "K+";
@@ -362,7 +364,6 @@ public class MusicInfoFragment extends Fragment {
                             Chained.setPaintFlagsMany(musicInfo_ribbon_right, musicInfo_songkr, musicInfo_ribbon, musicInfo_addlist, musicInfo_utaite, musicInfo_song, musicInfo_played_right, musicInfo_comment_right);
                         } else {
                             Song song = response.getSong();
-                            ArrayList<MainVO> vo = new ArrayList<>();
                             vo.add(new MainVO(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),
                                     song.get_sid(), song.get_aid()));
                             musicInfo_recyclerview.setAdapter(new MainAdapter(context, getFragmentManager(), vo));
