@@ -1,10 +1,7 @@
 package com.yuyu.utaitebox.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
@@ -22,17 +20,13 @@ import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.utils.MainVO;
 import com.yuyu.utaitebox.utils.Task;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Subscriber;
 
-public class MusicListFragment extends Fragment {
+public class MusicListFragment extends RxFragment {
 
     private static final String TAG = MusicListFragment.class.getSimpleName();
 
@@ -59,29 +53,11 @@ public class MusicListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_musiclist, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
+        initialize();
+        return view;
+    }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (true) {
-                        String msg = "msg";
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                TextView tv = new TextView(getActivity());
-                                tv.setTextSize(30);
-                                tv.setTextColor(Color.GREEN);
-                                tv.setText(msg);
-                            }
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
+    public void initialize() {
         musiclist_recyclerview.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -93,6 +69,7 @@ public class MusicListFragment extends Fragment {
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_next.setVisibility(View.GONE);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));
+
         fragment_musiclist.getViewTreeObserver().addOnScrollChangedListener(() -> {
             if (fragment_musiclist.getScrollY() >= musiclist_recyclerview.getHeight() - fragment_musiclist.getHeight() && loading) {
                 loading = false;
@@ -103,7 +80,6 @@ public class MusicListFragment extends Fragment {
                 }
             }
         });
-        return view;
     }
 
 
@@ -114,7 +90,7 @@ public class MusicListFragment extends Fragment {
     }
 
     @OnClick(R.id.musiclist_prev)
-    public void musiclist_prev() {
+    public void onPrevButtonClick() {
         if (count > PAGE) {
             loading = false;
             count = count / 5 * 5 - 4;
@@ -128,7 +104,7 @@ public class MusicListFragment extends Fragment {
     }
 
     @OnClick(R.id.musiclist_next)
-    public void musiclist_next() {
+    public void onNextButtonClick() {
         if ((count - 1) % PAGE == 0) {
             musiclist_next.setVisibility(View.GONE);
             vo.clear();
@@ -144,28 +120,19 @@ public class MusicListFragment extends Fragment {
         RestUtils.getRetrofit()
                 .create(RestUtils.ArraySongApi.class)
                 .arraySongApi(what, index)
-                .subscribe(new Subscriber<ArrayList<Song>>() {
-                    @Override
-                    public void onCompleted() {
+                .compose(bindToLifecycle())
+                .subscribe(songs -> {
+                    for (Song e : songs) {
+                        vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                e.get_sid(), e.get_aid()));
                     }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, e.getMessage());
-                        ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                        task.onPostExecute(null);
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<Song> songs) {
-                        for (Song e : songs) {
-                            vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
-                                    e.get_sid(), e.get_aid()));
-                        }
-                        mainAdapter.notifyDataSetChanged();
-                        task.onPostExecute(null);
-                        loading = true;
-                    }
+                    mainAdapter.notifyDataSetChanged();
+                    task.onPostExecute(null);
+                    loading = true;
+                }, e -> {
+                    Log.e(TAG, String.valueOf(e));
+                    ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
+                    task.onPostExecute(null);
                 });
     }
 

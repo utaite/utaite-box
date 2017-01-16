@@ -9,12 +9,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +20,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.chain.ChainedArrayList;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
-import com.yuyu.utaitebox.rest.Repo;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
 
@@ -36,14 +34,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Subscriber;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends RxAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = MainActivity.class.getSimpleName();
@@ -132,6 +124,7 @@ public class MainActivity extends AppCompatActivity
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_main, getFragment(item.getItemId()))
                 .commit();
+        setTitle(item.getTitle());
         drawer_layout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -166,42 +159,31 @@ public class MainActivity extends AppCompatActivity
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
-                .subscribe(new Subscriber<Repo>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                .compose(bindToLifecycle())
+                .subscribe(repo -> {
+                            TextView nav_id = (TextView) nav_view.getHeaderView(0).findViewById(R.id.nav_id);
+                            ImageView nav_bg1 = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_bg1);
+                            ImageView nav_img = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_img);
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, e.getMessage());
-                    }
+                            String avatar = TEMP_COVER = repo.getProfile().getAvatar();
+                            String cover = repo.getProfile().getCover();
+                            String url = RestUtils.BASE + getString(R.string.rest_profile_image);
 
-                    @Override
-                    public void onNext(Repo repo) {
-                        TextView nav_id = (TextView) nav_view.getHeaderView(0).findViewById(R.id.nav_id);
-                        ImageView nav_bg1 = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_bg1);
-                        ImageView nav_img = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_img);
-
-                        String avatar = repo.getProfile().getAvatar();
-                        String cover = repo.getProfile().getCover();
-                        TEMP_COVER = cover;
-                        String url = RestUtils.BASE + getString(R.string.rest_profile_image);
-
-                        nav_id.setText(repo.getMember().getUsername());
-                        requestManager.load(url + (avatar == null ? getString(R.string.rest_profile) : avatar))
-                                .bitmapTransform(new CropCircleTransformation(context))
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .into(nav_img);
-                        if (cover == null) {
-                            nav_bg1.setImageResource(android.R.color.transparent);
-                            nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
-                        } else {
-                            requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_cover))
+                            nav_id.setText(repo.getMember().getUsername());
+                            requestManager.load(url + (avatar == null ? getString(R.string.rest_profile) : avatar))
+                                    .bitmapTransform(new CropCircleTransformation(context))
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .into(nav_bg1);
-                        }
-                    }
-                });
+                                    .into(nav_img);
+                            if (cover == null) {
+                                nav_bg1.setImageResource(android.R.color.transparent);
+                                nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
+                            } else {
+                                requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_cover))
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                        .into(nav_bg1);
+                            }
+                        },
+                        e -> Log.e(TAG, String.valueOf(e)));
     }
 
     public ChainedToast getToast() {

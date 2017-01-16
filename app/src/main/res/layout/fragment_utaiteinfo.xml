@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_utaiteInfo"
+    android:id="@+id/fragment_utaiteinfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,7 +23,7 @@
                 android:scaleType="fitXY" />
 
             <ImageView
-                android:id="@+id/utaiteInfo_bg1"
+                android:id="@+id/utaiteinfo_bg1"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_alignParentStart="true"
@@ -32,19 +32,19 @@
                 android:scaleType="fitXY" />
 
             <ImageView
-                android:id="@+id/utaiteInfo_img"
+                android:id="@+id/utaiteinfo_img"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_marginTop="45dp"
                 android:scaleType="fitXY" />
 
             <TextView
-                android:id="@+id/utaiteInfo_id"
+                android:id="@+id/utaiteinfo_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/utaiteInfo_img"
+                android:layout_below="@+id/utaiteinfo_img"
                 android:layout_centerHorizontal="true"
                 android:paddingTop="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -54,11 +54,11 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/utaiteInfo_text1"
+            android:id="@+id/utaiteinfo_text1"
             style="@style/ListText" />
 
         <ImageView
-            android:id="@+id/utaiteInfo_text1_src"
+            android:id="@+id/utaiteinfo_text1_src"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -67,19 +67,20 @@
             android:tint="#fff" />
 
         <LinearLayout
-            android:id="@+id/utaiteInfo_ribbon_img"
-            android:layout_width="match_parent"
+            android:id="@+id/utaiteinfo_ribbon_img"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="16dp"
             android:background="@drawable/border_full"
             android:orientation="vertical" />
 
         <TextView
-            android:id="@+id/utaiteInfo_text2"
+            android:id="@+id/utaiteinfo_text2"
             style="@style/ListText" />
 
         <LinearLayout
-            android:id="@+id/utaiteInfo_timeline"
+            android:id="@+id/utaiteinfo_timeline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -92,11 +93,11 @@
                 android:paddingBottom="10dp">
 
                 <EditText
-                    android:id="@+id/utaiteInfo_timeline_editText"
+                    android:id="@+id/utaiteinfo_timeline_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
-                    android:layout_toLeftOf="@+id/utaiteInfo_timeline_button"
+                    android:layout_toLeftOf="@+id/utaiteinfo_timeline_button"
                     android:background="@drawable/border_full"
                     android:gravity="top|left"
                     android:inputType="textMultiLine"
@@ -104,7 +105,7 @@
                     android:scrollHorizontally="false" />
 
                 <Button
-                    android:id="@+id/utaiteInfo_timeline_button"
+                    android:id="@+id/utaiteinfo_timeline_button"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="80dp"
                     android:layout_height="40dp"
@@ -115,22 +116,23 @@
                     android:theme="@style/AppTheme.Button" />
 
                 <ImageView
-                    android:id="@+id/utaiteInfo_avatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toEndOf="@+id/utaiteInfo_timeline_editText" />
+                    android:id="@+id/utaiteinfo_avatar"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_marginLeft="18dp"
+                    android:layout_toEndOf="@+id/utaiteinfo_timeline_edittext"
+                    android:scaleType="fitXY" />
 
             </RelativeLayout>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/utaiteInfo_text3"
+            android:id="@+id/utaiteinfo_text3"
             style="@style/ListText" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/utaiteInfo_recyclerview"
+            android:id="@+id/utaiteinfo_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />

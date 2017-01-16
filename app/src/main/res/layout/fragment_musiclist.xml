@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingRight="5px">
+        android:paddingRight="5dp">
 
         <TextView
             android:id="@+id/musiclist_prev"
@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/musiclist_next"
             android:layout_weight="1"
-            android:text="▼  다음 페이지로"
+            android:text="@string/musiclist_next"
             style="@style/ListText" />
 
     </LinearLayout>

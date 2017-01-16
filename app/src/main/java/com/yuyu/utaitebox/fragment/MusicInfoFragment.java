@@ -32,6 +32,7 @@ import com.yuyu.utaitebox.rest.Repo;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Ribbon;
 import com.yuyu.utaitebox.rest.Song;
+import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
 import com.yuyu.utaitebox.utils.Task;
 
@@ -41,7 +42,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import rx.Subscriber;
 
 public class MusicInfoFragment extends Fragment {
 
@@ -50,58 +50,59 @@ public class MusicInfoFragment extends Fragment {
     private Repo repo;
     private Task task;
     private Context context;
-    private RequestManager requestManager;
+    private RequestManager glide;
     private MediaPlayer mediaPlayer;
 
     private ArrayList<MainVO> vo;
     private String str2Check;
     private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
 
-    @BindView(R.id.musicInfo_recyclerview)
-    RecyclerView musicInfo_recyclerview;
-    @BindView(R.id.musicInfo_cover)
-    ImageView musicInfo_cover;
-    @BindView(R.id.musicInfo_utaite)
-    TextView musicInfo_utaite;
-    @BindView(R.id.musicInfo_song)
-    TextView musicInfo_song;
-    @BindView(R.id.musicInfo_songkr)
-    TextView musicInfo_songkr;
-    @BindView(R.id.musicInfo_ribbon)
-    TextView musicInfo_ribbon;
-    @BindView(R.id.musicInfo_addlist)
-    TextView musicInfo_addlist;
-    @BindView(R.id.musicInfo_ribbon_src)
-    ImageView musicInfo_ribbon_src;
-    @BindView(R.id.musicInfo_text2_src)
-    ImageView musicInfo_text2_src;
-    @BindView(R.id.musicInfo_ribbon_right)
-    TextView musicInfo_ribbon_right;
-    @BindView(R.id.musicInfo_played_right)
-    TextView musicInfo_played_right;
-    @BindView(R.id.musicInfo_comment_right)
-    TextView musicInfo_comment_right;
-    @BindView(R.id.musicInfo_status)
-    RelativeLayout musicInfo_status;
-    @BindView(R.id.musicInfo_text1)
-    TextView musicInfo_text1;
-    @BindView(R.id.musicInfo_text2)
-    TextView musicInfo_text2;
-    @BindView(R.id.musicInfo_ribbon_img)
-    LinearLayout musicInfo_ribbon_img;
-    @BindView(R.id.musicInfo_timeline)
-    LinearLayout musicInfo_timeline;
-    @BindView(R.id.musicInfo_avatar)
-    ImageView musicInfo_avatar;
-    @BindView(R.id.musicInfo_text3)
-    TextView musicInfo_text3;
+    @BindView(R.id.musicinfo_recyclerview)
+    RecyclerView musicinfo_recyclerview;
+    @BindView(R.id.musicinfo_cover)
+    ImageView musicinfo_cover;
+    @BindView(R.id.musicinfo_utaite)
+    TextView musicinfo_utaite;
+    @BindView(R.id.musicinfo_song)
+    TextView musicinfo_song;
+    @BindView(R.id.musicinfo_songkr)
+    TextView musicinfo_songkr;
+    @BindView(R.id.musicinfo_ribbon)
+    TextView musicinfo_ribbon;
+    @BindView(R.id.musicinfo_addlist)
+    TextView musicinfo_addlist;
+    @BindView(R.id.musicinfo_ribbon_src)
+    ImageView musicinfo_ribbon_src;
+    @BindView(R.id.musicinfo_text2_src)
+    ImageView musicinfo_text2_src;
+    @BindView(R.id.musicinfo_ribbon_right)
+    TextView musicinfo_ribbon_right;
+    @BindView(R.id.musicinfo_played_right)
+    TextView musicinfo_played_right;
+    @BindView(R.id.musicinfo_comment_right)
+    TextView musicinfo_comment_right;
+    @BindView(R.id.musicinfo_status)
+    RelativeLayout musicinfo_status;
+    @BindView(R.id.musicinfo_text1)
+    TextView musicinfo_text1;
+    @BindView(R.id.musicinfo_text2)
+    TextView musicinfo_text2;
+    @BindView(R.id.musicinfo_ribbon_img)
+    LinearLayout musicinfo_ribbon_img;
+    @BindView(R.id.musicinfo_timeline)
+    LinearLayout musicinfo_timeline;
+    @BindView(R.id.musicinfo_avatar)
+    ImageView musicinfo_avatar;
+    @BindView(R.id.musicinfo_text3)
+    TextView musicinfo_text3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_musicinfo, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
-        requestManager = Glide.with(context);
+        glide = Glide.with(context);
         initialize();
         return view;
     }
@@ -109,31 +110,39 @@ public class MusicInfoFragment extends Fragment {
     public void initialize() {
         task = new Task(context, 1);
         task.onPreExecute();
-        Chained.setVisibilityMany(View.GONE, musicInfo_text2_src, musicInfo_text2_src, musicInfo_ribbon_img, musicInfo_timeline, musicInfo_status);
+        Chained.setVisibilityMany(View.GONE, musicinfo_text2_src, musicinfo_text2_src, musicinfo_ribbon_img, musicinfo_timeline, musicinfo_status);
+        musicinfo_ribbon_src.setBackground(getResources().getDrawable(R.drawable.circle_black));
         requestRetrofit(getString(R.string.rest_song), getArguments().getInt(getString(R.string.rest_sid)));
     }
 
     @Override
     public void onStart() {
-        ribbonCheck = text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = false;
         super.onStart();
+        Log.e(TAG, "onStart");
     }
 
-    @OnClick(R.id.musicInfo_text1)
-    public void musicInfo_text1() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume");
+        ribbonCheck = text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = false;
+    }
+
+    @OnClick(R.id.musicinfo_text1)
+    public void onTextView1Click() {
         if (!text1Check && !img1Check) {
             for (Other e : repo.getSidebar().getOther()) {
                 requestRetrofit(getString(R.string.rest_song), Integer.parseInt(e.get_sid()));
             }
             img1Check = true;
         }
-        musicInfo_recyclerview.setVisibility(!text1Check ? View.VISIBLE : View.GONE);
-        musicInfo_text1.setText(getString(R.string.musicinfo_txt1, !text1Check ? "▲" : "▼"));
+        musicinfo_recyclerview.setVisibility(!text1Check ? View.VISIBLE : View.GONE);
+        musicinfo_text1.setText(getString(R.string.musicinfo_txt1, !text1Check ? "▲" : "▼"));
         text1Check = !text1Check;
     }
 
-    @OnClick(R.id.musicInfo_text2)
-    public void musicInfo_text2() {
+    @OnClick(R.id.musicinfo_text2)
+    public void onTextView2Click() {
         if (!text2Check && !img2Check) {
             ArrayList<Ribbon> ribbon = repo.getSidebar().getRibbon();
             int size = ribbon.size();
@@ -146,22 +155,23 @@ public class MusicInfoFragment extends Fragment {
                 for (int i = 0; i < size; i++) {
                     if (i % 4 == 0) {
                         rHorizontal = new LinearLayout(context);
-                        rHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        rHorizontal.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                         rHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-                        musicInfo_ribbon_img.addView(rHorizontal);
+                        rHorizontal.setHorizontalGravity(Gravity.CENTER);
+                        musicinfo_ribbon_img.addView(rHorizontal);
                     }
 
                     iv[i] = new ImageView(context);
                     iv[i].setScaleType(ImageView.ScaleType.FIT_XY);
                     String avatar = ribbon.get(i).getAvatar();
-                    requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (avatar == null ? getString(R.string.rest_profile) : avatar))
+                    glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (avatar == null ? getString(R.string.rest_profile) : avatar))
                             .bitmapTransform(new CropCircleTransformation(context))
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
 
                     tv[i] = new TextView(context);
                     String nickname = ribbon.get(i).getNickname();
-                    tv[i].setText(nickname.length() <= 10 ? nickname : nickname.substring(0, 10) + "...");
+                    tv[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                     tv[i].setTextColor(Color.BLACK);
 
                     rAbsolute = new LinearLayout(context);
@@ -180,6 +190,7 @@ public class MusicInfoFragment extends Fragment {
                     rRelative.addView(tv[i]);
                     rAbsolute.addView(rRelative);
                     rAbsolute.setGravity(Gravity.CENTER);
+                    rAbsolute.setPadding(10, 0, 10, 0);
                     rHorizontal.addView(rAbsolute);
                 }
             } else {
@@ -189,25 +200,24 @@ public class MusicInfoFragment extends Fragment {
                 tv.setTextColor(Color.BLACK);
                 tv.setTextSize(20);
                 tv.setGravity(Gravity.CENTER);
-                musicInfo_ribbon_img.addView(tv);
+                musicinfo_ribbon_img.addView(tv);
             }
             img2Check = true;
         }
-        musicInfo_ribbon_img.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
-        musicInfo_text2_src.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
-        musicInfo_text2.setText((!text2Check ? "▲" : "▼") + str2Check);
+        musicinfo_ribbon_img.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
+        musicinfo_text2_src.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
+        musicinfo_text2.setText((!text2Check ? "▲" : "▼") + str2Check);
         text2Check = !text2Check;
     }
 
-    @OnClick(R.id.musicInfo_text3)
-    public void musicInfo_text3() {
+    @OnClick(R.id.musicinfo_text3)
+    public void onTextView3Click() {
         int nickInt = 1, contInt = 1001, dateInt = 2001;
         if (!text3Check && !img3Check) {
-            requestManager.load(RestUtils.BASE + (MainActivity.TEMP_COVER == null ? getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_COVER))
+            glide.load(RestUtils.BASE + (MainActivity.TEMP_COVER == null ? getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_COVER))
                     .bitmapTransform(new CropCircleTransformation(context))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .override(300, 300)
-                    .into(musicInfo_avatar);
+                    .into(musicinfo_avatar);
             ArrayList<Comment> comment = repo.getComment();
             int size = comment.size();
             if (size != 0) {
@@ -224,7 +234,7 @@ public class MusicInfoFragment extends Fragment {
                     img[i] = new ImageView(context);
                     img[i].setScaleType(ImageView.ScaleType.FIT_XY);
                     String avatar = comment.get(i).getAvatar();
-                    requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (avatar == null ? getString(R.string.rest_profile) : avatar))
+                    glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (avatar == null ? getString(R.string.rest_profile) : avatar))
                             .bitmapTransform(new CropCircleTransformation(context))
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(img[i]);
@@ -239,7 +249,7 @@ public class MusicInfoFragment extends Fragment {
 
                     nick[i] = new TextView(context);
                     String nickname = comment.get(i).getNickname();
-                    nick[i].setText(nickname.length() <= 10 ? nickname : nickname.substring(0, 10) + "...");
+                    nick[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                     nick[i].setTextColor(Color.BLACK);
                     nick[i].setTextSize(20);
                     rRelativeNick = new RelativeLayout(context);
@@ -287,17 +297,17 @@ public class MusicInfoFragment extends Fragment {
                     drawable.setStroke(3, Color.BLACK);
                     rRelativeImg.setBackground(drawable);
                 }
-                musicInfo_timeline.addView(rAbsolute);
+                musicinfo_timeline.addView(rAbsolute);
             }
             img3Check = true;
         }
-        musicInfo_timeline.setVisibility(!text3Check ? View.VISIBLE : View.GONE);
-        musicInfo_text3.setText(getString(R.string.musicinfo_txt3, !text3Check ? "▲" : "▼"));
+        musicinfo_timeline.setVisibility(!text3Check ? View.VISIBLE : View.GONE);
+        musicinfo_text3.setText(getString(R.string.musicinfo_txt3, !text3Check ? "▲" : "▼"));
         text3Check = !text3Check;
     }
 
-    @OnClick(R.id.musicInfo_play)
-    public void musicInfo_play() {
+    @OnClick(R.id.musicinfo_play)
+    public void onPlayButtonClick() {
         mediaPlayer = new MediaPlayer();
         task.onPreExecute();
         try {
@@ -316,60 +326,51 @@ public class MusicInfoFragment extends Fragment {
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
-                .subscribe(new Subscriber<Repo>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                .subscribe(response -> {
+                            task.onPostExecute(null);
+                            if (repo == null) {
+                                repo = response;
+                                String cover = repo.getSong().getCover();
+                                glide.load(RestUtils.BASE + (cover == null ? getString(R.string.rest_images_cover) : getString(R.string.rest_cover) + cover))
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                        .into(musicinfo_cover);
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, e.getMessage());
-                        ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                        task.onPostExecute(null);
-                    }
-
-                    @Override
-                    public void onNext(Repo response) {
-                        task.onPostExecute(null);
-                        if (repo == null) {
-                            repo = response;
-                            String cover = repo.getSong().getCover();
-                            requestManager.load(RestUtils.BASE + (cover == null ? getString(R.string.rest_images_cover) : getString(R.string.rest_cover) + cover))
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .into(musicInfo_cover);
-
-                            for (Ribbon e : repo.getSidebar().getRibbon()) {
-                                if (!ribbonCheck) {
-                                    ribbonCheck = MainActivity.MID == Integer.parseInt(e.get_mid());
+                                for (Ribbon e : repo.getSidebar().getRibbon()) {
+                                    if (!ribbonCheck) {
+                                        ribbonCheck = MainActivity.MID == Integer.parseInt(e.get_mid());
+                                    }
                                 }
-                            }
-                            musicInfo_ribbon_src.setBackground(getResources().getDrawable(ribbonCheck ? R.drawable.circle_yellow : R.drawable.circle_black));
-                            musicInfo_text2_src.setBackground(getResources().getDrawable(ribbonCheck ? R.drawable.circle_yellow : R.drawable.circle_black));
-                            str2Check = getString(ribbonCheck ? R.string.musicinfo_txt2_1 : R.string.musicinfo_txt2_2);
+                                musicinfo_ribbon_src.setBackground(getResources().getDrawable(ribbonCheck ? R.drawable.circle_yellow : R.drawable.circle_black));
+                                musicinfo_text2_src.setBackground(getResources().getDrawable(ribbonCheck ? R.drawable.circle_yellow : R.drawable.circle_black));
+                                str2Check = getString(ribbonCheck ? R.string.musicinfo_txt2_1 : R.string.musicinfo_txt2_2);
 
-                            vo = new ArrayList<>();
-                            String played = repo.getSong().getPlayed();
-                            if (Integer.parseInt(played) >= 1000) {
-                                played = String.valueOf(Integer.parseInt(played) / 1000) + "." + String.valueOf(Integer.parseInt(played) % 1000).substring(0, 1) + "K+";
-                            }
-                            musicInfo_played_right.setText(played);
-                            musicInfo_status.setVisibility(View.VISIBLE);
-                            musicInfo_recyclerview.setHasFixedSize(true);
-                            LinearLayoutManager llm = new LinearLayoutManager(context);
-                            llm.setOrientation(LinearLayoutManager.VERTICAL);
-                            musicInfo_recyclerview.setLayoutManager(llm);
+                                vo = new ArrayList<>();
+                                String played = repo.getSong().getPlayed();
+                                if (Integer.parseInt(played) >= 1000) {
+                                    played = String.valueOf(Integer.parseInt(played) / 1000) + "." + String.valueOf(Integer.parseInt(played) % 1000).substring(0, 1) + "K+";
+                                }
+                                musicinfo_played_right.setText(played);
+                                musicinfo_status.setVisibility(View.VISIBLE);
+                                musicinfo_recyclerview.setHasFixedSize(true);
+                                LinearLayoutManager llm = new LinearLayoutManager(context);
+                                llm.setOrientation(LinearLayoutManager.VERTICAL);
+                                musicinfo_recyclerview.setLayoutManager(llm);
 
-                            Chained.setTextMany(new TextView[]{musicInfo_text1, musicInfo_text2, musicInfo_text3, musicInfo_utaite, musicInfo_song, musicInfo_songkr, musicInfo_ribbon_right, musicInfo_comment_right},
-                                    new String[]{getString(R.string.musicinfo_txt1, "▼"), "▼" + str2Check, getString(R.string.musicinfo_txt3, "▼"), repo.getSong().getArtist_en(), repo.getSong().getSong_original(), repo.getSong().getSong_kr(), repo.getSong().getRibbon(), repo.getSong().getComment()});
-                            Chained.setPaintFlagsMany(musicInfo_ribbon_right, musicInfo_songkr, musicInfo_ribbon, musicInfo_addlist, musicInfo_utaite, musicInfo_song, musicInfo_played_right, musicInfo_comment_right);
-                        } else {
-                            Song song = response.getSong();
-                            vo.add(new MainVO(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),
-                                    song.get_sid(), song.get_aid()));
-                            musicInfo_recyclerview.setAdapter(new MainAdapter(context, getFragmentManager(), vo));
-                        }
-                    }
-                });
+                                Chained.setTextMany(new TextView[]{musicinfo_text1, musicinfo_text2, musicinfo_text3, musicinfo_utaite, musicinfo_song, musicinfo_songkr, musicinfo_ribbon_right, musicinfo_comment_right},
+                                        new String[]{getString(R.string.musicinfo_txt1, "▼"), "▼" + str2Check, getString(R.string.musicinfo_txt3, "▼"), repo.getSong().getArtist_en(), repo.getSong().getSong_original(), repo.getSong().getSong_kr(), repo.getSong().getRibbon(), repo.getSong().getComment()});
+                                Chained.setPaintFlagsMany(musicinfo_ribbon_right, musicinfo_songkr, musicinfo_ribbon, musicinfo_addlist, musicinfo_utaite, musicinfo_song, musicinfo_played_right, musicinfo_comment_right);
+                            } else {
+                                Song song = response.getSong();
+                                vo.add(new MainVO(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),
+                                        song.get_sid(), song.get_aid()));
+                                musicinfo_recyclerview.setAdapter(new MainAdapter(context, getFragmentManager(), vo));
+                            }
+                        },
+                        e -> {
+                            Log.e(TAG, String.valueOf(e));
+                            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
+                            task.onPostExecute(null);
+                        });
     }
 
 }

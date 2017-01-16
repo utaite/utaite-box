@@ -47,8 +47,11 @@
     <string name="musicinfo_txt2_2">&#160;&#160;노래에 좋아요를 눌러보세요.</string>
     <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
     <string name="musicinfo_txt3">%1$s&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
+
     <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드 된 노래에요.</string>
     <string name="musiclist_txt2">▲&#160;&#160;이전 페이지로</string>
+    <string name="musiclist_next">▼&#160;&#160;다음 페이지로</string>
+
     <string name="utaiteinfo_txt1_1">&#160;&#160;우타이테에 좋아요를 눌러주셨어요.</string>
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>
     <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
