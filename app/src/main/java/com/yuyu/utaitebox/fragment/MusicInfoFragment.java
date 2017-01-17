@@ -357,7 +357,8 @@ public class MusicInfoFragment extends Fragment {
                                 musicinfo_recyclerview.setLayoutManager(llm);
 
                                 Chained.setTextMany(new TextView[]{musicinfo_text1, musicinfo_text2, musicinfo_text3, musicinfo_utaite, musicinfo_song, musicinfo_songkr, musicinfo_ribbon_right, musicinfo_comment_right},
-                                        new String[]{getString(R.string.musicinfo_txt1, "▼"), "▼" + str2Check, getString(R.string.musicinfo_txt3, "▼"), repo.getSong().getArtist_en(), repo.getSong().getSong_original(), repo.getSong().getSong_kr(), repo.getSong().getRibbon(), repo.getSong().getComment()});
+                                        new String[]{getString(R.string.musicinfo_txt1, "▼"), "▼" + str2Check, getString(R.string.musicinfo_txt3, "▼"), repo.getSong().getArtist_en(),
+                                                repo.getSong().getSong_original(), repo.getSong().getSong_kr(), repo.getSong().getRibbon(), repo.getSong().getComment()});
                                 Chained.setPaintFlagsMany(musicinfo_ribbon_right, musicinfo_songkr, musicinfo_ribbon, musicinfo_addlist, musicinfo_utaite, musicinfo_song, musicinfo_played_right, musicinfo_comment_right);
                             } else {
                                 Song song = response.getSong();
