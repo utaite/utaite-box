@@ -9,6 +9,10 @@
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
 
 
+    <string name="yes">확인</string>
+    <string name="no">취소</string>
+
+
     <string name="rest_profile">1083_1477456743726.jpeg</string>
     <string name="rest_member">member</string>
     <string name="rest_sid">sid</string>
@@ -29,6 +33,7 @@
     <string name="rest_stream">/api/play/stream/</string>
 
     <string name="rest_error">네트워크 접속에 실패했습니다.</string>
+    <string name="rest_not_found">네트워크 접속에 실패했거나,\n요청한 페이지를 찾을 수 없습니다.</string>
 
 
     <string name="nav_home">HOME</string>
@@ -45,12 +50,18 @@
     <string name="musicinfo_txt1">%1$s&#160;&#160;같은 노래, 다른 우타이테는 어때요?</string>
     <string name="musicinfo_txt2_1">&#160;&#160;노래에 좋아요를 눌러주셨어요.</string>
     <string name="musicinfo_txt2_2">&#160;&#160;노래에 좋아요를 눌러보세요.</string>
-    <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
     <string name="musicinfo_txt3">%1$s&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
+    <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
+
+    <string name="musicinfo_content_1">/*&#160;&#160;&#160;Upload music&#160;&#160;&#160;*/</string>
+    <string name="musicinfo_content_2">/*&#160;&#160;&#160;Upload cover image&#160;&#160;&#160;*/</string>
+
+    <string name="_musiclist_search">페이지 이동</string>
 
     <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드 된 노래에요.</string>
     <string name="musiclist_txt2">▲&#160;&#160;이전 페이지로</string>
     <string name="musiclist_next">▼&#160;&#160;다음 페이지로</string>
+    <string name="musiclist_search">현재 %1d번째 페이지를 보고 있습니다.\n몇번째 페이지로 이동하시겠습니까?</string>
 
     <string name="utaiteinfo_txt1_1">&#160;&#160;우타이테에 좋아요를 눌러주셨어요.</string>
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>

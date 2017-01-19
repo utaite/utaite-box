@@ -51,21 +51,21 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 context.getString(R.string.rest_images_cover) : context.getString(R.string.rest_cover) + vo.get(position).getBg()))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.bg);
-        holder.bg.setOnClickListener(v -> onClickMethod(position, true));
+        holder.bg.setOnClickListener(v -> onImageClick(position, true));
 
         requestManager.load(RestUtils.BASE + (vo.get(position).getImg() == null ?
                 context.getString(R.string.rest_images_artist) : context.getString(R.string.rest_artist_image) + vo.get(position).getImg()))
                 .bitmapTransform(new CropCircleTransformation(context))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.img);
-        holder.img.setOnClickListener(v -> onClickMethod(position, false));
+        holder.img.setOnClickListener(v -> onImageClick(position, false));
 
         holder.title.setText(vo.get(position).getTitle());
         holder.title.bringToFront();
         holder.utaite.setText(vo.get(position).getUtaite());
     }
 
-    public void onClickMethod(int position, boolean bg) {
+    public void onImageClick(int position, boolean bg) {
         Fragment fragment = bg ?
                 new MusicInfoFragment() : new UtaiteInfoFragment();
         Bundle bundle = new Bundle();

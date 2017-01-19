@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_musiclist"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/musiclist_prev"
+        style="@style/ListText" />
+
+    <TextView
+        android:text="@string/_musiclist_search"
+        android:id="@+id/musiclist_search"
+        style="@style/ListText"
+        android:layout_below="@+id/musiclist_prev" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/musiclist_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingRight="5dp">
+        android:layout_above="@+id/musiclist_next"
+        android:layout_below="@+id/musiclist_search"
+        android:scrollbars="vertical" />
 
-        <TextView
-            android:id="@+id/musiclist_prev"
-            style="@style/ListText" />
+    <TextView
+        android:id="@+id/musiclist_next"
+        style="@style/ListText"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
+        android:text="@string/musiclist_next" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/musiclist_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-
-        <TextView
-            android:id="@+id/musiclist_next"
-            android:layout_weight="1"
-            android:text="@string/musiclist_next"
-            style="@style/ListText" />
-
-    </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>

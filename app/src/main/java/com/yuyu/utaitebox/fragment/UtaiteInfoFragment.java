@@ -1,6 +1,5 @@
 package com.yuyu.utaitebox.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.chain.Chained;
@@ -25,7 +25,6 @@ import com.yuyu.utaitebox.rest.Comment;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Utaite;
 import com.yuyu.utaitebox.utils.Constant;
-import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -34,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class UtaiteInfoFragment extends Fragment {
+public class UtaiteInfoFragment extends RxFragment {
 
     private static final String TAG = UtaiteInfoFragment.class.getSimpleName();
 
@@ -73,13 +72,8 @@ public class UtaiteInfoFragment extends Fragment {
         glide = Glide.with(context);
         Chained.setVisibilityMany(View.GONE, utaiteinfo_text1_src, utaiteinfo_ribbon_img, utaiteinfo_timeline);
         requestRetrofit(getString(R.string.rest_artist), getArguments().getInt(getString(R.string.rest_aid)));
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         ribbonCheck = text1Check = img1Check = text2Check = img2Check = false;
+        return view;
     }
 
     @OnClick(R.id.utaiteinfo_text1)
@@ -154,8 +148,8 @@ public class UtaiteInfoFragment extends Fragment {
     public void onTextView2Click() {
         int nickInt = 1, contInt = 100, dateInt = 10000;
         if (!text2Check && !img2Check) {
-            glide.load(RestUtils.BASE + (MainActivity.TEMP_COVER == null ?
-                    getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_COVER))
+            glide.load(RestUtils.BASE + (MainActivity.TEMP_AVATAR == null ?
+                    getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_AVATAR))
                     .bitmapTransform(new CropCircleTransformation(context))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(utaiteinfo_avatar);
@@ -251,16 +245,16 @@ public class UtaiteInfoFragment extends Fragment {
     }
 
     public void requestRetrofit(String what, int index) {
-        Task task = new Task(context, 1);
-        task.onPreExecute();
-
+        ((MainActivity) context).getTask().onPostExecute(null);
+        ((MainActivity) context).getTask().onPreExecute();
 
         RestUtils.getRetrofit()
                 .create(RestUtils.UtaiteApi.class)
                 .utaiteApi(what, index)
+                .compose(bindToLifecycle())
+                .distinct()
                 .subscribe(response -> {
                             utaite = response;
-                            task.onPostExecute(null);
                             utaiteinfo_id.setText(utaite.getAritst().getAritst_en());
 
                             String cover = utaite.getAritst().getArtist_cover();
@@ -288,12 +282,12 @@ public class UtaiteInfoFragment extends Fragment {
                             str1Check = ribbonCheck ? getString(R.string.utaiteinfo_txt1_1) : getString(R.string.utaiteinfo_txt1_2);
                             Chained.setTextMany(new TextView[]{utaiteinfo_text1, utaiteinfo_text2, utaiteinfo_text3},
                                     new String[]{"▼" + str1Check, getString(R.string.utaiteinfo_txt2, "▼"), getString(R.string.utaiteinfo_txt3, "▼")});
+                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
-
-                            Log.e(TAG, String.valueOf(e));
+                            Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            task.onPostExecute(null);
+                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 }

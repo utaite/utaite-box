@@ -1,6 +1,5 @@
 package com.yuyu.utaitebox.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -9,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
@@ -34,7 +35,6 @@ import com.yuyu.utaitebox.rest.Ribbon;
 import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
-import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -43,12 +43,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class MusicInfoFragment extends Fragment {
+public class MusicInfoFragment extends RxFragment {
 
     private static final String TAG = MusicInfoFragment.class.getSimpleName();
 
     private Repo repo;
-    private Task task;
     private Context context;
     private RequestManager glide;
     private MediaPlayer mediaPlayer;
@@ -98,7 +97,6 @@ public class MusicInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_musicinfo, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
@@ -108,24 +106,11 @@ public class MusicInfoFragment extends Fragment {
     }
 
     public void initialize() {
-        task = new Task(context, 1);
-        task.onPreExecute();
+        repo = null;
+        ribbonCheck = text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = false;
         Chained.setVisibilityMany(View.GONE, musicinfo_text2_src, musicinfo_text2_src, musicinfo_ribbon_img, musicinfo_timeline, musicinfo_status);
         musicinfo_ribbon_src.setBackground(getResources().getDrawable(R.drawable.circle_black));
         requestRetrofit(getString(R.string.rest_song), getArguments().getInt(getString(R.string.rest_sid)));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.e(TAG, "onStart");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e(TAG, "onResume");
-        ribbonCheck = text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = false;
     }
 
     @OnClick(R.id.musicinfo_text1)
@@ -194,7 +179,6 @@ public class MusicInfoFragment extends Fragment {
                     rHorizontal.addView(rAbsolute);
                 }
             } else {
-
                 TextView tv = new TextView(context);
                 tv.setText(R.string.not_ribbon);
                 tv.setTextColor(Color.BLACK);
@@ -214,7 +198,7 @@ public class MusicInfoFragment extends Fragment {
     public void onTextView3Click() {
         int nickInt = 1, contInt = 1001, dateInt = 2001;
         if (!text3Check && !img3Check) {
-            glide.load(RestUtils.BASE + (MainActivity.TEMP_COVER == null ? getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_COVER))
+            glide.load(RestUtils.BASE + (MainActivity.TEMP_AVATAR == null ? getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_AVATAR))
                     .bitmapTransform(new CropCircleTransformation(context))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(musicinfo_avatar);
@@ -263,7 +247,9 @@ public class MusicInfoFragment extends Fragment {
                     rRelativeImg.addView(rRelativeNick);
 
                     cont[i] = new TextView(context);
-                    cont[i].setText(!comment.get(i).getContent().equals("") ? comment.get(i).getContent() : comment.get(i).getType().equals("1") ? "/*   Upload music   */" : "/*   Upload cover image   */");
+                    cont[i].setText(!TextUtils.isEmpty(comment.get(i).getContent()) ?
+                            comment.get(i).getContent() : Integer.parseInt(comment.get(i).getType()) == 1 ?
+                            getString(R.string.musicinfo_content_1) : getString(R.string.musicinfo_content_2));
                     cont[i].setTextColor(Color.BLACK);
                     cont[i].setTextSize(12);
                     rRelativeCont = new RelativeLayout(context);
@@ -309,7 +295,7 @@ public class MusicInfoFragment extends Fragment {
     @OnClick(R.id.musicinfo_play)
     public void onPlayButtonClick() {
         mediaPlayer = new MediaPlayer();
-        task.onPreExecute();
+        ((MainActivity) context).getTask().onPreExecute();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(RestUtils.BASE + getString(R.string.rest_stream) + repo.getSong().getKey());
@@ -317,17 +303,21 @@ public class MusicInfoFragment extends Fragment {
         }
         mediaPlayer.setOnPreparedListener(mp -> {
             mediaPlayer.start();
-            task.onPostExecute(null);
+            ((MainActivity) context).getTask().onPostExecute(null);
         });
         mediaPlayer.prepareAsync();
     }
 
     public void requestRetrofit(String what, int index) {
+        ((MainActivity) context).getTask().onPostExecute(null);
+        ((MainActivity) context).getTask().onPreExecute();
+
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
+                .compose(bindToLifecycle())
+                .distinct()
                 .subscribe(response -> {
-                            task.onPostExecute(null);
                             if (repo == null) {
                                 repo = response;
                                 String cover = repo.getSong().getCover();
@@ -366,11 +356,12 @@ public class MusicInfoFragment extends Fragment {
                                         song.get_sid(), song.get_aid()));
                                 musicinfo_recyclerview.setAdapter(new MainAdapter(context, getFragmentManager(), vo));
                             }
+                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
-                            Log.e(TAG, String.valueOf(e));
+                            Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            task.onPostExecute(null);
+                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 

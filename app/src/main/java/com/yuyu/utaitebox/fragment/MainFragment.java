@@ -17,7 +17,6 @@ import com.yuyu.utaitebox.rest.Music;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
-import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -38,28 +37,24 @@ public class MainFragment extends RxFragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
+        requestRetrofit(getString(R.string.rest_chart), MainActivity.TODAY);
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        requestRetrofit(getString(R.string.rest_chart), MainActivity.TODAY);
-    }
-
     public void requestRetrofit(String what, int index) {
-        Task task = new Task(context, 0);
-        task.onPreExecute();
+        ((MainActivity) context).getTask().onPostExecute(null);
+        ((MainActivity) context).getTask().onPreExecute();
 
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
                 .compose(bindToLifecycle())
+                .distinct()
                 .subscribe(repo -> {
-                            task.onPostExecute(null);
                             if (MainActivity.TODAY == Constant.TODAY_DEFAULT) {
                                 MainActivity.TODAY = Integer.parseInt(repo.getNavigation().getPageCount());
                                 requestRetrofit(getString(R.string.rest_chart), MainActivity.TODAY);
+
                             } else {
                                 LinearLayoutManager llm = new LinearLayoutManager(context);
                                 llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -73,11 +68,12 @@ public class MainFragment extends RxFragment {
                                 }
                                 main_recyclerview.setAdapter(new MainAdapter(context, getFragmentManager(), vo));
                             }
+                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
-                            Log.e(TAG, String.valueOf(e));
+                            Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            task.onPostExecute(null);
+                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 

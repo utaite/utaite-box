@@ -28,6 +28,7 @@ import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
+import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -35,20 +36,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class MainActivity extends RxAppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends RxAppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
-    public static int MID, TODAY = Constant.TODAY_DEFAULT;
-    public static String TEMP_COVER;
+    public static int MID = 53;
+    public static int TODAY = Constant.TODAY_DEFAULT;
+    public static String TEMP_AVATAR;
 
+    private Task task;
     private Context context;
     private ChainedToast toast;
     private RequestManager requestManager;
-    private ArrayList<Integer> items;
 
     private int index;
+    private ArrayList<Integer> items;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -63,6 +65,7 @@ public class MainActivity extends RxAppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         context = this;
+        task = new Task(context);
         requestManager = Glide.with(context);
         toast = new ChainedToast(context).makeTextTo(this, "", Toast.LENGTH_SHORT);
         setSupportActionBar(toolbar);
@@ -70,7 +73,15 @@ public class MainActivity extends RxAppCompatActivity
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer_layout.addDrawerListener(toggle);
         toggle.syncState();
-        nav_view.setNavigationItemSelectedListener(this);
+        nav_view.setNavigationItemSelectedListener(item -> {
+            getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, getFragment(item.getItemId()))
+                    .commit();
+            setTitle(item.getTitle());
+            drawer_layout.closeDrawer(GravityCompat.START);
+            return true;
+        });
         initialize();
     }
 
@@ -118,17 +129,6 @@ public class MainActivity extends RxAppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content_main, getFragment(item.getItemId()))
-                .commit();
-        setTitle(item.getTitle());
-        drawer_layout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     public Fragment getFragment(int iid) {
         index = items.indexOf(iid);
         Fragment fragment = null;
@@ -149,7 +149,7 @@ public class MainActivity extends RxAppCompatActivity
         items = (ArrayList<Integer>) new ChainedArrayList()
                 .addMenu(nav_view.getMenu(), 0, size);
         setTitle(getString(R.string.nav_home));
-        requestRetrofit(getString(R.string.rest_member), MID = 53);
+        requestRetrofit(getString(R.string.rest_member), MID);
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_main, new MainFragment())
                 .commit();
@@ -165,7 +165,7 @@ public class MainActivity extends RxAppCompatActivity
                             ImageView nav_bg1 = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_bg1);
                             ImageView nav_img = (ImageView) nav_view.getHeaderView(0).findViewById(R.id.nav_img);
 
-                            String avatar = TEMP_COVER = repo.getProfile().getAvatar();
+                            String avatar = TEMP_AVATAR = repo.getProfile().getAvatar();
                             String cover = repo.getProfile().getCover();
                             String url = RestUtils.BASE + getString(R.string.rest_profile_image);
 
@@ -178,16 +178,20 @@ public class MainActivity extends RxAppCompatActivity
                                 nav_bg1.setImageResource(android.R.color.transparent);
                                 nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
                             } else {
-                                requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_cover))
+                                requestManager.load(RestUtils.BASE + getString(R.string.rest_profile_cover) + cover)
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .into(nav_bg1);
                             }
                         },
-                        e -> Log.e(TAG, String.valueOf(e)));
+                        e -> Log.e(TAG, e.toString()));
     }
 
     public ChainedToast getToast() {
         return toast;
+    }
+
+    public Task getTask() {
+        return task;
     }
 
 }

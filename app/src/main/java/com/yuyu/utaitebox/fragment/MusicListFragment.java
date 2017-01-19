@@ -8,9 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
@@ -18,7 +18,6 @@ import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.utils.MainVO;
-import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -30,19 +29,14 @@ public class MusicListFragment extends RxFragment {
 
     private static final String TAG = MusicListFragment.class.getSimpleName();
 
-    private final int PAGE = 5;
-
     private Context context;
     private ArrayList<MainVO> vo;
     private MainAdapter mainAdapter;
 
     private int count;
-    private boolean loading = true;
 
     @BindView(R.id.musiclist_recyclerview)
     RecyclerView musiclist_recyclerview;
-    @BindView(R.id.fragment_musiclist)
-    ScrollView fragment_musiclist;
     @BindView(R.id.musiclist_next)
     TextView musiclist_next;
     @BindView(R.id.musiclist_prev)
@@ -67,72 +61,66 @@ public class MusicListFragment extends RxFragment {
         requestRetrofit(getString(R.string.rest_songlist), count = 1);
         mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
         musiclist_recyclerview.setAdapter(mainAdapter);
-        musiclist_next.setVisibility(View.GONE);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));
-
-        fragment_musiclist.getViewTreeObserver().addOnScrollChangedListener(() -> {
-            if (fragment_musiclist.getScrollY() >= musiclist_recyclerview.getHeight() - fragment_musiclist.getHeight() && loading) {
-                loading = false;
-                ++count;
-                if ((count - 1) % PAGE != 0) {
-                    musiclist_next.setVisibility((count - 1) % PAGE == 4 ? View.VISIBLE : View.INVISIBLE);
-                    requestRetrofit(getString(R.string.rest_songlist), count);
-                }
-            }
-        });
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        count = 1;
+    @OnClick(R.id.musiclist_search)
+    public void onSearchButtonClick() {
+        new MaterialDialog.Builder(context)
+                .input(String.valueOf(count), null, (dialog, input) -> {
+                })
+                .content(getString(R.string.musiclist_search, count))
+                .positiveText(getString(R.string.yes))
+                .negativeText(getString(R.string.no))
+                .onPositive((dialog, which) -> {
+                    vo.clear();
+                    mainAdapter.notifyDataSetChanged();
+                    requestRetrofit(getString(R.string.rest_songlist),
+                            count = Integer.parseInt(dialog.getInputEditText().getText().toString().trim()));
+                    musiclist_prev.setText(getString(count == 1 ? R.string.musiclist_txt1 : R.string.musiclist_txt2));
+                })
+                .onNegative((dialog, which) -> dialog.cancel())
+                .show();
     }
 
     @OnClick(R.id.musiclist_prev)
     public void onPrevButtonClick() {
-        if (count > PAGE) {
-            loading = false;
-            count = count / 5 * 5 - 4;
+        if (count > 1) {
             vo.clear();
             mainAdapter.notifyDataSetChanged();
-            requestRetrofit(getString(R.string.rest_songlist), count);
-            if (count == 1) {
-                musiclist_prev.setText(getString(R.string.musiclist_txt1));
-            }
+            requestRetrofit(getString(R.string.rest_songlist), --count);
+            musiclist_prev.setText(getString(count == 1 ? R.string.musiclist_txt1 : R.string.musiclist_txt2));
         }
     }
 
     @OnClick(R.id.musiclist_next)
     public void onNextButtonClick() {
-        if ((count - 1) % PAGE == 0) {
-            musiclist_next.setVisibility(View.GONE);
-            vo.clear();
-            mainAdapter.notifyDataSetChanged();
-            requestRetrofit(getString(R.string.rest_songlist), count);
-            musiclist_prev.setText(getString(R.string.musiclist_txt2));
-        }
+        vo.clear();
+        mainAdapter.notifyDataSetChanged();
+        musiclist_prev.setText(R.string.musiclist_txt2);
+        requestRetrofit(getString(R.string.rest_songlist), ++count);
     }
 
     public void requestRetrofit(String what, int index) {
-        Task task = new Task(context, 0);
-        task.onPreExecute();
+        ((MainActivity) context).getTask().onPostExecute(null);
+        ((MainActivity) context).getTask().onPreExecute();
+
         RestUtils.getRetrofit()
                 .create(RestUtils.ArraySongApi.class)
                 .arraySongApi(what, index)
                 .compose(bindToLifecycle())
+                .distinct()
                 .subscribe(songs -> {
                     for (Song e : songs) {
                         vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                                 e.get_sid(), e.get_aid()));
                     }
                     mainAdapter.notifyDataSetChanged();
-                    task.onPostExecute(null);
-                    loading = true;
+                    ((MainActivity) context).getTask().onPostExecute(null);
                 }, e -> {
-                    Log.e(TAG, String.valueOf(e));
-                    ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                    task.onPostExecute(null);
+                    Log.e(TAG, e.toString());
+                    ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_not_found));
+                    ((MainActivity) context).getTask().onPostExecute(null);
                 });
     }
 
