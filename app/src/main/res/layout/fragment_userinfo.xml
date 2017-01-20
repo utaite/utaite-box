@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="bottom"
+                android:background="#fff"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/userinfo_bg1"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#ccc"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/userinfo_img"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="45dp"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/userinfo_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/userinfo_img"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/userinfo_text1"
+            style="@style/ListText" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userinfo_recyclerview1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/userinfo_text1"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/userinfo_text2"
+            style="@style/ListText" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userinfo_recyclerview2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/userinfo_text2"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/userinfo_text3"
+            style="@style/ListText" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userinfo_recyclerview3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/userinfo_text3"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/userinfo_text4"
+            style="@style/ListText" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userinfo_recyclerview4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/userinfo_text4"
+            android:scrollbars="vertical" />
+
+    </LinearLayout>
+
+</RelativeLayout>

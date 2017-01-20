@@ -37,7 +37,7 @@ public class Repo {
     private Upload upload;
 
     @SerializedName("playlist")
-    private Playlist playlist;
+    private Object playlist;
 
     @SerializedName("listen")
     private String listen;

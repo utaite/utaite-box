@@ -1,5 +1,6 @@
 package com.yuyu.utaitebox.fragment;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -153,6 +154,17 @@ public class MusicInfoFragment extends RxFragment {
                             .bitmapTransform(new CropCircleTransformation(context))
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
+                    int position = i;
+                    iv[i].setOnClickListener(v -> {
+                        Fragment fragment = new UserInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(ribbon.get(position).get_mid()));
+                        fragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_main, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    });
 
                     tv[i] = new TextView(context);
                     String nickname = ribbon.get(i).getNickname();
@@ -209,26 +221,37 @@ public class MusicInfoFragment extends RxFragment {
                 rAbsolute = new LinearLayout(context);
                 rAbsolute.setOrientation(LinearLayout.VERTICAL);
                 RelativeLayout rRelativeNick, rRelativeCont, rRelativeImg, rRelativeDate;
-                ImageView img[] = new ImageView[size];
+                ImageView iv[] = new ImageView[size];
                 TextView nick[] = new TextView[size];
                 TextView cont[] = new TextView[size];
                 TextView date[] = new TextView[size];
 
                 for (int i = 0; i < size; i++) {
-                    img[i] = new ImageView(context);
-                    img[i].setScaleType(ImageView.ScaleType.FIT_XY);
+                    iv[i] = new ImageView(context);
+                    iv[i].setScaleType(ImageView.ScaleType.FIT_XY);
                     String avatar = comment.get(i).getAvatar();
                     glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (avatar == null ? getString(R.string.rest_profile) : avatar))
                             .bitmapTransform(new CropCircleTransformation(context))
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .into(img[i]);
+                            .into(iv[i]);
+                    int position = i;
+                    iv[i].setOnClickListener(v -> {
+                        Fragment fragment = new UserInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(comment.get(position).get_mid()));
+                        fragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_main, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    });
 
                     rRelativeImg = new RelativeLayout(context);
                     RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
                     rRelativeImg.setLayoutParams(pImg);
                     rRelativeImg.setPadding(10, 10, 0, 10);
-                    rRelativeImg.addView(img[i]);
+                    rRelativeImg.addView(iv[i]);
                     rAbsolute.addView(rRelativeImg);
 
                     nick[i] = new TextView(context);

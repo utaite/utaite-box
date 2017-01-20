@@ -27,7 +27,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="110dp"
                     android:background="#000"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:textColor="#fff" />
 
                 <ImageView

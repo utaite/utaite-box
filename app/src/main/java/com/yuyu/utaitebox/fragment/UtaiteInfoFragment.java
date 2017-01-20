@@ -1,9 +1,12 @@
 package com.yuyu.utaitebox.fragment;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,11 +23,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
+import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.rest.Comment;
 import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.rest.Utaite;
 import com.yuyu.utaitebox.utils.Constant;
+import com.yuyu.utaitebox.utils.MainVO;
 
 import java.util.ArrayList;
 
@@ -40,8 +46,13 @@ public class UtaiteInfoFragment extends RxFragment {
     private Context context;
     private RequestManager glide;
     private Utaite utaite;
-    private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check;
+
+    private ArrayList<MainVO> vo;
+    private MainAdapter mainAdapter;
+
+    private boolean ribbonCheck, text1Check, img1Check, text2Check, img2Check, text3Check, img3Check;
     private String str1Check;
+    private int count;
 
     @BindView(R.id.utaiteinfo_bg1)
     ImageView utaiteinfo_bg1;
@@ -63,6 +74,8 @@ public class UtaiteInfoFragment extends RxFragment {
     ImageView utaiteinfo_avatar;
     @BindView(R.id.utaiteinfo_text3)
     TextView utaiteinfo_text3;
+    @BindView(R.id.utaiteinfo_recyclerview)
+    RecyclerView utaiteinfo_recyclerview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,10 +83,22 @@ public class UtaiteInfoFragment extends RxFragment {
         ButterKnife.bind(this, view);
         context = getActivity();
         glide = Glide.with(context);
-        Chained.setVisibilityMany(View.GONE, utaiteinfo_text1_src, utaiteinfo_ribbon_img, utaiteinfo_timeline);
+        initialize();
+        return view;
+    }
+
+    public void initialize() {
+        vo = new ArrayList<>();
+        utaiteinfo_recyclerview.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        utaiteinfo_recyclerview.setLayoutManager(llm);
+
+        mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
+        utaiteinfo_recyclerview.setAdapter(mainAdapter);
+        Chained.setVisibilityMany(View.GONE, utaiteinfo_text1_src, utaiteinfo_ribbon_img, utaiteinfo_timeline, utaiteinfo_recyclerview);
         requestRetrofit(getString(R.string.rest_artist), getArguments().getInt(getString(R.string.rest_aid)));
         ribbonCheck = text1Check = img1Check = text2Check = img2Check = false;
-        return view;
     }
 
     @OnClick(R.id.utaiteinfo_text1)
@@ -103,6 +128,18 @@ public class UtaiteInfoFragment extends RxFragment {
                             .bitmapTransform(new CropCircleTransformation(context))
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
+
+                    int position = i;
+                    iv[i].setOnClickListener(v -> {
+                        Fragment fragment = new UserInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(comment.get(position).get_mid()));
+                        fragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_main, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    });
 
                     tv[i] = new TextView(context);
                     String nickname = comment.get(i).getNickname();
@@ -175,6 +212,17 @@ public class UtaiteInfoFragment extends RxFragment {
                             .bitmapTransform(new CropCircleTransformation(context))
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
+                    int position = i;
+                    iv[i].setOnClickListener(v -> {
+                        Fragment fragment = new UserInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(comment.get(position).get_mid()));
+                        fragment.setArguments(bundle);
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_main, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    });
 
                     rRelativeImg = new RelativeLayout(context);
                     RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -244,6 +292,19 @@ public class UtaiteInfoFragment extends RxFragment {
         text2Check = !text2Check;
     }
 
+    @OnClick(R.id.utaiteinfo_text3)
+    public void onTextView3Click() {
+        if (!text3Check && !img3Check) {
+            requestRetrofitList(getArguments().getInt(getString(R.string.rest_aid)), count = 1);
+            ((MainActivity) context).getTask().onPostExecute(null);
+            ((MainActivity) context).getTask().onPreExecute();
+            img3Check = true;
+        }
+        utaiteinfo_recyclerview.setVisibility(!text3Check ? View.VISIBLE : View.GONE);
+        utaiteinfo_text3.setText(getString(R.string.utaiteinfo_txt3, !text3Check ? "▲" : "▼"));
+        text3Check = !text3Check;
+    }
+
     public void requestRetrofit(String what, int index) {
         ((MainActivity) context).getTask().onPostExecute(null);
         ((MainActivity) context).getTask().onPreExecute();
@@ -289,5 +350,24 @@ public class UtaiteInfoFragment extends RxFragment {
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
                             ((MainActivity) context).getTask().onPostExecute(null);
                         });
+    }
+
+    public void requestRetrofitList(int aid, int index) {
+        RestUtils.getRetrofit()
+                .create(RestUtils.ArraySongApis.class)
+                .arraySongApis(aid, index)
+                .compose(bindToLifecycle())
+                .distinct()
+                .subscribe(songs -> {
+                    for (Song e : songs) {
+                        vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                e.get_sid(), e.get_aid()));
+                    }
+                    mainAdapter.notifyDataSetChanged();
+                    requestRetrofitList(getArguments().getInt(getString(R.string.rest_aid)), ++count);
+                }, e -> {
+                    mainAdapter.notifyDataSetChanged();
+                    ((MainActivity) context).getTask().onPostExecute(null);
+                });
     }
 }

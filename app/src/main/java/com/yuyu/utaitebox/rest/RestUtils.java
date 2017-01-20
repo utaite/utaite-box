@@ -13,7 +13,7 @@ import rx.schedulers.Schedulers;
 
 public class RestUtils {
 
-    public static final String BASE = "http://utaitebox.com";
+    public static final String BASE = "http://utaitebox.com/";
 
     private static Retrofit retrofit;
 
@@ -31,19 +31,25 @@ public class RestUtils {
     }
 
     public interface DefaultApi {
-        @GET("/api/{what}/{index}")
+        @GET("api/{what}/{index}")
         Observable<Repo> defaultApi(@Path("what") String what,
                                     @Path("index") int index);
     }
 
     public interface ArraySongApi {
-        @GET("/api/{what}/{index}")
+        @GET("api/{what}/{index}")
         Observable<ArrayList<Song>> arraySongApi(@Path("what") String what,
                                                  @Path("index") int index);
     }
 
+    public interface ArraySongApis {
+        @GET("api/artist/{aid}/list/{index}")
+        Observable<ArrayList<Song>> arraySongApis(@Path("aid") int aid,
+                                                 @Path("index") int index);
+    }
+
     public interface UtaiteApi {
-        @GET("/api/{what}/{index}")
+        @GET("api/{what}/{index}")
         Observable<Utaite> utaiteApi(@Path("what") String what,
                                      @Path("index") int index);
     }

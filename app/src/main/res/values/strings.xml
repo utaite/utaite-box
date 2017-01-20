@@ -17,6 +17,7 @@
     <string name="rest_member">member</string>
     <string name="rest_sid">sid</string>
     <string name="rest_aid">aid</string>
+    <string name="rest_mid">mid</string>
     <string name="rest_chart">chart</string>
     <string name="rest_song">song</string>
     <string name="rest_artist">artist</string>
@@ -67,6 +68,11 @@
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>
     <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
     <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 다른 노래는 어때요?</string>
+
+    <string name="user_txt1">좋아요</string>
+    <string name="user_txt2">최근 들은 노래</string>
+    <string name="user_txt3">업로드</string>
+    <string name="user_txt4">플레이리스트</string>
 
     <string name="task_0">리스트를 불러오는 중입니다 ...</string>
     <string name="task_1">로딩중입니다 ...</string>

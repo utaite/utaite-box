@@ -33,7 +33,7 @@ public class MusicListFragment extends RxFragment {
     private ArrayList<MainVO> vo;
     private MainAdapter mainAdapter;
 
-    private int count;
+    private int count = 1;
 
     @BindView(R.id.musiclist_recyclerview)
     RecyclerView musiclist_recyclerview;
@@ -58,7 +58,7 @@ public class MusicListFragment extends RxFragment {
         musiclist_recyclerview.setLayoutManager(llm);
         vo = new ArrayList<>();
 
-        requestRetrofit(getString(R.string.rest_songlist), count = 1);
+        requestRetrofit(getString(R.string.rest_songlist), count);
         mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));

@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingRight="5dp">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/main_text1"
+        style="@style/ListText"
+        android:text="@string/main_text1" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingRight="5dp">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_text1"
+        android:scrollbars="vertical" />
 
-        <TextView
-            android:id="@+id/main_text1"
-            style="@style/ListText"
-            android:text="@string/main_text1" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/main_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/main_text1"
-            android:scrollbars="vertical" />
-
-    </RelativeLayout>
-
-</ScrollView>
+</RelativeLayout>
