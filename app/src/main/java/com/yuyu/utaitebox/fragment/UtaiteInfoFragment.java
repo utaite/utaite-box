@@ -98,7 +98,7 @@ public class UtaiteInfoFragment extends RxFragment {
         utaiteinfo_recyclerview.setAdapter(mainAdapter);
         Chained.setVisibilityMany(View.GONE, utaiteinfo_text1_src, utaiteinfo_ribbon_img, utaiteinfo_timeline, utaiteinfo_recyclerview);
         requestRetrofit(getString(R.string.rest_artist), getArguments().getInt(getString(R.string.rest_aid)));
-        ribbonCheck = text1Check = img1Check = text2Check = img2Check = false;
+        ribbonCheck = text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = false;
     }
 
     @OnClick(R.id.utaiteinfo_text1)

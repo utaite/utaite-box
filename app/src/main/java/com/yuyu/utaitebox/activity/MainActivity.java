@@ -24,6 +24,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.chain.ChainedArrayList;
 import com.yuyu.utaitebox.chain.ChainedToast;
+import com.yuyu.utaitebox.fragment.ChartFragment;
 import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
@@ -138,7 +139,7 @@ public class MainActivity extends RxAppCompatActivity {
         } else if (iid == R.id.nav_music) {
             fragment = new MusicListFragment();
         } else if (iid == R.id.nav_chart) {
-        } else if (iid == R.id.nav_upload) {
+            fragment = new ChartFragment();
         } else if (iid == R.id.nav_timeline) {
         }
         return fragment;

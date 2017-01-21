@@ -5,8 +5,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +21,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
+import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.chain.Chained;
-import com.yuyu.utaitebox.rest.Comment;
 import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.rest.Song;
+import com.yuyu.utaitebox.utils.MainVO;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +40,8 @@ public class UserInfoFragment extends RxFragment {
 
     private Context context;
     private RequestManager glide;
+
+    private boolean text1Check, img1Check, text2Check, img2Check, text3Check, img3Check, text4Check, img4Check;
 
     @BindView(R.id.userinfo_bg1)
     ImageView userinfo_bg1;
@@ -67,28 +75,53 @@ public class UserInfoFragment extends RxFragment {
         requestRetrofit(getString(R.string.rest_member), getArguments().getInt(getString(R.string.rest_mid)));
         Chained.setVisibilityMany(View.GONE, userinfo_recyclerview1, userinfo_recyclerview2, userinfo_recyclerview3, userinfo_recyclerview4);
         Chained.setTextMany(new TextView[]{userinfo_text1, userinfo_text2, userinfo_text3, userinfo_text4},
-                new String[]{getString(R.string.user_txt1), getString(R.string.user_txt2), getString(R.string.user_txt3), getString(R.string.user_txt4)});
+                new String[]{getString(R.string.user_txt1, "▼"), getString(R.string.user_txt2, "▼"), getString(R.string.user_txt3, "▼"), getString(R.string.user_txt4, "▼")});
+        text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = text4Check = img4Check = false;
         return view;
     }
 
     @OnClick(R.id.userinfo_text1)
     public void onTextView1Click() {
-
+        if (!text1Check && !img1Check) {
+            requestRetrofitMember(userinfo_recyclerview1, getArguments().getInt(getString(R.string.rest_mid)), getString(R.string.rest_ribbon));
+            img1Check = true;
+        }
+        userinfo_recyclerview1.setVisibility(!text1Check ? View.VISIBLE : View.GONE);
+        userinfo_text1.setText(getString(R.string.user_txt1, !text1Check ? "▲" : "▼"));
+        text1Check = !text1Check;
     }
 
     @OnClick(R.id.userinfo_text2)
     public void onTextView2Click() {
-
+        if (!text2Check && !img2Check) {
+            requestRetrofitMember(userinfo_recyclerview2, getArguments().getInt(getString(R.string.rest_mid)), getString(R.string.rest_listen));
+            img2Check = true;
+        }
+        userinfo_recyclerview2.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
+        userinfo_text2.setText(getString(R.string.user_txt2, !text2Check ? "▲" : "▼"));
+        text2Check = !text2Check;
     }
 
     @OnClick(R.id.userinfo_text3)
     public void onTextView3Click() {
-
+        if (!text3Check && !img3Check) {
+            requestRetrofitMember(userinfo_recyclerview3, getArguments().getInt(getString(R.string.rest_mid)), getString(R.string.rest_upload));
+            img3Check = true;
+        }
+        userinfo_recyclerview3.setVisibility(!text3Check ? View.VISIBLE : View.GONE);
+        userinfo_text3.setText(getString(R.string.user_txt3, !text3Check ? "▲" : "▼"));
+        text3Check = !text3Check;
     }
 
     @OnClick(R.id.userinfo_text4)
     public void onTextView4Click() {
-
+        if (!text4Check && !img4Check) {
+            requestRetrofitMember(userinfo_recyclerview4, getArguments().getInt(getString(R.string.rest_mid)), getString(R.string.rest_playlist));
+            img4Check = true;
+        }
+        userinfo_recyclerview4.setVisibility(!text4Check ? View.VISIBLE : View.GONE);
+        userinfo_text4.setText(getString(R.string.user_txt4, !text4Check ? "▲" : "▼"));
+        text4Check = !text4Check;
     }
 
     public void requestRetrofit(String what, int index) {
@@ -116,6 +149,38 @@ public class UserInfoFragment extends RxFragment {
                                 glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + response.getProfile().getCover())
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .into(userinfo_bg1);
+                            }
+                            ((MainActivity) context).getTask().onPostExecute(null);
+                        },
+                        e -> {
+                            Log.e(TAG, e.toString());
+                            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
+                            ((MainActivity) context).getTask().onPostExecute(null);
+                        });
+    }
+
+    public void requestRetrofitMember(RecyclerView view, int index, String category) {
+        ((MainActivity) context).getTask().onPostExecute(null);
+        ((MainActivity) context).getTask().onPreExecute();
+
+        RestUtils.getRetrofit()
+                .create(RestUtils.MemberApi.class)
+                .memberApi(index, category)
+                .compose(bindToLifecycle())
+                .distinct()
+                .subscribe(response -> {
+                            LinearLayoutManager llm = new LinearLayoutManager(context);
+                            llm.setOrientation(LinearLayoutManager.VERTICAL);
+                            view.setLayoutManager(llm);
+                            if (!response.toString().equals("[]")) {
+                                ArrayList<MainVO> vo = new ArrayList<>();
+                                for (Song e : response) {
+                                    vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                            e.get_sid(), e.get_aid()));
+                                }
+                                MainAdapter mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
+                                view.setAdapter(mainAdapter);
+                                mainAdapter.notifyDataSetChanged();
                             }
                             ((MainActivity) context).getTask().onPostExecute(null);
                         },

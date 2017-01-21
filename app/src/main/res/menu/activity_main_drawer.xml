@@ -18,11 +18,6 @@
             android:title="@string/nav_chart" />
 
         <item
-            android:id="@+id/nav_upload"
-            android:icon="@drawable/ic_upload"
-            android:title="@string/nav_upload" />
-
-        <item
             android:id="@+id/nav_timeline"
             android:icon="@drawable/ic_timeline"
             android:title="@string/nav_timeline" />

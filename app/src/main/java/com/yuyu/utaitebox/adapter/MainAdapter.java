@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.provider.ChildLoadProvider;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.fragment.MusicInfoFragment;
 import com.yuyu.utaitebox.fragment.UtaiteInfoFragment;

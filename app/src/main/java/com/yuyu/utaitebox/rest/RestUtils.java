@@ -45,13 +45,24 @@ public class RestUtils {
     public interface ArraySongApis {
         @GET("api/artist/{aid}/list/{index}")
         Observable<ArrayList<Song>> arraySongApis(@Path("aid") int aid,
-                                                 @Path("index") int index);
+                                                  @Path("index") int index);
     }
 
     public interface UtaiteApi {
         @GET("api/{what}/{index}")
         Observable<Utaite> utaiteApi(@Path("what") String what,
                                      @Path("index") int index);
+    }
+
+    public interface MemberApi {
+        @GET("api/member/{index}/{category}")
+        Observable<ArrayList<Song>> memberApi(@Path("index") int index,
+                                              @Path("category") String category);
+    }
+
+    public interface ChartApi {
+        @GET("api/{what}")
+        Observable<Chart> chartApi(@Path("what") String what);
     }
 
 }
