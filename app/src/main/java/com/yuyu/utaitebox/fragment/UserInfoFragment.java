@@ -21,6 +21,8 @@ import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.chain.Chained;
+import com.yuyu.utaitebox.chain.ChainedArrayList;
+import com.yuyu.utaitebox.rest.Playlist;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.utils.MainVO;
@@ -40,6 +42,7 @@ public class UserInfoFragment extends RxFragment {
     private RequestManager glide;
 
     private boolean text1Check, img1Check, text2Check, img2Check, text3Check, img3Check, text4Check, img4Check;
+    private ArrayList<Integer> counts;
 
     @BindView(R.id.userinfo_bg1)
     ImageView userinfo_bg1;
@@ -73,7 +76,7 @@ public class UserInfoFragment extends RxFragment {
         requestRetrofit(getString(R.string.rest_member), getArguments().getInt(getString(R.string.rest_mid)));
         Chained.setVisibilityMany(View.GONE, userinfo_recyclerview1, userinfo_recyclerview2, userinfo_recyclerview3, userinfo_recyclerview4);
         Chained.setTextMany(new TextView[]{userinfo_text1, userinfo_text2, userinfo_text3, userinfo_text4},
-                new String[]{getString(R.string.user_txt1, "▼"), getString(R.string.user_txt2, "▼"), getString(R.string.user_txt3, "▼"), getString(R.string.user_txt4, "▼")});
+                new String[]{getString(R.string.user_txt1, "▼", 0), getString(R.string.user_txt2, "▼", 0), getString(R.string.user_txt3, "▼", 0), getString(R.string.user_txt4, "▼", 0)});
         text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = text4Check = img4Check = false;
         return view;
     }
@@ -85,7 +88,7 @@ public class UserInfoFragment extends RxFragment {
             img1Check = true;
         }
         userinfo_recyclerview1.setVisibility(!text1Check ? View.VISIBLE : View.GONE);
-        userinfo_text1.setText(getString(R.string.user_txt1, !text1Check ? "▲" : "▼"));
+        userinfo_text1.setText(getString(R.string.user_txt1, !text1Check ? "▲" : "▼", counts.get(0)));
         text1Check = !text1Check;
     }
 
@@ -96,7 +99,7 @@ public class UserInfoFragment extends RxFragment {
             img2Check = true;
         }
         userinfo_recyclerview2.setVisibility(!text2Check ? View.VISIBLE : View.GONE);
-        userinfo_text2.setText(getString(R.string.user_txt2, !text2Check ? "▲" : "▼"));
+        userinfo_text2.setText(getString(R.string.user_txt2, !text2Check ? "▲" : "▼", counts.get(1)));
         text2Check = !text2Check;
     }
 
@@ -107,7 +110,7 @@ public class UserInfoFragment extends RxFragment {
             img3Check = true;
         }
         userinfo_recyclerview3.setVisibility(!text3Check ? View.VISIBLE : View.GONE);
-        userinfo_text3.setText(getString(R.string.user_txt3, !text3Check ? "▲" : "▼"));
+        userinfo_text3.setText(getString(R.string.user_txt3, !text3Check ? "▲" : "▼", counts.get(2)));
         text3Check = !text3Check;
     }
 
@@ -118,20 +121,35 @@ public class UserInfoFragment extends RxFragment {
             img4Check = true;
         }
         userinfo_recyclerview4.setVisibility(!text4Check ? View.VISIBLE : View.GONE);
-        userinfo_text4.setText(getString(R.string.user_txt4, !text4Check ? "▲" : "▼"));
+        userinfo_text4.setText(getString(R.string.user_txt4, !text4Check ? "▲" : "▼", counts.get(3)));
         text4Check = !text4Check;
     }
 
     public void requestRetrofit(String what, int index) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
                 .compose(bindToLifecycle())
                 .distinct()
                 .subscribe(response -> {
+                            int playlist = 0;
+                            if (response.getPlaylist().toString().equals("0.0")) {
+                                playlist = 0;
+                            } else {
+                                String temp1 = response.getPlaylist().toString();
+                                String temp2 = temp1.substring(temp1.lastIndexOf("=") + 1, temp1.lastIndexOf("."));
+                                playlist = Integer.parseInt(temp2);
+                            }
+
+                            counts = new ChainedArrayList().addMany(Integer.parseInt(response.getRecent().getRibbon().getNumber()),
+                                    Integer.parseInt(response.getListen()), Integer.parseInt(response.getUpload().getNumber()),
+                                    playlist);
+                            Chained.setTextMany(new TextView[]{userinfo_text1, userinfo_text2, userinfo_text3, userinfo_text4},
+                                    new String[]{getString(R.string.user_txt1, "▼", counts.get(0)),
+                                            getString(R.string.user_txt2, "▼", counts.get(1)),
+                                            getString(R.string.user_txt3, "▼", counts.get(2)),
+                                            getString(R.string.user_txt4, "▼", counts.get(3))});
+
                             userinfo_id.setText(response.getMember().getUsername());
 
                             glide.load(RestUtils.BASE + (response.getProfile().getAvatar() == null ?
@@ -144,23 +162,18 @@ public class UserInfoFragment extends RxFragment {
                                 userinfo_bg1.setImageResource(android.R.color.transparent);
                                 userinfo_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
                             } else {
-                                glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + response.getProfile().getCover())
+                                glide.load(RestUtils.BASE + getString(R.string.rest_profile_cover) + response.getProfile().getCover())
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .into(userinfo_bg1);
                             }
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
                             Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 
     public void requestRetrofitMember(RecyclerView view, int index, String category) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.MemberApi.class)
                 .memberApi(index, category)
@@ -180,9 +193,8 @@ public class UserInfoFragment extends RxFragment {
                                 view.setAdapter(mainAdapter);
                                 mainAdapter.notifyDataSetChanged();
                             }
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
-                        e -> ((MainActivity) context).getTask().onPostExecute(null));
+                        e -> Log.e(TAG, e.toString()));
     }
 
 }

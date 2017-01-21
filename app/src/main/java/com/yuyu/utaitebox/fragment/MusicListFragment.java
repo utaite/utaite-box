@@ -102,9 +102,6 @@ public class MusicListFragment extends RxFragment {
     }
 
     public void requestRetrofit(String what, int index) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.ArraySongApi.class)
                 .arraySongApi(what, index)
@@ -116,11 +113,9 @@ public class MusicListFragment extends RxFragment {
                                 e.get_sid(), e.get_aid()));
                     }
                     mainAdapter.notifyDataSetChanged();
-                    ((MainActivity) context).getTask().onPostExecute(null);
                 }, e -> {
                     Log.e(TAG, e.toString());
                     ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_not_found));
-                    ((MainActivity) context).getTask().onPostExecute(null);
                 });
     }
 

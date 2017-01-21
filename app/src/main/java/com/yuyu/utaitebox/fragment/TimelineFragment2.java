@@ -50,9 +50,6 @@ public class TimelineFragment2 extends RxFragment {
     }
 
     public void requestRetrofit(String what) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.TimelineApi.class)
                 .timelineApi(what)
@@ -60,12 +57,10 @@ public class TimelineFragment2 extends RxFragment {
                 .distinct()
                 .subscribe(response -> {
                             initialize(response.getRight());
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
                             Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 
@@ -99,7 +94,7 @@ public class TimelineFragment2 extends RxFragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(right.get(position).get_mid()));
                     fragment.setArguments(bundle);
-                    getFragmentManager().beginTransaction()
+                    ((MainActivity) context).getFragmentManager().beginTransaction()
                             .replace(R.id.content_main, fragment)
                             .addToBackStack(null)
                             .commit();

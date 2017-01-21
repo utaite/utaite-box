@@ -35,6 +35,14 @@ public class RestUtils {
         return retrofit;
     }
 
+    public interface Register {
+        @FormUrlEncoded
+        @POST("api/register")
+        Observable<com.yuyu.utaitebox.rest.Login> register(@Field("email") String email,
+                                                           @Field("username") String username,
+                                                           @Field("password") String password);
+    }
+
     public interface Login {
         @FormUrlEncoded
         @POST("api/login")
@@ -102,16 +110,23 @@ public class RestUtils {
     public interface UtaiteRibbon {
         @GET("api/artist/heart/{index}")
         Observable<Void> utaiteRibbon(@Header("Authorization") String authorization,
-                                     @Path("index") int index);
+                                      @Path("index") int index);
     }
 
     public interface MusicTimeline {
         @FormUrlEncoded
-        @POST("api/song/{what}")
+        @POST("api/song/comment")
         Observable<Void> musicTimeline(@Header("Authorization") String authorization,
-                                       @Path("what") String what,
                                        @Field("_sid") int _sid,
                                        @Field("comment") String comment);
+    }
+
+    public interface UtaiteTimeline {
+        @FormUrlEncoded
+        @POST("api/artist/comment")
+        Observable<Void> utaiteTimeline(@Header("Authorization") String authorization,
+                                        @Field("_aid") int _aid,
+                                        @Field("comment") String comment);
     }
 
 }

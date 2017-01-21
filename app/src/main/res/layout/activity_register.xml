@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="32dp"
+    android:layout_marginRight="32dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="32dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/register_email_edit"
+            style="@style/LoginForm"
+            android:hint="@string/_login_email"
+            android:imeOptions="actionNext" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/register_id_edit"
+                style="@style/LoginForm"
+                android:hint="@string/_login_id"
+                android:imeOptions="actionNext" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/register_pw_edit"
+                style="@style/LoginForm"
+                android:hint="@string/_login_pw"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/register_register_btn"
+            style="@style/LoginButton"
+            android:layout_marginTop="10dp"
+            android:text="@string/_login_register_btn"
+            android:theme="@style/LoginRegisterButton" />
+
+    </LinearLayout>
+
+</RelativeLayout>

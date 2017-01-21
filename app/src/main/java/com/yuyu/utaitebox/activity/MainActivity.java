@@ -32,7 +32,6 @@ import com.yuyu.utaitebox.fragment.TimelineFragment;
 import com.yuyu.utaitebox.fragment.UserInfoFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
-import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -48,7 +47,6 @@ public class MainActivity extends RxAppCompatActivity {
     public static int TODAY = Constant.TODAY_DEFAULT;
     public static String TOKEN, TEMP_AVATAR;
 
-    private Task task;
     private Context context;
     private ChainedToast toast;
     private RequestManager requestManager;
@@ -69,7 +67,6 @@ public class MainActivity extends RxAppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         context = this;
-        task = new Task(context);
         requestManager = Glide.with(context);
         toast = new ChainedToast(context).makeTextTo(this, "", Toast.LENGTH_SHORT);
         setSupportActionBar(toolbar);
@@ -206,10 +203,6 @@ public class MainActivity extends RxAppCompatActivity {
 
     public ChainedToast getToast() {
         return toast;
-    }
-
-    public Task getTask() {
-        return task;
     }
 
 }

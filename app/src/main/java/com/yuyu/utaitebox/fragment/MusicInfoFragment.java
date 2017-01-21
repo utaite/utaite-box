@@ -110,6 +110,12 @@ public class MusicInfoFragment extends RxFragment {
         return view;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(musicinfo_timeline_edittext.getWindowToken(), 0);
+    }
+
     public void initialize() {
         repo = null;
         ribbonCheck = text1Check = img1Check = text2Check = img2Check = text3Check = img3Check = false;
@@ -133,6 +139,7 @@ public class MusicInfoFragment extends RxFragment {
 
     @OnClick(R.id.musicinfo_text2)
     public void onTextView2Click() {
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(musicinfo_timeline_edittext.getWindowToken(), 0);
         if (!text2Check && !img2Check) {
             ArrayList<Ribbon> ribbon = repo.getSidebar().getRibbon();
             int size = ribbon.size();
@@ -322,7 +329,6 @@ public class MusicInfoFragment extends RxFragment {
     @OnClick(R.id.musicinfo_play)
     public void onPlayButtonClick() {
         mediaPlayer = new MediaPlayer();
-        ((MainActivity) context).getTask().onPreExecute();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(RestUtils.BASE + getString(R.string.rest_stream) + repo.getSong().getKey());
@@ -330,7 +336,6 @@ public class MusicInfoFragment extends RxFragment {
         }
         mediaPlayer.setOnPreparedListener(mp -> {
             mediaPlayer.start();
-            ((MainActivity) context).getTask().onPostExecute(null);
         });
         mediaPlayer.prepareAsync();
     }
@@ -340,11 +345,6 @@ public class MusicInfoFragment extends RxFragment {
         if (MainActivity.MID == 1994) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
         } else {
-            getFragmentManager().beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit();
-
             RestUtils.getRetrofit()
                     .create(RestUtils.MusicRibbon.class)
                     .musicRibbon(MainActivity.TOKEN, getArguments().getInt(getString(R.string.rest_sid)))
@@ -352,6 +352,10 @@ public class MusicInfoFragment extends RxFragment {
                     .distinct()
                     .subscribe(o -> {
                                 ((MainActivity) context).getToast().setTextShow(getString(ribbonCheck ? R.string.musicinfo_not_ribbon : R.string.musicinfo_ribbon));
+                                getFragmentManager().beginTransaction()
+                                        .detach(this)
+                                        .attach(this)
+                                        .commit();
                             },
                             e -> Log.e(TAG, e.toString()));
         }
@@ -366,7 +370,7 @@ public class MusicInfoFragment extends RxFragment {
         } else {
             RestUtils.getRetrofit()
                     .create(RestUtils.MusicTimeline.class)
-                    .musicTimeline(MainActivity.TOKEN, getString(R.string.rest_comment), getArguments().getInt(getString(R.string.rest_sid)),
+                    .musicTimeline(MainActivity.TOKEN, getArguments().getInt(getString(R.string.rest_sid)),
                             musicinfo_timeline_edittext.getText().toString().trim())
                     .compose(bindToLifecycle())
                     .distinct()
@@ -382,9 +386,6 @@ public class MusicInfoFragment extends RxFragment {
     }
 
     public void requestRetrofit(String what, int index) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
@@ -429,12 +430,10 @@ public class MusicInfoFragment extends RxFragment {
                                         song.get_sid(), song.get_aid()));
                                 musicinfo_recyclerview.setAdapter(new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo));
                             }
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
                             Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 

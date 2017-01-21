@@ -7,16 +7,15 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="32dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -88,7 +87,13 @@
             android:text="@string/_login_guest_btn"
             android:theme="@style/LoginGuestButton" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/login_register_btn"
+            style="@style/LoginButton"
+            android:layout_marginTop="10dp"
+            android:text="@string/_login_register_btn"
+            android:theme="@style/LoginRegisterButton" />
 
+    </LinearLayout>
 
 </RelativeLayout>

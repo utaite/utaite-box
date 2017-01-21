@@ -42,9 +42,6 @@ public class MainFragment extends RxFragment {
     }
 
     public void requestRetrofit(String what, int index) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
                 .defaultApi(what, index)
@@ -68,12 +65,10 @@ public class MainFragment extends RxFragment {
                                 }
                                 main_recyclerview.setAdapter(new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo));
                             }
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
                             Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 

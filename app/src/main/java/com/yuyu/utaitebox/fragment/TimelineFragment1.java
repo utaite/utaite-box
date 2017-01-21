@@ -49,9 +49,6 @@ public class TimelineFragment1 extends RxFragment {
     }
 
     public void requestRetrofit(String what) {
-        ((MainActivity) context).getTask().onPostExecute(null);
-        ((MainActivity) context).getTask().onPreExecute();
-
         RestUtils.getRetrofit()
                 .create(RestUtils.TimelineApi.class)
                 .timelineApi(what)
@@ -59,12 +56,10 @@ public class TimelineFragment1 extends RxFragment {
                 .distinct()
                 .subscribe(response -> {
                             initialize(response.getLeft());
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         },
                         e -> {
                             Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                            ((MainActivity) context).getTask().onPostExecute(null);
                         });
     }
 
@@ -93,14 +88,16 @@ public class TimelineFragment1 extends RxFragment {
                         .into(iv[i]);
                 int position = i;
                 iv[i].setOnClickListener(v -> {
-                    Fragment fragment = new UserInfoFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(left.get(position).get_mid()));
-                    fragment.setArguments(bundle);
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.content_main, fragment)
-                            .addToBackStack(null)
-                            .commit();
+                    if(left.get(position).get_mid() != null) {
+                        Fragment fragment = new UserInfoFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(left.get(position).get_mid()));
+                        fragment.setArguments(bundle);
+                        ((MainActivity) context).getFragmentManager().beginTransaction()
+                                .replace(R.id.content_main, fragment)
+                                .addToBackStack(null)
+                                .commit();
+                    }
                 });
 
                 rRelativeImg = new RelativeLayout(context);
@@ -147,7 +144,7 @@ public class TimelineFragment1 extends RxFragment {
                 String temp2 = temp1.substring(temp1.indexOf("T") + 1);
                 String temp3 = temp2.substring(0, temp2.length() - 5);
                 int temp4 = Integer.parseInt(temp3.substring(0, 2)) + 9;
-                int temp5 = temp4 > 24 ? temp4 - 24 : temp4;
+                int temp5 = temp4 >= 24 ? temp4 - 24 : temp4;
                 String temp6 = temp5 < 10 ? "0" + temp5 : String.valueOf(temp5);
                 String temp7 = temp6 + temp3.substring(2);
                 date[i].setText(temp7);

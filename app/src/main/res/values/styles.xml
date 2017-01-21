@@ -67,4 +67,8 @@
         <item name="colorButtonNormal">#6799FF</item>
     </style>
 
+    <style name="LoginRegisterButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#F29661</item>
+    </style>
+
 </resources>

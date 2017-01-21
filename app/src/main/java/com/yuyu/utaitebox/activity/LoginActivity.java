@@ -18,7 +18,6 @@ import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
-import com.yuyu.utaitebox.utils.Task;
 
 import java.util.ArrayList;
 
@@ -65,17 +64,22 @@ public class LoginActivity extends RxAppCompatActivity {
     }
 
     @OnClick(R.id.login_login_btn)
-    public void onLoginButtonClick(View view) {
+    public void onLoginButtonClick() {
         loginCheck();
     }
 
     @OnClick(R.id.login_guest_btn)
-    public void onGuestButtonClick(View view) {
+    public void onGuestButtonClick() {
         if (!networkCheck()) {
             toast.setTextShow(getString(R.string.login_network_err));
         } else {
             loginPrepare(getString(R.string.login_guest), getString(R.string.login_guest), false);
         }
+    }
+
+    @OnClick(R.id.login_register_btn)
+    public void onRegisterButtonClick() {
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 
     @OnClick({R.id.login_save_btn, R.id.login_save_txt})
@@ -95,6 +99,7 @@ public class LoginActivity extends RxAppCompatActivity {
     }
 
     public void initialize() {
+        setTitle(getString(R.string._login_login_btn));
         String status = getSharedPreferences(getString(R.string.login_login), MODE_PRIVATE).getString(getString(R.string.login_status), null);
 
         Observable.just(status)
@@ -153,7 +158,7 @@ public class LoginActivity extends RxAppCompatActivity {
     }
 
     public void loginPrepare(String id, String pw, boolean isGuest) {
-        if(isGuest) {
+        if (isGuest) {
             SharedPreferences preferences = getSharedPreferences(getString(R.string.login_login), MODE_PRIVATE);
 
             preferences.edit().putString(getString(R.string.login_status), login_check_btn.isChecked() ?
@@ -163,13 +168,10 @@ public class LoginActivity extends RxAppCompatActivity {
             preferences.edit().putString(getString(R.string.login_pw), login_check_btn.isChecked() ? pw : null).apply();
         }
 
-        Task task = new Task(context);
-        task.onPreExecute();
         RestUtils.getRetrofit()
                 .create(RestUtils.Login.class)
                 .login(id, pw)
                 .subscribe(o -> {
-                            task.onPostExecute(null);
                             if (o.isStatus()) {
                                 MainActivity.MID = o.getData().get_mid();
                                 MainActivity.TOKEN = o.getData().getToken();
@@ -180,7 +182,6 @@ public class LoginActivity extends RxAppCompatActivity {
                             }
                         },
                         e -> {
-                            task.onPostExecute(null);
                             Log.e(TAG, e.toString());
                             toast.setTextShow(getString(R.string.login_network_err));
                         });
