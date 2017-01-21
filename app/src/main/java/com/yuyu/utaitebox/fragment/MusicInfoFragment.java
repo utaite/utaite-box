@@ -15,6 +15,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -95,6 +97,8 @@ public class MusicInfoFragment extends RxFragment {
     ImageView musicinfo_avatar;
     @BindView(R.id.musicinfo_text3)
     TextView musicinfo_text3;
+    @BindView(R.id.musicinfo_timeline_edittext)
+    EditText musicinfo_timeline_edittext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -329,6 +333,52 @@ public class MusicInfoFragment extends RxFragment {
             ((MainActivity) context).getTask().onPostExecute(null);
         });
         mediaPlayer.prepareAsync();
+    }
+
+    @OnClick({R.id.musicinfo_ribbon_src, R.id.musicinfo_text2_src})
+    public void onMusicRibbonClick() {
+        if (MainActivity.MID == 1994) {
+            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
+        } else {
+            getFragmentManager().beginTransaction()
+                    .detach(this)
+                    .attach(this)
+                    .commit();
+
+            RestUtils.getRetrofit()
+                    .create(RestUtils.MusicRibbon.class)
+                    .musicRibbon(MainActivity.TOKEN, getArguments().getInt(getString(R.string.rest_sid)))
+                    .compose(bindToLifecycle())
+                    .distinct()
+                    .subscribe(o -> {
+                                ((MainActivity) context).getToast().setTextShow(getString(ribbonCheck ? R.string.musicinfo_not_ribbon : R.string.musicinfo_ribbon));
+                            },
+                            e -> Log.e(TAG, e.toString()));
+        }
+    }
+
+    @OnClick(R.id.musicinfo_timeline_button)
+    public void onMusicTimelineClick() {
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(musicinfo_timeline_edittext.getWindowToken(), 0);
+        if (MainActivity.MID == 1994) {
+            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
+            musicinfo_timeline_edittext.getText().clear();
+        } else {
+            RestUtils.getRetrofit()
+                    .create(RestUtils.MusicTimeline.class)
+                    .musicTimeline(MainActivity.TOKEN, getString(R.string.rest_comment), getArguments().getInt(getString(R.string.rest_sid)),
+                            musicinfo_timeline_edittext.getText().toString().trim())
+                    .compose(bindToLifecycle())
+                    .distinct()
+                    .subscribe(o -> {
+                                musicinfo_timeline_edittext.getText().clear();
+                                getFragmentManager().beginTransaction()
+                                        .detach(this)
+                                        .attach(this)
+                                        .commit();
+                            },
+                            e -> Log.e(TAG, e.toString()));
+        }
     }
 
     public void requestRetrofit(String what, int index) {

@@ -45,12 +45,26 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="LoginForm">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
     <style name="LoginButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#fff</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="LoginLoginButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#3CB371</item>
+    </style>
+
+    <style name="LoginGuestButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#6799FF</item>
     </style>
 
 </resources>

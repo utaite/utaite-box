@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 public class Data_ {
 
     @SerializedName("_mid")
-    private String _mid;
+    private int _mid;
 
     @SerializedName("username")
     private String username;

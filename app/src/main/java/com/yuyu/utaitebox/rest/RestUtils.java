@@ -1,11 +1,16 @@
 package com.yuyu.utaitebox.rest;
 
+
 import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,6 +33,13 @@ public class RestUtils {
         }
 
         return retrofit;
+    }
+
+    public interface Login {
+        @FormUrlEncoded
+        @POST("api/login")
+        Observable<com.yuyu.utaitebox.rest.Login> login(@Field("id") String id,
+                                                        @Field("password") String pw);
     }
 
     public interface DefaultApi {
@@ -78,7 +90,28 @@ public class RestUtils {
     public interface SearchApi2 {
         @GET("api/source/{index}/list/{repeat}")
         Observable<ArrayList<Source>> searchApi2(@Path("index") int index,
-                                      @Path("repeat") int repeat);
+                                                 @Path("repeat") int repeat);
+    }
+
+    public interface MusicRibbon {
+        @GET("api/song/ribbon/{index}")
+        Observable<Void> musicRibbon(@Header("Authorization") String authorization,
+                                     @Path("index") int index);
+    }
+
+    public interface UtaiteRibbon {
+        @GET("api/artist/heart/{index}")
+        Observable<Void> utaiteRibbon(@Header("Authorization") String authorization,
+                                     @Path("index") int index);
+    }
+
+    public interface MusicTimeline {
+        @FormUrlEncoded
+        @POST("api/song/{what}")
+        Observable<Void> musicTimeline(@Header("Authorization") String authorization,
+                                       @Path("what") String what,
+                                       @Field("_sid") int _sid,
+                                       @Field("comment") String comment);
     }
 
 }

@@ -6,6 +6,25 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
 
+    <string name="_login_id">아이디</string>
+    <string name="_login_pw">비밀번호</string>
+    <string name="_login_login_btn">로그인</string>
+    <string name="_login_guest_btn">게스트로 로그인</string>
+    <string name="_login_remember_id">아이디 저장</string>
+    <string name="_login_remember_me">자동 로그인</string>
+
+    <string name="login_login">LOGIN</string>
+    <string name="login_status">STATUS</string>
+    <string name="login_check">CHECK</string>
+    <string name="login_save">SAVE</string>
+    <string name="login_id">ID</string>
+    <string name="login_pw">PW</string>
+    <string name="login_guest">Guest</string>
+
+    <string name="login_auth_err">로그인에 실패했습니다.</string>
+    <string name="login_network_err">네트워크 접속에 실패했습니다.</string>
+    <string name="login_required_err">값을 입력해주세요</string>
+
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
 
 
@@ -22,6 +41,7 @@
     <string name="rest_song">song</string>
     <string name="rest_artist">artist</string>
     <string name="rest_songlist">songlist</string>
+    <string name="rest_comment">comment</string>
 
     <string name="rest_profile_image">/res/profile/image/</string>
     <string name="rest_profile_cover">/res/profile/cover/</string>
@@ -40,9 +60,11 @@
     <string name="rest_guest">Guest</string>
     <string name="rest_point">Point:</string>
 
+    <string name="rest_guest_err">게스트 계정으로는 사용하실 수 없습니다.</string>
     <string name="rest_not_search">검색 결과가 없습니다.</string>
     <string name="rest_error">네트워크 접속에 실패했습니다.</string>
     <string name="rest_not_found">네트워크 접속에 실패했거나,\n요청한 페이지를 찾을 수 없습니다.</string>
+    <string name="rest_server_err">현재 서버에 문제가 있어 이 기능을 사용하실 수 없습니다.\nㅠㅠ 죄송합니다.</string>
 
 
     <string name="nav_home">HOME</string>
@@ -61,6 +83,8 @@
     <string name="musicinfo_txt2_2">&#160;&#160;노래에 좋아요를 눌러보세요.</string>
     <string name="musicinfo_txt3">%1$s&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
     <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
+    <string name="musicinfo_ribbon">이 노래가 좋아요!</string>
+    <string name="musicinfo_not_ribbon">이 노래가 싫어졌어요...</string>s
 
     <string name="musicinfo_content_1">/*&#160;&#160;&#160;Upload music&#160;&#160;&#160;*/</string>
     <string name="musicinfo_content_2">/*&#160;&#160;&#160;Upload cover image&#160;&#160;&#160;*/</string>
@@ -76,6 +100,8 @@
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>
     <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
     <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 노래를 들어보실래요?</string>
+    <string name="utaiteinfo_ribbon">이 우타이테가 좋아요!</string>
+    <string name="utaiteinfo_not_ribbon">이 우타이테가 싫어졌어요...</string>s
 
     <string name="user_txt1">%1$s&#160;&#160;좋아요</string>
     <string name="user_txt2">%1$s&#160;&#160;최근 들은 노래</string>
@@ -111,5 +137,5 @@
     <string name="search_title1">MUSIC</string>
     <string name="search_title2">UTAITE</string>
 
-    <string name="search_dialog">원활한 검색을 위해 \'영어로\' 입력해주세요.\n업로드 순으로 20개까지만 검색됩니다.</string>
+    <string name="search_dialog">한국어가 지원되지만, 원활한 검색을 위해\n\'영본어로\' 입력해주시면 좋습니다.\n업로드 순으로 20개까지만 검색됩니다.</string>
 </resources>

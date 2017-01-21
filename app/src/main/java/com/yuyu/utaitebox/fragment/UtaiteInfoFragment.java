@@ -305,6 +305,31 @@ public class UtaiteInfoFragment extends RxFragment {
         text3Check = !text3Check;
     }
 
+    @OnClick(R.id.utaiteinfo_text1_src)
+    public void onUtaiteRibbonClick() {
+        if (MainActivity.MID == 1994) {
+            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
+        } else {
+            ((MainActivity) context).getToast().setTextShow(getString(ribbonCheck ? R.string.utaiteinfo_not_ribbon : R.string.utaiteinfo_ribbon));
+            getFragmentManager().beginTransaction()
+                    .detach(this)
+                    .attach(this)
+                    .commit();
+
+            RestUtils.getRetrofit()
+                    .create(RestUtils.UtaiteRibbon.class)
+                    .utaiteRibbon(MainActivity.TOKEN, getArguments().getInt(getString(R.string.rest_aid)))
+                    .compose(bindToLifecycle())
+                    .distinct()
+                    .subscribe(o -> {
+                                ((MainActivity) context).getToast().setTextShow(getString(ribbonCheck ? R.string.utaiteinfo_not_ribbon : R.string.utaiteinfo_ribbon));
+                            },
+                            e -> {
+                                ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_server_err));
+                            });
+        }
+    }
+
     public void requestRetrofit(String what, int index) {
         ((MainActivity) context).getTask().onPostExecute(null);
         ((MainActivity) context).getTask().onPreExecute();

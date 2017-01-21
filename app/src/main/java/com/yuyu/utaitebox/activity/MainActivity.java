@@ -44,9 +44,9 @@ public class MainActivity extends RxAppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
-    public static int MID = 53;
+    public static int MID;
     public static int TODAY = Constant.TODAY_DEFAULT;
-    public static String TEMP_AVATAR;
+    public static String TOKEN, TEMP_AVATAR;
 
     private Task task;
     private Context context;
