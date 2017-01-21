@@ -70,9 +70,15 @@ public class RestUtils {
         Observable<Timeline> timelineApi(@Path("what") String what);
     }
 
-    public interface SearchApi {
+    public interface SearchApi1 {
         @GET("api/search/all/{what}")
-        Observable<Search> searchApi(@Path("what") String what);
+        Observable<Search> searchApi1(@Path("what") String what);
+    }
+
+    public interface SearchApi2 {
+        @GET("api/source/{index}/list/{repeat}")
+        Observable<ArrayList<Source>> searchApi2(@Path("index") int index,
+                                      @Path("repeat") int repeat);
     }
 
 }

@@ -8,16 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
-import com.yuyu.utaitebox.rest.Music;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.SearchMusic;
+import com.yuyu.utaitebox.rest.Source;
 import com.yuyu.utaitebox.utils.MainVO;
 
 import java.util.ArrayList;
@@ -31,6 +30,8 @@ public class SearchFragment1 extends RxFragment {
     private final String TAG = SearchFragment1.class.getSimpleName();
 
     private Context context;
+    private ArrayList<MainVO> vo;
+    private MainAdapter mainAdapter;
 
     @BindView(R.id.search_recyclerview1)
     RecyclerView search_recyclerview1;
@@ -53,16 +54,16 @@ public class SearchFragment1 extends RxFragment {
                 .negativeText(getString(R.string.no))
                 .onPositive((dialog, which) -> {
                     String result = dialog.getInputEditText().getText().toString().trim();
-                    requestRetrofit(result);
+                    requestRetrofitSearch1(result);
                 })
                 .onNegative((dialog, which) -> dialog.cancel())
                 .show();
     }
 
-    public void requestRetrofit(String what) {
+    public void requestRetrofitSearch1(String what) {
         RestUtils.getRetrofit()
-                .create(RestUtils.SearchApi.class)
-                .searchApi(what)
+                .create(RestUtils.SearchApi1.class)
+                .searchApi1(what)
                 .compose(bindToLifecycle())
                 .distinct()
                 .subscribe(response -> {
@@ -70,9 +71,12 @@ public class SearchFragment1 extends RxFragment {
                             llm.setOrientation(LinearLayoutManager.VERTICAL);
                             search_recyclerview1.setHasFixedSize(true);
                             search_recyclerview1.setLayoutManager(llm);
+                            vo = new ArrayList<>();
+                            mainAdapter = new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
                             for (SearchMusic e : response.getMusic()) {
-                                requestRetrofitSong(Integer.parseInt(e.get_source_id()));
+                                requestRetrofitSearch2(Integer.parseInt(e.get_source_id()), 1);
                             }
+                            search_recyclerview1.setAdapter(mainAdapter);
                         },
                         e -> {
                             Log.e(TAG, e.toString());
@@ -80,23 +84,21 @@ public class SearchFragment1 extends RxFragment {
                         });
     }
 
-    public void requestRetrofitSong(int index) {
+    public void requestRetrofitSearch2(int index, int repeat) {
         RestUtils.getRetrofit()
-                .create(RestUtils.DefaultApi.class)
-                .defaultApi(getString(R.string.rest_song), index)
+                .create(RestUtils.SearchApi2.class)
+                .searchApi2(index, repeat)
                 .compose(bindToLifecycle())
                 .distinct()
-                .subscribe(repo -> {
-                            ArrayList<MainVO> vo = new ArrayList<>();
-                            for (Music e : repo.getMusic()) {
-                                vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
-                                        e.get_sid(), e.get_aid()));
+                .subscribe(response -> {
+                            for (Source song : response) {
+                                vo.add(new MainVO(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),
+                                        song.get_sid(), song.get_aid()));
                             }
+                            mainAdapter.notifyDataSetChanged();
+                            requestRetrofitSearch2(index, repeat + 1);
                         },
-                        e -> {
-                            Log.e(TAG, e.toString());
-                            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
-                        });
+                        e -> Log.e(TAG, e.toString()));
     }
 
 }

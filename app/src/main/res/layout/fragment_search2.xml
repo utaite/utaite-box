@@ -5,6 +5,7 @@
 
     <TextView
         android:id="@+id/search_txt2"
+        android:text="@string/search_desc2"
         style="@style/ListText" />
 
     <android.support.v7.widget.RecyclerView

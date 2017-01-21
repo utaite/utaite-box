@@ -27,8 +27,6 @@ public class SearchFragment extends RxFragment {
 
     @BindView(R.id.search_tab)
     TabLayout search_tab;
-    @BindView(R.id.search_txt1)
-    TextView search_txt1;
     @BindView(R.id.search_view_pager)
     ViewPager search_view_pager;
 
@@ -48,25 +46,9 @@ public class SearchFragment extends RxFragment {
         TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager(), arrayList);
         search_view_pager.setAdapter(tabAdapter);
         search_tab.setupWithViewPager(search_view_pager);
-        search_txt1.setText(tabAdapter.getPageDesc(0));
         for (int i = 0; i < search_tab.getTabCount(); i++) {
             search_tab.getTabAt(i).setIcon(imgs[i]);
         }
-
-        search_tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                search_txt1.setText(tabAdapter.getPageDesc(tab.getPosition()));
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
     }
 
 }

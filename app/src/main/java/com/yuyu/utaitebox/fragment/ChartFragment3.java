@@ -13,11 +13,8 @@ import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.ActiveAdapter;
-import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.rest.Active;
-import com.yuyu.utaitebox.rest.Music;
 import com.yuyu.utaitebox.rest.RestUtils;
-import com.yuyu.utaitebox.utils.MainVO;
 
 import java.util.ArrayList;
 

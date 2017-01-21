@@ -17,29 +17,31 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.fragment.UserInfoFragment;
+import com.yuyu.utaitebox.fragment.UtaiteInfoFragment;
 import com.yuyu.utaitebox.rest.Active;
 import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.rest.Utaite;
 
 import java.util.ArrayList;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder> {
+public class UtaiteAdapter extends RecyclerView.Adapter<UtaiteAdapter.ViewHolder> {
 
-    private final String TAG = ActiveAdapter.class.getSimpleName();
+    private final String TAG = UtaiteAdapter.class.getSimpleName();
 
     private Context context;
     private FragmentManager fragmentManager;
-    private ArrayList<Active> vo;
+    private ArrayList<Utaite> vo;
 
-    public ActiveAdapter(Context context, FragmentManager fragmentManager, ArrayList<Active> vo) {
+    public UtaiteAdapter(Context context, FragmentManager fragmentManager, ArrayList<Utaite> vo) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.vo = vo;
     }
 
     @Override
-    public ActiveAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UtaiteAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.active_view, parent, false);
         return new ViewHolder(v);
     }
@@ -48,20 +50,18 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, final int position) {
         RequestManager glide = Glide.with(context);
 
-        String avatar = vo.get(position).getAvatar();
-        String cover = vo.get(position).getCover();
-        String url = RestUtils.BASE + context.getString(R.string.rest_profile_image);
+        holder.nav_id.setText(vo.get(position).getAritst().getAritst_en());
 
-        holder.nav_id.setText(vo.get(position).getNickname());
-        holder.nav_point.setText(context.getString(R.string.rest_point) + " " + vo.get(position).getPoint());
-        glide.load(url + (avatar == null ? context.getString(R.string.rest_profile) : avatar))
+        String cover = vo.get(position).getAritst().getArtist_cover();
+        glide.load(RestUtils.BASE + (cover == null ?
+                context.getString(R.string.rest_images_artist) : context.getString(R.string.rest_artist_image) + vo.get(position).getAritst().getArtist_cover()))
                 .bitmapTransform(new CropCircleTransformation(context))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(holder.nav_img);
         holder.nav_img.setOnClickListener(v -> {
-            Fragment fragment = new UserInfoFragment();
+            Fragment fragment = new UtaiteInfoFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(vo.get(position).get_mid()));
+            bundle.putInt(context.getString(R.string.rest_aid), Integer.parseInt(vo.get(position).getAritst().get_aid()));
             fragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .replace(R.id.content_main, fragment)
@@ -69,11 +69,11 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
                     .commit();
         });
 
-        if (cover == null) {
+        if (vo.get(position).getAritst().getArtist_background() == null) {
             holder.nav_bg1.setImageResource(android.R.color.transparent);
             holder.nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));
         } else {
-            glide.load(RestUtils.BASE + context.getString(R.string.rest_profile_cover) + cover)
+            glide.load(RestUtils.BASE + context.getString(R.string.rest_artist_cover) + vo.get(position).getAritst().getArtist_background())
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.nav_bg1);
         }
@@ -87,14 +87,13 @@ public class ActiveAdapter extends RecyclerView.Adapter<ActiveAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView nav_bg1, nav_img;
-        TextView nav_id, nav_point;
+        TextView nav_id;
 
         ViewHolder(View view) {
             super(view);
             nav_bg1 = (ImageView) view.findViewById(R.id.nav_bg1);
             nav_img = (ImageView) view.findViewById(R.id.nav_img);
             nav_id = (TextView) view.findViewById(R.id.nav_id);
-            nav_point = (TextView) view.findViewById(R.id.nav_point);
         }
     }
 

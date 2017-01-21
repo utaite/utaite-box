@@ -94,7 +94,7 @@ public class UtaiteInfoFragment extends RxFragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         utaiteinfo_recyclerview.setLayoutManager(llm);
 
-        mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
+        mainAdapter = new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
         utaiteinfo_recyclerview.setAdapter(mainAdapter);
         Chained.setVisibilityMany(View.GONE, utaiteinfo_text1_src, utaiteinfo_ribbon_img, utaiteinfo_timeline, utaiteinfo_recyclerview);
         requestRetrofit(getString(R.string.rest_artist), getArguments().getInt(getString(R.string.rest_aid)));

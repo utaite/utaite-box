@@ -40,6 +40,7 @@
     <string name="rest_guest">Guest</string>
     <string name="rest_point">Point:</string>
 
+    <string name="rest_not_search">검색 결과가 없습니다.</string>
     <string name="rest_error">네트워크 접속에 실패했습니다.</string>
     <string name="rest_not_found">네트워크 접속에 실패했거나,\n요청한 페이지를 찾을 수 없습니다.</string>
 
@@ -74,7 +75,7 @@
     <string name="utaiteinfo_txt1_1">&#160;&#160;우타이테에 좋아요를 눌러주셨어요.</string>
     <string name="utaiteinfo_txt1_2">&#160;&#160;우타이테에 좋아요를 눌러보세요.</string>
     <string name="utaiteinfo_txt2">%1$s&#160;&#160;어떤 느낌의 우타이테인가요?</string>
-    <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 다른 노래는 어때요?</string>
+    <string name="utaiteinfo_txt3">%1$s&#160;&#160;우타이테의 노래를 들어보실래요?</string>
 
     <string name="user_txt1">%1$s&#160;&#160;좋아요</string>
     <string name="user_txt2">%1$s&#160;&#160;최근 들은 노래</string>
@@ -110,5 +111,5 @@
     <string name="search_title1">MUSIC</string>
     <string name="search_title2">UTAITE</string>
 
-    <string name="search_dialog">검색어를 입력해주세요.</string>
+    <string name="search_dialog">원활한 검색을 위해 \'영어로\' 입력해주세요.\n업로드 순으로 20개까지만 검색됩니다.</string>
 </resources>

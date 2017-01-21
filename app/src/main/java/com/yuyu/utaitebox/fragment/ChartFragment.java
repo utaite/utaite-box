@@ -27,6 +27,8 @@ public class ChartFragment extends RxFragment {
 
     @BindView(R.id.chart_tab)
     TabLayout chart_tab;
+    @BindView(R.id.chart_txt1)
+    TextView chart_txt1;
     @BindView(R.id.chart_view_pager)
     ViewPager chart_view_pager;
 
@@ -50,6 +52,22 @@ public class ChartFragment extends RxFragment {
         for (int i = 0; i < chart_tab.getTabCount(); i++) {
             chart_tab.getTabAt(i).setIcon(imgs[i]);
         }
+        chart_txt1.setText("▼  " + tabAdapter.getPageDesc(0));
+
+        chart_tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                chart_txt1.setText("▼  " + tabAdapter.getPageDesc(tab.getPosition()));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 
 }

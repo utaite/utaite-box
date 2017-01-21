@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.img.setOnClickListener(v -> onImageClick(position, false));
 
         holder.title.setText(vo.get(position).getTitle());
+        holder.title.setGravity(Gravity.CENTER);
         holder.title.bringToFront();
         holder.utaite.setText(vo.get(position).getUtaite());
     }

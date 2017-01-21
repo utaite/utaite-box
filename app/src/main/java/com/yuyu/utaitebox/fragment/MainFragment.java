@@ -66,7 +66,7 @@ public class MainFragment extends RxFragment {
                                     vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                                             e.get_sid(), e.get_aid()));
                                 }
-                                main_recyclerview.setAdapter(new MainAdapter(context, getFragmentManager(), vo));
+                                main_recyclerview.setAdapter(new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo));
                             }
                             ((MainActivity) context).getTask().onPostExecute(null);
                         },

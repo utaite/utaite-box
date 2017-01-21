@@ -59,7 +59,7 @@ public class MusicListFragment extends RxFragment {
         vo = new ArrayList<>();
 
         requestRetrofit(getString(R.string.rest_songlist), count);
-        mainAdapter = new MainAdapter(context, getFragmentManager(), vo);
+        mainAdapter = new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
         musiclist_recyclerview.setAdapter(mainAdapter);
         musiclist_prev.setText(getString(R.string.musiclist_txt1));
     }
