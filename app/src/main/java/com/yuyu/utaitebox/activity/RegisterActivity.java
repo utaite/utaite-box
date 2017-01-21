@@ -1,11 +1,8 @@
 package com.yuyu.utaitebox.activity;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +12,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.rest.RestUtils;
-import com.yuyu.utaitebox.utils.Constant;
 
 import java.util.ArrayList;
 

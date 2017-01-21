@@ -17,9 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
-import com.yuyu.utaitebox.fragment.UserInfoFragment;
 import com.yuyu.utaitebox.fragment.UtaiteInfoFragment;
-import com.yuyu.utaitebox.rest.Active;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Utaite;
 

@@ -2,31 +2,25 @@ package com.yuyu.utaitebox.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
-import com.yuyu.utaitebox.adapter.TabAdapter;
 import com.yuyu.utaitebox.adapter.UtaiteAdapter;
-import com.yuyu.utaitebox.chain.ChainedArrayList;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.SearchArtist;
 import com.yuyu.utaitebox.rest.SearchMusic;
 import com.yuyu.utaitebox.rest.Source;
 import com.yuyu.utaitebox.rest.Utaite;
 import com.yuyu.utaitebox.utils.MainVO;
-import com.yuyu.utaitebox.utils.TabVO;
 
 import java.util.ArrayList;
 

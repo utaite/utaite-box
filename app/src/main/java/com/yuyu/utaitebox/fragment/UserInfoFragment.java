@@ -22,7 +22,6 @@ import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.chain.ChainedArrayList;
-import com.yuyu.utaitebox.rest.Playlist;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.utils.MainVO;
