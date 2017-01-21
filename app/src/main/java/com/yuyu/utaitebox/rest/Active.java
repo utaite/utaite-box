@@ -12,13 +12,15 @@ public class Active {
     @SerializedName("nickname")
     private String nickname;
 
-    @SerializedName("avartar")
-    private String avartar;
+    @SerializedName("avatar")
+    private String avatar;
 
     @SerializedName("_mid")
     private String _mid;
 
     @SerializedName("point")
     private String point;
+
+    private String cover;
 
 }

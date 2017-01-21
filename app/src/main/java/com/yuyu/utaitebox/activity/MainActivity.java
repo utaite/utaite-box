@@ -27,6 +27,9 @@ import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.fragment.ChartFragment;
 import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
+import com.yuyu.utaitebox.fragment.SearchFragment;
+import com.yuyu.utaitebox.fragment.TimelineFragment;
+import com.yuyu.utaitebox.fragment.UserInfoFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.Task;
@@ -124,9 +127,6 @@ public class MainActivity extends RxAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int iid = item.getItemId();
-        if (iid == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -141,6 +141,9 @@ public class MainActivity extends RxAppCompatActivity {
         } else if (iid == R.id.nav_chart) {
             fragment = new ChartFragment();
         } else if (iid == R.id.nav_timeline) {
+            fragment = new TimelineFragment();
+        } else if (iid == R.id.nav_search) {
+            fragment = new SearchFragment();
         }
         return fragment;
     }
@@ -175,6 +178,20 @@ public class MainActivity extends RxAppCompatActivity {
                                     .bitmapTransform(new CropCircleTransformation(context))
                                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                     .into(nav_img);
+                            nav_img.setOnClickListener(v -> {
+                                if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+                                    drawer_layout.closeDrawer(GravityCompat.START);
+                                }
+
+                                Fragment fragment = new UserInfoFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(repo.getProfile().get_mid()));
+                                fragment.setArguments(bundle);
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragment)
+                                        .addToBackStack(null)
+                                        .commit();
+                            });
                             if (cover == null) {
                                 nav_bg1.setImageResource(android.R.color.transparent);
                                 nav_bg1.setBackgroundColor(Color.rgb(204, 204, 204));

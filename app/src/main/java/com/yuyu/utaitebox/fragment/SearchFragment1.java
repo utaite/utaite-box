@@ -8,55 +8,70 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
-import com.yuyu.utaitebox.adapter.ActiveAdapter;
 import com.yuyu.utaitebox.adapter.MainAdapter;
-import com.yuyu.utaitebox.rest.Active;
 import com.yuyu.utaitebox.rest.Music;
 import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.rest.SearchMusic;
 import com.yuyu.utaitebox.utils.MainVO;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class ChartFragment3 extends RxFragment {
+public class SearchFragment1 extends RxFragment {
 
-    private final String TAG = ChartFragment3.class.getSimpleName();
+    private final String TAG = SearchFragment1.class.getSimpleName();
 
     private Context context;
-    private ArrayList<Active> vo;
 
-    @BindView(R.id.chart_recyclerview3)
-    RecyclerView chart_recyclerview3;
+    @BindView(R.id.search_recyclerview1)
+    RecyclerView search_recyclerview1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chart3, container, false);
+        View view = inflater.inflate(R.layout.fragment_search1, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
-        requestRetrofit(getString(R.string.rest_chart));
         return view;
+    }
+
+    @OnClick(R.id.search_txt1)
+    public void onTextView1Click() {
+        new MaterialDialog.Builder(context)
+                .input(null, null, (dialog, input) -> {
+                })
+                .content(getString(R.string.search_dialog))
+                .positiveText(getString(R.string.yes))
+                .negativeText(getString(R.string.no))
+                .onPositive((dialog, which) -> {
+                    String result = dialog.getInputEditText().getText().toString().trim();
+                    requestRetrofit(result);
+                })
+                .onNegative((dialog, which) -> dialog.cancel())
+                .show();
     }
 
     public void requestRetrofit(String what) {
         RestUtils.getRetrofit()
-                .create(RestUtils.ChartApi.class)
-                .chartApi(what)
+                .create(RestUtils.SearchApi.class)
+                .searchApi(what)
                 .compose(bindToLifecycle())
                 .distinct()
                 .subscribe(response -> {
                             LinearLayoutManager llm = new LinearLayoutManager(context);
                             llm.setOrientation(LinearLayoutManager.VERTICAL);
-                            chart_recyclerview3.setLayoutManager(llm);
-                            vo = new ArrayList<>();
-                            for (int i = 0; i < 5; i++) {
-                                vo.add(response.getActive().get(i));
-                                requestRetrofitCover(i, context.getString(R.string.rest_member), Integer.parseInt(response.getActive().get(i).get_mid()));
+                            search_recyclerview1.setHasFixedSize(true);
+                            search_recyclerview1.setLayoutManager(llm);
+                            for (SearchMusic e : response.getMusic()) {
+                                requestRetrofitSong(Integer.parseInt(e.get_source_id()));
                             }
                         },
                         e -> {
@@ -65,19 +80,17 @@ public class ChartFragment3 extends RxFragment {
                         });
     }
 
-    public void requestRetrofitCover(int position, String what, int index) {
+    public void requestRetrofitSong(int index) {
         RestUtils.getRetrofit()
                 .create(RestUtils.DefaultApi.class)
-                .defaultApi(what, index)
+                .defaultApi(getString(R.string.rest_song), index)
                 .compose(bindToLifecycle())
                 .distinct()
-                .subscribe(response -> {
-                            String cover = response.getProfile().getCover();
-                            vo.get(position).setCover(cover);
-                            if (position == 4) {
-                                ActiveAdapter activeAdapter = new ActiveAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
-                                chart_recyclerview3.setAdapter(activeAdapter);
-                                activeAdapter.notifyDataSetChanged();
+                .subscribe(repo -> {
+                            ArrayList<MainVO> vo = new ArrayList<>();
+                            for (Music e : repo.getMusic()) {
+                                vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
+                                        e.get_sid(), e.get_aid()));
                             }
                         },
                         e -> {

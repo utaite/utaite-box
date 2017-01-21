@@ -36,6 +36,9 @@
     <string name="rest_listen">listen</string>
     <string name="rest_upload">upload</string>
     <string name="rest_playlist">playlist</string>
+    <string name="rest_timeline">timeline</string>
+    <string name="rest_guest">Guest</string>
+    <string name="rest_point">Point:</string>
 
     <string name="rest_error">네트워크 접속에 실패했습니다.</string>
     <string name="rest_not_found">네트워크 접속에 실패했거나,\n요청한 페이지를 찾을 수 없습니다.</string>
@@ -86,10 +89,26 @@
     <string name="like">LIKE</string>
 
     <string name="tab_desc1">가장 많이 재생된 노래</string>
-    <string name="tab_desc2">가장 많이 재생된 노래를 부른 우타이테</string>
-    <string name="tab_desc3">가장 많이 노래를 업로드한 사용자</string>
+    <string name="tab_desc2">가장 인기있는 우타이테들의 노래</string>
+    <string name="tab_desc3">가장 많은 노래를 업로드한 사용자</string>
 
-    <string name="tab_title1">Music</string>
-    <string name="tab_title2">Utaite</string>
-    <string name="tab_title3">User</string>
+    <string name="tab_title1">MUSIC</string>
+    <string name="tab_title2">UTAITE</string>
+    <string name="tab_title3">USER</string>
+
+
+    <string name="timeline_desc1">최근에 재생된 노래</string>
+    <string name="timeline_desc2">최근에 작성된 코멘트</string>
+
+    <string name="timeline_title1">LISTEN</string>
+    <string name="timeline_title2">COMMENT</string>
+
+
+    <string name="search_desc1">노래 검색하기</string>
+    <string name="search_desc2">우타이테 검색하기</string>
+
+    <string name="search_title1">MUSIC</string>
+    <string name="search_title2">UTAITE</string>
+
+    <string name="search_dialog">검색어를 입력해주세요.</string>
 </resources>

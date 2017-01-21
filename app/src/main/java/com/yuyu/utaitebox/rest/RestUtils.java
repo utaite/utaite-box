@@ -65,4 +65,14 @@ public class RestUtils {
         Observable<Chart> chartApi(@Path("what") String what);
     }
 
+    public interface TimelineApi {
+        @GET("api/{what}")
+        Observable<Timeline> timelineApi(@Path("what") String what);
+    }
+
+    public interface SearchApi {
+        @GET("api/search/all/{what}")
+        Observable<Search> searchApi(@Path("what") String what);
+    }
+
 }
