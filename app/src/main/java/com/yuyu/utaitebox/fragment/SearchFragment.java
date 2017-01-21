@@ -58,6 +58,11 @@ public class SearchFragment extends RxFragment {
 
     @OnClick(R.id.search_music_btn)
     public void onMusicSearchButtonClick() {
+        getFragmentManager().beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit();
+
         new MaterialDialog.Builder(context)
                 .input(null, null, (dialog, input) -> {
                 })
@@ -65,11 +70,6 @@ public class SearchFragment extends RxFragment {
                 .positiveText(getString(R.string.yes))
                 .negativeText(getString(R.string.no))
                 .onPositive((dialog, which) -> {
-                    getFragmentManager().beginTransaction()
-                            .detach(this)
-                            .attach(this)
-                            .commit();
-
                     String result = dialog.getInputEditText().getText().toString().trim();
                     requestRetrofitMusic1(result);
                 })
@@ -120,6 +120,11 @@ public class SearchFragment extends RxFragment {
 
     @OnClick(R.id.search_utaite_btn)
     public void onUtaiteSearchButtonClick() {
+        getFragmentManager().beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit();
+
         new MaterialDialog.Builder(context)
                 .input(null, null, (dialog, input) -> {
                 })
@@ -127,11 +132,6 @@ public class SearchFragment extends RxFragment {
                 .positiveText(getString(R.string.yes))
                 .negativeText(getString(R.string.no))
                 .onPositive((dialog, which) -> {
-                    getFragmentManager().beginTransaction()
-                            .detach(this)
-                            .attach(this)
-                            .commit();
-
                     String result = dialog.getInputEditText().getText().toString().trim();
                     requestRetrofitUtaite1(result);
                 })

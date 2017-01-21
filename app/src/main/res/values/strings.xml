@@ -28,6 +28,9 @@
     <string name="login_required_err">값을 입력해주세요</string>
     <string name="register_email_err">잘못된 이메일 형식입니다.</string>
 
+    <string name="login_bg">http://utaitebox.com/images/login_bg.jpg</string>
+    <string name="register_bg">http://utaitebox.com/images/register_bg.jpg</string>
+
     <string name="onBackPressed">\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.</string>
 
 
@@ -137,7 +140,7 @@
     <string name="search_title1">MUSIC</string>
     <string name="search_title2">UTAITE</string>
 
-    <string name="search_dialog">한국어가 지원되지만, 원활한 검색을 위해\n\'영본어로\' 입력해주시면 좋습니다.\n업로드 순으로 20개까지만 검색됩니다.</string>
+    <string name="search_dialog">한국어가 지원되지만, 원활한 검색을 위해\n\'영본어\'로 입력해주시면 좋습니다.\n업로드 순으로 20개까지만 검색됩니다.</string>
 
 
     <string name="register_err_2">아이디가 너무 짧습니다.</string>

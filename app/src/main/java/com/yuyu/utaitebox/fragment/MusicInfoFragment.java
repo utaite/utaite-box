@@ -166,21 +166,13 @@ public class MusicInfoFragment extends RxFragment {
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
                     int position = i;
-                    iv[i].setOnClickListener(v -> {
-                        Fragment fragment = new UserInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(ribbon.get(position).get_mid()));
-                        fragment.setArguments(bundle);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_main, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    });
+                    iv[i].setOnClickListener(v -> onProfileClick(ribbon.get(position).get_mid()));
 
                     tv[i] = new TextView(context);
                     String nickname = ribbon.get(i).getNickname();
                     tv[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                     tv[i].setTextColor(Color.BLACK);
+                    tv[i].setOnClickListener(v -> onProfileClick(ribbon.get(position).get_mid()));
 
                     rAbsolute = new LinearLayout(context);
                     rAbsolute.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -246,16 +238,7 @@ public class MusicInfoFragment extends RxFragment {
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
                     int position = i;
-                    iv[i].setOnClickListener(v -> {
-                        Fragment fragment = new UserInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(comment.get(position).get_mid()));
-                        fragment.setArguments(bundle);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_main, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    });
+                    iv[i].setOnClickListener(v -> onProfileClick(comment.get(position).get_mid()));
 
                     rRelativeImg = new RelativeLayout(context);
                     RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -270,6 +253,8 @@ public class MusicInfoFragment extends RxFragment {
                     nick[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                     nick[i].setTextColor(Color.BLACK);
                     nick[i].setTextSize(20);
+                    nick[i].setOnClickListener(v -> onProfileClick(comment.get(position).get_mid()));
+
                     rRelativeNick = new RelativeLayout(context);
                     rRelativeNick.setId(i + nickInt);
                     RelativeLayout.LayoutParams pNick = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -435,6 +420,17 @@ public class MusicInfoFragment extends RxFragment {
                             Log.e(TAG, e.toString());
                             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
                         });
+    }
+
+    public void onProfileClick(String mid) {
+        Fragment fragment = new UserInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(mid));
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

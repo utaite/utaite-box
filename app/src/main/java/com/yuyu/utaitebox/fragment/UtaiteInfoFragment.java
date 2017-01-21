@@ -140,16 +140,7 @@ public class UtaiteInfoFragment extends RxFragment {
                             .into(iv[i]);
 
                     int position = i;
-                    iv[i].setOnClickListener(v -> {
-                        Fragment fragment = new UserInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(comment.get(position).get_mid()));
-                        fragment.setArguments(bundle);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_main, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    });
+                    iv[i].setOnClickListener(v -> onProfileClick(comment.get(position).get_mid()));
 
                     tv[i] = new TextView(context);
                     String nickname = comment.get(i).getNickname();
@@ -224,16 +215,7 @@ public class UtaiteInfoFragment extends RxFragment {
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(iv[i]);
                     int position = i;
-                    iv[i].setOnClickListener(v -> {
-                        Fragment fragment = new UserInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(comment.get(position).get_mid()));
-                        fragment.setArguments(bundle);
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_main, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    });
+                    iv[i].setOnClickListener(v -> onProfileClick(comment.get(position).get_mid()));
 
                     rRelativeImg = new RelativeLayout(context);
                     RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -419,4 +401,16 @@ public class UtaiteInfoFragment extends RxFragment {
                     requestRetrofitList(getArguments().getInt(getString(R.string.rest_aid)), ++count);
                 }, e -> mainAdapter.notifyDataSetChanged());
     }
+
+    public void onProfileClick(String mid) {
+        Fragment fragment = new UserInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(mid));
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
 }

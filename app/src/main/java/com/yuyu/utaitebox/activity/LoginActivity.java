@@ -10,11 +10,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
@@ -41,6 +46,14 @@ public class LoginActivity extends RxAppCompatActivity {
     AppCompatCheckBox login_save_btn;
     @BindView(R.id.login_check_btn)
     AppCompatCheckBox login_check_btn;
+    @BindView(R.id.login_bg)
+    ImageView login_bg;
+    @BindView(R.id.login_login_btn)
+    Button login_login_btn;
+    @BindView(R.id.login_guest_btn)
+    Button login_guest_btn;
+    @BindView(R.id.login_register_btn)
+    Button login_register_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +112,10 @@ public class LoginActivity extends RxAppCompatActivity {
     }
 
     public void initialize() {
+        login_bg.setImageResource(R.drawable.login_bg);
+        login_bg.setAlpha(125);
+        Chained.setAlpha(150, login_login_btn, login_guest_btn, login_register_btn);
+
         setTitle(getString(R.string._login_login_btn));
         String status = getSharedPreferences(getString(R.string.login_login), MODE_PRIVATE).getString(getString(R.string.login_status), null);
 
@@ -174,7 +191,7 @@ public class LoginActivity extends RxAppCompatActivity {
                 .subscribe(o -> {
                             if (o.isStatus()) {
                                 MainActivity.MID = o.getData().get_mid();
-                                MainActivity.TOKEN = o.getData().getToken();
+                                MainActivity.TOKEN = isGuest ? null : o.getData().getToken();
                                 startActivity(new Intent(this, MainActivity.class));
                                 finish();
                             } else {

@@ -15,14 +15,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.Button.Login" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">#FFBB00</item>
-    </style>
-
-    <style name="AppTheme.Button.Register" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">#6799FF</item>
-    </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

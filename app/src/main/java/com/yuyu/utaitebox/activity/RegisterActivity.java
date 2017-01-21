@@ -10,11 +10,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
@@ -39,6 +44,10 @@ public class RegisterActivity extends RxAppCompatActivity {
     AutoCompleteTextView register_id_edit;
     @BindView(R.id.register_pw_edit)
     EditText register_pw_edit;
+    @BindView(R.id.register_bg)
+    ImageView register_bg;
+    @BindView(R.id.register_register_btn)
+    Button register_register_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,9 @@ public class RegisterActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         toast = new ChainedToast(this).makeTextTo(this, "", Toast.LENGTH_SHORT);
+        register_bg.setImageResource(R.drawable.register_bg);
+        register_bg.setAlpha(125);
+        Chained.setAlpha(150, register_register_btn);
         setTitle(getString(R.string._login_register_btn));
     }
 
