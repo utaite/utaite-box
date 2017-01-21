@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/search_tab"
+    <LinearLayout
+        android:id="@+id/search_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/search_view_pager"
+        <Button
+            android:id="@+id/search_music_btn"
+            style="@style/LoginButton"
+            android:layout_weight="1"
+            android:text="@string/search_desc1"
+            android:theme="@style/SearchMusicButton" />
+
+        <Button
+            android:id="@+id/search_utaite_btn"
+            style="@style/LoginButton"
+            android:layout_weight="1"
+            android:text="@string/search_desc2"
+            android:theme="@style/SearchUtaiteButton" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search_tab" />
+        android:layout_below="@+id/search_layout"
+        android:scrollbars="vertical" />
+
 
 </RelativeLayout>

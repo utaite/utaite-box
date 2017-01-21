@@ -71,4 +71,12 @@
         <item name="colorButtonNormal">#F29661</item>
     </style>
 
+    <style name="SearchMusicButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#FFCA6C</item>
+    </style>
+
+    <style name="SearchUtaiteButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#F15F5F</item>
+    </style>
+
 </resources>

@@ -89,16 +89,7 @@ public class TimelineFragment2 extends RxFragment {
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(iv[i]);
                 int position = i;
-                iv[i].setOnClickListener(v -> {
-                    Fragment fragment = new UserInfoFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(right.get(position).get_mid()));
-                    fragment.setArguments(bundle);
-                    ((MainActivity) context).getFragmentManager().beginTransaction()
-                            .replace(R.id.content_main, fragment)
-                            .addToBackStack(null)
-                            .commit();
-                });
+                iv[i].setOnClickListener(v -> onProfileClick(right, position));
 
                 rRelativeImg = new RelativeLayout(context);
                 RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -113,6 +104,7 @@ public class TimelineFragment2 extends RxFragment {
                 nick[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                 nick[i].setTextColor(Color.BLACK);
                 nick[i].setTextSize(20);
+                nick[i].setOnClickListener(v -> onProfileClick(right, position));
 
                 rRelativeNick = new RelativeLayout(context);
                 rRelativeNick.setId(i + nickInt);
@@ -161,6 +153,17 @@ public class TimelineFragment2 extends RxFragment {
             }
             timeline_view2.addView(rAbsolute);
         }
+    }
+
+    public void onProfileClick(ArrayList<Right> right, int position) {
+        Fragment fragment = new UserInfoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(right.get(position).get_mid()));
+        fragment.setArguments(bundle);
+        ((MainActivity) context).getFragmentManager().beginTransaction()
+                .replace(R.id.content_main, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

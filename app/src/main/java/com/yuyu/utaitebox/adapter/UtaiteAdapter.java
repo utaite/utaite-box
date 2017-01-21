@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class UtaiteAdapter extends RecyclerView.Adapter<UtaiteAdapter.ViewHolder
         RequestManager glide = Glide.with(context);
 
         holder.nav_id.setText(vo.get(position).getAritst().getAritst_en());
+        holder.nav_id.setGravity(Gravity.CENTER);
 
         String cover = vo.get(position).getAritst().getArtist_cover();
         glide.load(RestUtils.BASE + (cover == null ?

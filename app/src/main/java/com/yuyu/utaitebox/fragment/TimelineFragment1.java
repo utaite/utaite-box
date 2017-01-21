@@ -76,7 +76,10 @@ public class TimelineFragment1 extends RxFragment {
             ImageView iv[] = new ImageView[size];
             TextView nick[] = new TextView[size];
             TextView title[] = new TextView[size];
+            TextView utaite[] = new TextView[size];
+            TextView hypen[] = new TextView[size];
             TextView date[] = new TextView[size];
+            LinearLayout text[] = new LinearLayout[size];
 
             for (int i = 0; i < size; i++) {
                 iv[i] = new ImageView(context);
@@ -87,18 +90,7 @@ public class TimelineFragment1 extends RxFragment {
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(iv[i]);
                 int position = i;
-                iv[i].setOnClickListener(v -> {
-                    if(left.get(position).get_mid() != null) {
-                        Fragment fragment = new UserInfoFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(left.get(position).get_mid()));
-                        fragment.setArguments(bundle);
-                        ((MainActivity) context).getFragmentManager().beginTransaction()
-                                .replace(R.id.content_main, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
+                iv[i].setOnClickListener(v -> onProfileClick(left, position));
 
                 rRelativeImg = new RelativeLayout(context);
                 RelativeLayout.LayoutParams pImg = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -113,6 +105,8 @@ public class TimelineFragment1 extends RxFragment {
                 nick[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                 nick[i].setTextColor(Color.BLACK);
                 nick[i].setTextSize(20);
+                nick[i].setOnClickListener(v -> onProfileClick(left, position));
+
                 rRelativeNick = new RelativeLayout(context);
                 rRelativeNick.setId(i + nickInt);
                 RelativeLayout.LayoutParams pNick = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -124,9 +118,44 @@ public class TimelineFragment1 extends RxFragment {
                 rRelativeImg.addView(rRelativeNick);
 
                 title[i] = new TextView(context);
-                title[i].setText(left.get(i).getSong_original() + " - " + left.get(i).getArtist_en());
+                title[i].setText(left.get(i).getSong_original());
                 title[i].setTextColor(Color.BLACK);
                 title[i].setTextSize(12);
+                title[i].setOnClickListener(v -> {
+                    Fragment fragment = new MusicInfoFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(context.getString(R.string.rest_sid), Integer.parseInt(left.get(position).get_sid()));
+                    fragment.setArguments(bundle);
+                    ((MainActivity) context).getFragmentManager().beginTransaction()
+                            .replace(R.id.content_main, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
+
+                utaite[i] = new TextView(context);
+                utaite[i].setText(left.get(i).getArtist_en());
+                utaite[i].setTextColor(Color.BLACK);
+                utaite[i].setTextSize(12);
+                utaite[i].setOnClickListener(v -> {
+                    Fragment fragment = new UtaiteInfoFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(context.getString(R.string.rest_aid), Integer.parseInt(left.get(position).get_aid()));
+                    fragment.setArguments(bundle);
+                    ((MainActivity) context).getFragmentManager().beginTransaction()
+                            .replace(R.id.content_main, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
+
+                hypen[i] = new TextView(context);
+                hypen[i].setText(" - ");
+                hypen[i].setTextColor(Color.BLACK);
+                hypen[i].setTextSize(12);
+
+                text[i] = new LinearLayout(context);
+                text[i].addView(title[i]);
+                text[i].addView(hypen[i]);
+                text[i].addView(utaite[i]);
 
                 rRelativeCont = new RelativeLayout(context);
                 RelativeLayout.LayoutParams pCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -136,7 +165,7 @@ public class TimelineFragment1 extends RxFragment {
                 rRelativeCont.setId(i + titleInt);
                 rRelativeCont.setPadding(0, 0, 10, 10);
                 rRelativeCont.setLayoutParams(pCont);
-                rRelativeCont.addView(title[i]);
+                rRelativeCont.addView(text[i]);
                 rRelativeImg.addView(rRelativeCont);
 
                 date[i] = new TextView(context);
@@ -166,6 +195,19 @@ public class TimelineFragment1 extends RxFragment {
                 rRelativeImg.setBackground(drawable);
             }
             timeline_view1.addView(rAbsolute);
+        }
+    }
+
+    public void onProfileClick(ArrayList<Left> left, int position){
+        if (left.get(position).get_mid() != null) {
+            Fragment fragment = new UserInfoFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(context.getString(R.string.rest_mid), Integer.parseInt(left.get(position).get_mid()));
+            fragment.setArguments(bundle);
+            ((MainActivity) context).getFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
