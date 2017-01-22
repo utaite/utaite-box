@@ -43,6 +43,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+
 public class MainActivity extends RxAppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
@@ -105,7 +107,10 @@ public class MainActivity extends RxAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+        if (getString(R.string.service_list).equals(getIntent().getAction())) {
+            finish();
+
+        } else if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START);
 
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
@@ -153,7 +158,6 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     public void initialize() {
-        playlists = new ArrayList<>();
         int size = nav_view.getMenu().size();
         items = (ArrayList<Integer>) new ChainedArrayList()
                 .addMenu(nav_view.getMenu(), 0, size);
@@ -171,22 +175,21 @@ public class MainActivity extends RxAppCompatActivity {
             String title = intent.getStringExtra(getString(R.string.music_title));
             String utaite = intent.getStringExtra(getString(R.string.music_utaite));
 
-            Fragment fragment = new MusicInfoFragment();
-            Bundle bundle = new Bundle();
-            bundle.putInt(context.getString(R.string.rest_sid), sid);
-            fragment.setArguments(bundle);
+            Intent i = new Intent(context, MusicActivity.class)
+                    .setFlags(FLAG_ACTIVITY_NO_HISTORY)
+                    .putExtra(getString(R.string.music_sid), sid)
+                    .putExtra(getString(R.string.music_key), key)
+                    .putExtra(getString(R.string.music_cover), cover)
+                    .putExtra(getString(R.string.music_title), title)
+                    .putExtra(getString(R.string.music_utaite), utaite);
+            startActivity(i);
+
+        } else if (getString(R.string.service_list).equals(intent.getAction())) {
+            nav_view.getMenu().getItem(1).setChecked(true);
             getFragmentManager().beginTransaction()
-                    .replace(R.id.content_main, fragment)
+                    .replace(R.id.content_main, new PlaylistFragment())
                     .addToBackStack(null)
                     .commit();
-
-            Intent i = new Intent(context, MusicActivity.class);
-            i.putExtra(getString(R.string.music_sid), sid);
-            i.putExtra(getString(R.string.music_key), key);
-            i.putExtra(getString(R.string.music_cover), cover);
-            i.putExtra(getString(R.string.music_title), title);
-            i.putExtra(getString(R.string.music_utaite), utaite);
-            startActivity(i);
         }
     }
 
@@ -234,7 +237,8 @@ public class MainActivity extends RxAppCompatActivity {
                         },
                         e -> Log.e(TAG, e.toString()));
 
-        if (MID != Constant.GUEST) {
+        if (MID != Constant.GUEST && playlists == null) {
+            playlists = new ArrayList<>();
             RestUtils.getRetrofit()
                     .create(RestUtils.PlaylistApi.class)
                     .playlistApi(TOKEN)

@@ -23,6 +23,9 @@ import com.yuyu.utaitebox.utils.PlaylistVO;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
 
     private final String TAG = PlaylistAdapter.class.getSimpleName();
@@ -65,12 +68,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     public Intent setIntent(Intent intent, int position) {
-        intent.putExtra(context.getString(R.string.music_sid), MainActivity.playlists.get(position).get_sid());
-        intent.putExtra(context.getString(R.string.music_key), MainActivity.playlists.get(position).getKey());
-        intent.putExtra(context.getString(R.string.music_cover), MainActivity.playlists.get(position).getCover());
-        intent.putExtra(context.getString(R.string.music_title), MainActivity.playlists.get(position).getSong_original());
-        intent.putExtra(context.getString(R.string.music_utaite), MainActivity.playlists.get(position).getArtist_en());
-        return intent;
+        return intent.setFlags(FLAG_ACTIVITY_NO_HISTORY)
+                .putExtra(context.getString(R.string.music_sid), MainActivity.playlists.get(position).get_sid())
+                .putExtra(context.getString(R.string.music_key), MainActivity.playlists.get(position).getKey())
+                .putExtra(context.getString(R.string.music_cover), MainActivity.playlists.get(position).getCover())
+                .putExtra(context.getString(R.string.music_title), MainActivity.playlists.get(position).getSong_original())
+                .putExtra(context.getString(R.string.music_utaite), MainActivity.playlists.get(position).getArtist_en());
     }
 
     public void onMusicLongClick(int position) {

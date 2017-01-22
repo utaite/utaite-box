@@ -22,6 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+
+
 public class MusicActivity extends RxAppCompatActivity {
 
     private final String TAG = MusicActivity.class.getSimpleName();
@@ -71,9 +74,11 @@ public class MusicActivity extends RxAppCompatActivity {
             new Thread() {
                 @Override
                 public void run() {
-                    while (!MusicService.mediaPlayer.isPlaying()) {
+                    if(MusicService.mediaPlayer != null) {
+                        while (!MusicService.mediaPlayer.isPlaying()) {
+                        }
+                        runOnUiThread(() -> initialize());
                     }
-                    runOnUiThread(() -> initialize());
                 }
             }.start();
         }
@@ -81,18 +86,30 @@ public class MusicActivity extends RxAppCompatActivity {
 
     @OnClick(R.id.music_stop)
     public void onMusicStopButtonClick() {
-        if (MusicService.mediaPlayer.isPlaying()) {
-            MusicService.mediaPlayer.pause();
-            music_stop.setImageResource(R.drawable.music_play);
-        } else {
-            MusicService.mediaPlayer.start();
-            music_stop.setImageResource(R.drawable.music_stop);
+        if(MusicService.mediaPlayer != null) {
+            if (MusicService.mediaPlayer.isPlaying()) {
+                MusicService.mediaPlayer.pause();
+                music_stop.setImageResource(R.drawable.music_play);
+            } else {
+                MusicService.mediaPlayer.start();
+                music_stop.setImageResource(R.drawable.music_stop);
+            }
         }
     }
 
     @OnClick(R.id.music_list_btn)
     public void onMusisListButtonClick() {
-
+        if(MusicService.mediaPlayer != null) {
+            Intent intent = new Intent(context, MainActivity.class)
+                    .setAction(getString(R.string.service_list))
+                    .setFlags(FLAG_ACTIVITY_NO_HISTORY)
+                    .putExtra(getString(R.string.music_sid), sid)
+                    .putExtra(getString(R.string.music_key), key)
+                    .putExtra(getString(R.string.music_cover), cover)
+                    .putExtra(getString(R.string.music_title), title)
+                    .putExtra(getString(R.string.music_utaite), utaite);
+            startActivity(intent);
+        }
     }
 
     public void initialize() {
@@ -121,11 +138,13 @@ public class MusicActivity extends RxAppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    MusicService.mediaPlayer.seekTo(progress);
-                    music_seek_bar.setProgress(progress);
+                if(MusicService.mediaPlayer != null) {
+                    if (fromUser) {
+                        MusicService.mediaPlayer.seekTo(progress);
+                        music_seek_bar.setProgress(progress);
+                    }
+                    setTime(music_time_current, MusicService.mediaPlayer.getCurrentPosition());
                 }
-                setTime(music_time_current, MusicService.mediaPlayer.getCurrentPosition());
             }
         });
     }
@@ -144,7 +163,9 @@ public class MusicActivity extends RxAppCompatActivity {
                     if (MusicService.mediaPlayer != null) {
                         music_seek_bar.setProgress(MusicService.mediaPlayer.getCurrentPosition());
                         try {
-                            Thread.sleep(1000);
+                            if(MusicService.mediaPlayer != null) {
+                                Thread.sleep(1000);
+                            }
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }

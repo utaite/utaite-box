@@ -18,6 +18,8 @@ import com.yuyu.utaitebox.activity.RegisterActivity;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+
 public class MusicService extends Service {
 
     private final String TAG = MusicService.class.getSimpleName();
@@ -52,14 +54,13 @@ public class MusicService extends Service {
 
     public void sendNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class).setFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setAction(getString(R.string.service_noti));
-        intent.putExtra(getString(R.string.music_sid), sid);
-        intent.putExtra(getString(R.string.music_key), key);
-        intent.putExtra(getString(R.string.music_cover), cover);
-        intent.putExtra(getString(R.string.music_title), title);
-        intent.putExtra(getString(R.string.music_utaite), utaite);
+        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class)
+                .setAction(getString(R.string.service_noti))
+                .putExtra(getString(R.string.music_sid), sid)
+                .putExtra(getString(R.string.music_key), key)
+                .putExtra(getString(R.string.music_cover), cover)
+                .putExtra(getString(R.string.music_title), title)
+                .putExtra(getString(R.string.music_utaite), utaite);
         PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())

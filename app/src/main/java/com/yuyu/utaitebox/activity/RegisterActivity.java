@@ -64,12 +64,13 @@ public class RegisterActivity extends RxAppCompatActivity {
             String title = intent.getStringExtra(getString(R.string.music_title));
             String utaite = intent.getStringExtra(getString(R.string.music_utaite));
 
-            Intent i = new Intent(context, MainActivity.class).setAction(getString(R.string.service_noti));
-            i.putExtra(getString(R.string.music_sid), sid);
-            i.putExtra(getString(R.string.music_key), key);
-            i.putExtra(getString(R.string.music_cover), cover);
-            i.putExtra(getString(R.string.music_title), title);
-            i.putExtra(getString(R.string.music_utaite), utaite);
+            Intent i = new Intent(context, MainActivity.class)
+                    .setAction(getString(R.string.service_noti))
+                    .putExtra(getString(R.string.music_sid), sid)
+                    .putExtra(getString(R.string.music_key), key)
+                    .putExtra(getString(R.string.music_cover), cover)
+                    .putExtra(getString(R.string.music_title), title)
+                    .putExtra(getString(R.string.music_utaite), utaite);
             startActivity(i);
             finish();
         }

@@ -49,6 +49,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+
 public class MusicInfoFragment extends RxFragment {
 
     private static final String TAG = MusicInfoFragment.class.getSimpleName();
@@ -317,7 +319,7 @@ public class MusicInfoFragment extends RxFragment {
     public void onPlayButtonClick() {
         if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
-        } else {
+        } else if (repo != null) {
             addList(false);
             if (MusicService.mediaPlayer != null) {
                 MusicService.mediaPlayer.stop();
@@ -333,19 +335,19 @@ public class MusicInfoFragment extends RxFragment {
     }
 
     public Intent setIntent(Intent intent) {
-        intent.putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()));
-        intent.putExtra(getString(R.string.music_key), repo.getSong().getKey());
-        intent.putExtra(getString(R.string.music_cover), repo.getSong().getCover());
-        intent.putExtra(getString(R.string.music_title), repo.getSong().getSong_original());
-        intent.putExtra(getString(R.string.music_utaite), repo.getSong().getArtist_en());
-        return intent;
+        return intent.setFlags(FLAG_ACTIVITY_NO_HISTORY)
+                .putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()))
+                .putExtra(getString(R.string.music_key), repo.getSong().getKey())
+                .putExtra(getString(R.string.music_cover), repo.getSong().getCover())
+                .putExtra(getString(R.string.music_title), repo.getSong().getSong_original())
+                .putExtra(getString(R.string.music_utaite), repo.getSong().getArtist_en());
     }
 
     @OnClick({R.id.musicinfo_ribbon_src, R.id.musicinfo_text2_src})
     public void onMusicRibbonClick() {
         if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
-        } else {
+        } else if (repo != null) {
             RestUtils.getRetrofit()
                     .create(RestUtils.MusicRibbon.class)
                     .musicRibbon(MainActivity.TOKEN, getArguments().getInt(getString(R.string.rest_sid)))
@@ -368,7 +370,7 @@ public class MusicInfoFragment extends RxFragment {
         if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
             musicinfo_timeline_edittext.getText().clear();
-        } else {
+        } else if (repo != null) {
             RestUtils.getRetrofit()
                     .create(RestUtils.MusicTimeline.class)
                     .musicTimeline(MainActivity.TOKEN, getArguments().getInt(getString(R.string.rest_sid)),
@@ -390,7 +392,7 @@ public class MusicInfoFragment extends RxFragment {
     public void onMusicAddlistClick() {
         if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
-        } else {
+        } else if (repo != null) {
             addList(true);
         }
     }

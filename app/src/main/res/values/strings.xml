@@ -107,7 +107,7 @@
     <string name="playlist_option3">전체 노래 삭제</string>
 
     <string name="playlist_delete1">선택된 노래를 삭제했습니다.</string>
-    <string name="playlist_delete2">전체 노래</string>
+    <string name="playlist_delete2">전체 노래를 삭제했습니다.</string>
 
 
     <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드된 노래에요.</string>
@@ -174,4 +174,5 @@
 
 
     <string name="service_noti">Notification</string>
+    <string name="service_list">List</string>
 </resources>
