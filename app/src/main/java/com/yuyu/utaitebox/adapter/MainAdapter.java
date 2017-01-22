@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.fragment.MusicInfoFragment;
 import com.yuyu.utaitebox.fragment.UtaiteInfoFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
@@ -30,12 +31,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     private final String TAG = MainAdapter.class.getSimpleName();
 
     private Context context;
-    private FragmentManager fragmentManager;
     private ArrayList<MainVO> vo;
 
-    public MainAdapter(Context context, FragmentManager fragmentManager, ArrayList<MainVO> vo) {
+    public MainAdapter(Context context,ArrayList<MainVO> vo) {
         this.context = context;
-        this.fragmentManager = fragmentManager;
         this.vo = vo;
     }
 
@@ -75,7 +74,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 R.string.rest_sid : R.string.rest_aid), Integer.parseInt(bg ?
                 vo.get(position).get_sid() : vo.get(position).get_aid()));
         fragment.setArguments(bundle);
-        fragmentManager.beginTransaction()
+        ((MainActivity) context).getFragmentManager().beginTransaction()
                 .replace(R.id.content_main, fragment)
                 .addToBackStack(null)
                 .commit();

@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.fragment.UtaiteInfoFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Utaite;
@@ -30,12 +31,10 @@ public class UtaiteAdapter extends RecyclerView.Adapter<UtaiteAdapter.ViewHolder
     private final String TAG = UtaiteAdapter.class.getSimpleName();
 
     private Context context;
-    private FragmentManager fragmentManager;
     private ArrayList<Utaite> vo;
 
-    public UtaiteAdapter(Context context, FragmentManager fragmentManager, ArrayList<Utaite> vo) {
+    public UtaiteAdapter(Context context, ArrayList<Utaite> vo) {
         this.context = context;
-        this.fragmentManager = fragmentManager;
         this.vo = vo;
     }
 
@@ -63,7 +62,7 @@ public class UtaiteAdapter extends RecyclerView.Adapter<UtaiteAdapter.ViewHolder
             Bundle bundle = new Bundle();
             bundle.putInt(context.getString(R.string.rest_aid), Integer.parseInt(vo.get(position).getAritst().get_aid()));
             fragment.setArguments(bundle);
-            fragmentManager.beginTransaction()
+            ((MainActivity) context).getFragmentManager().beginTransaction()
                     .replace(R.id.content_main, fragment)
                     .addToBackStack(null)
                     .commit();

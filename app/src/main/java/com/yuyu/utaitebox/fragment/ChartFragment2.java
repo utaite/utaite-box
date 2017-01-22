@@ -57,7 +57,7 @@ public class ChartFragment2 extends RxFragment {
                                             e.get_sid(), e.get_aid()));
                                 }
                             }
-                            MainAdapter mainAdapter = new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
+                            MainAdapter mainAdapter = new MainAdapter(context, vo);
                             chart_recyclerview2.setAdapter(mainAdapter);
                             mainAdapter.notifyDataSetChanged();
                         },

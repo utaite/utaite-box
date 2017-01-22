@@ -29,11 +29,13 @@ import com.yuyu.utaitebox.fragment.ChartFragment;
 import com.yuyu.utaitebox.fragment.MainFragment;
 import com.yuyu.utaitebox.fragment.MusicInfoFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
+import com.yuyu.utaitebox.fragment.PlaylistFragment;
 import com.yuyu.utaitebox.fragment.SearchFragment;
 import com.yuyu.utaitebox.fragment.TimelineFragment;
 import com.yuyu.utaitebox.fragment.UserInfoFragment;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
+import com.yuyu.utaitebox.utils.PlaylistVO;
 
 import java.util.ArrayList;
 
@@ -55,6 +57,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private int index;
     private ArrayList<Integer> items;
+    private ArrayList<PlaylistVO> playlists;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -135,6 +138,8 @@ public class MainActivity extends RxAppCompatActivity {
 
         if (iid == R.id.nav_home) {
             fragment = new MainFragment();
+        } else if (iid == R.id.nav_playlist) {
+            fragment = new PlaylistFragment();
         } else if (iid == R.id.nav_music) {
             fragment = new MusicListFragment();
         } else if (iid == R.id.nav_chart) {
@@ -148,6 +153,7 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     public void initialize() {
+        playlists = new ArrayList<>();
         int size = nav_view.getMenu().size();
         items = (ArrayList<Integer>) new ChainedArrayList()
                 .addMenu(nav_view.getMenu(), 0, size);
@@ -227,10 +233,31 @@ public class MainActivity extends RxAppCompatActivity {
                             }
                         },
                         e -> Log.e(TAG, e.toString()));
+
+        if (MID != Constant.GUEST) {
+            RestUtils.getRetrofit()
+                    .create(RestUtils.PlaylistApi.class)
+                    .playlistApi(TOKEN)
+                    .subscribe(o -> {
+                                for (int i : o.getArray()) {
+                                    RestUtils.getRetrofit()
+                                            .create(RestUtils.PlaylistAddSongApi.class)
+                                            .playlistAddApi(TOKEN, i)
+                                            .subscribe(o1 -> {
+                                                playlists.add(o1);
+                                            }, e -> Log.e(TAG, e.toString()));
+                                }
+                            },
+                            e -> Log.e(TAG, e.toString()));
+        }
     }
 
     public ChainedToast getToast() {
         return toast;
+    }
+
+    public ArrayList<PlaylistVO> getPlaylists() {
+        return playlists;
     }
 
 }

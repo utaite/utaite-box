@@ -102,7 +102,7 @@ public class TimelineFragment1 extends RxFragment {
 
                 nick[i] = new TextView(context);
                 String nickname = left.get(i).getNickname() == null ? getString(R.string.rest_guest) : left.get(i).getNickname();
-                nick[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
+                nick[i].setText(nickname);
                 nick[i].setTextColor(Color.BLACK);
                 nick[i].setTextSize(20);
                 nick[i].setOnClickListener(v -> onProfileClick(left, position));

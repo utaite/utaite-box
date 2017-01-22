@@ -1,6 +1,8 @@
 package com.yuyu.utaitebox.rest;
 
 
+import com.yuyu.utaitebox.utils.PlaylistVO;
+
 import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
@@ -127,6 +129,31 @@ public class RestUtils {
         Observable<Void> utaiteTimeline(@Header("Authorization") String authorization,
                                         @Field("_aid") int _aid,
                                         @Field("comment") String comment);
+    }
+
+    public interface PlaylistApi {
+        @GET("api/playlist")
+        Observable<Playlist_> playlistApi(@Header("Authorization") String authorization);
+    }
+
+    public interface PlaylistUpdate {
+        @FormUrlEncoded
+        @POST("api/playlist")
+        Observable<Object> playlistUpdate(@Header("Authorization") String authorization,
+                                             @Field("array") ArrayList<Integer> array);
+    }
+
+    public interface PlaylistDelete {
+        @FormUrlEncoded
+        @POST("api/playlist")
+        Observable<Object> playlistDelete(@Header("Authorization") String authorization,
+                                          @Field("array") String array);
+    }
+
+    public interface PlaylistAddSongApi {
+        @GET("api/play/add/{index}")
+        Observable<PlaylistVO> playlistAddApi(@Header("Authorization") String authorization,
+                                              @Path("index") int index);
     }
 
 }

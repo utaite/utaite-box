@@ -72,7 +72,7 @@ public class ChartFragment3 extends RxFragment {
                             String cover = response.getProfile().getCover();
                             vo.get(position).setCover(cover);
                             if (position == 4) {
-                                ActiveAdapter activeAdapter = new ActiveAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
+                                ActiveAdapter activeAdapter = new ActiveAdapter(context, vo);
                                 chart_recyclerview3.setAdapter(activeAdapter);
                                 activeAdapter.notifyDataSetChanged();
                             }

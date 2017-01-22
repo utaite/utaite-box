@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_playlist"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/playlist_prev"
+        style="@style/ListText"
+        android:text="@string/playlist_txt1" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/playlist_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/playlist_prev"
+        android:scrollbars="vertical" />
+
+</RelativeLayout>

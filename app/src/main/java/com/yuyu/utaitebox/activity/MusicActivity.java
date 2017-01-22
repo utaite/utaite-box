@@ -95,7 +95,7 @@ public class MusicActivity extends RxAppCompatActivity {
         music_seek_bar.setMax(MusicService.mediaPlayer.getDuration());
         music_seek_bar.setProgress(MusicService.mediaPlayer.getCurrentPosition());
         music_title.setText(title);
-        music_utaite.setText(utaite);
+        music_utaite.setText("- " + utaite);
         setTime(music_time_total, music_seek_bar.getMax());
         setTime(music_time_current, MusicService.mediaPlayer.getCurrentPosition());
 

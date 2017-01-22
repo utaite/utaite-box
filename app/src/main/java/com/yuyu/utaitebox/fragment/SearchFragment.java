@@ -83,7 +83,7 @@ public class SearchFragment extends RxFragment {
                             search_recyclerview.setHasFixedSize(true);
                             search_recyclerview.setLayoutManager(llm);
                             mainList = new ArrayList<>();
-                            mainAdapter = new MainAdapter(context, ((MainActivity) context).getFragmentManager(), mainList);
+                            mainAdapter = new MainAdapter(context, mainList);
                             for (SearchMusic e : response.getMusic()) {
                                 requestRetrofitMusic2(Integer.parseInt(e.get_source_id()), 1);
                             }
@@ -145,7 +145,7 @@ public class SearchFragment extends RxFragment {
                             search_recyclerview.setHasFixedSize(true);
                             search_recyclerview.setLayoutManager(llm);
                             utaiteList = new ArrayList<>();
-                            utaiteAdapter = new UtaiteAdapter(context, ((MainActivity) context).getFragmentManager(), utaiteList);
+                            utaiteAdapter = new UtaiteAdapter(context, utaiteList);
                             for (SearchArtist e : response.getArtist()) {
                                 requestRetrofitUtaite2(Integer.parseInt(e.get_aid()));
                             }

@@ -67,7 +67,7 @@ public class MusicService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentIntent(pendingIntent)
-                .setContentText(utaite);
+                .setContentText("- " + utaite);
 
         Notification noti = builder.build();
         startForeground(Constant.NOTI_ID, noti);

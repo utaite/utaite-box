@@ -188,7 +188,7 @@ public class UserInfoFragment extends RxFragment {
                                     vo.add(new MainVO(e.getCover(), e.getArtist_cover(), e.getSong_original(), e.getArtist_en(),
                                             e.get_sid(), e.get_aid()));
                                 }
-                                MainAdapter mainAdapter = new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo);
+                                MainAdapter mainAdapter = new MainAdapter(context, vo);
                                 view.setAdapter(mainAdapter);
                                 mainAdapter.notifyDataSetChanged();
                             }

@@ -423,7 +423,7 @@ public class MusicInfoFragment extends RxFragment {
                                 Song song = response.getSong();
                                 vo.add(new MainVO(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),
                                         song.get_sid(), song.get_aid()));
-                                musicinfo_recyclerview.setAdapter(new MainAdapter(context, ((MainActivity) context).getFragmentManager(), vo));
+                                musicinfo_recyclerview.setAdapter(new MainAdapter(context, vo));
                             }
                         },
                         e -> {
