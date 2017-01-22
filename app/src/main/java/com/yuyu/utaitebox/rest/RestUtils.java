@@ -139,14 +139,14 @@ public class RestUtils {
     public interface PlaylistUpdate {
         @FormUrlEncoded
         @POST("api/playlist")
-        Observable<Object> playlistUpdate(@Header("Authorization") String authorization,
-                                             @Field("array") ArrayList<Integer> array);
+        Observable<Void> playlistUpdate(@Header("Authorization") String authorization,
+                                          @Field("array") ArrayList<Integer> array);
     }
 
     public interface PlaylistDelete {
         @FormUrlEncoded
         @POST("api/playlist")
-        Observable<Object> playlistDelete(@Header("Authorization") String authorization,
+        Observable<Void> playlistDelete(@Header("Authorization") String authorization,
                                           @Field("array") String array);
     }
 
@@ -154,6 +154,12 @@ public class RestUtils {
         @GET("api/play/add/{index}")
         Observable<PlaylistVO> playlistAddApi(@Header("Authorization") String authorization,
                                               @Path("index") int index);
+    }
+
+    public interface MusicPlayApi {
+        @GET("api/play/play/{what}")
+        Observable<Void> musicPlayApi(@Header("Authorization") String authorization,
+                                            @Path("what") String what);
     }
 
 }

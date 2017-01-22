@@ -20,6 +20,7 @@ import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.rest.RestUtils;
+import com.yuyu.utaitebox.service.MusicService;
 import com.yuyu.utaitebox.utils.Constant;
 
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ public class LoginActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         toast = new ChainedToast(this).makeTextTo(this, "", Toast.LENGTH_SHORT);
+        MusicService.positions = new ArrayList<>();
+        MusicService.isShuffle = getSharedPreferences(getString(R.string.service_shuffle), MODE_PRIVATE).getBoolean(getString(R.string.service_shuffle), false);
         initialize();
     }
 
@@ -110,7 +113,7 @@ public class LoginActivity extends RxAppCompatActivity {
     }
 
     public void initialize() {
-        login_bg.setImageResource(R.drawable.login_bg);
+        login_bg.setImageResource(R.drawable.bg_login_1);
         login_bg.setAlpha(125);
         Chained.setAlpha(150, login_login_btn, login_guest_btn, login_register_btn);
 

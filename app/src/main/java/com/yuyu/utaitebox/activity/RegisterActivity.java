@@ -51,7 +51,7 @@ public class RegisterActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         toast = new ChainedToast(this).makeTextTo(this, "", Toast.LENGTH_SHORT);
-        register_bg.setImageResource(R.drawable.register_bg);
+        register_bg.setImageResource(R.drawable.bg_register_1);
         register_bg.setAlpha(125);
         Chained.setAlpha(150, register_register_btn);
         setTitle(getString(R.string._login_register_btn));

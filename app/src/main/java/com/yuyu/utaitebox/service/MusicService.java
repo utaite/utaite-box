@@ -6,11 +6,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.activity.MainActivity;
@@ -18,13 +20,16 @@ import com.yuyu.utaitebox.activity.RegisterActivity;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
 
-import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+import java.util.ArrayList;
 
 public class MusicService extends Service {
 
     private final String TAG = MusicService.class.getSimpleName();
 
     public static MediaPlayer mediaPlayer;
+
+    public static boolean isLoading, isShuffle;
+    public static ArrayList<Integer> positions;
 
     private int sid;
     private String key, cover, title, utaite;
@@ -38,6 +43,13 @@ public class MusicService extends Service {
             title = intent.getStringExtra(getString(R.string.music_title));
             utaite = intent.getStringExtra(getString(R.string.music_utaite));
         }
+
+        RestUtils.getRetrofit()
+                .create(RestUtils.MusicPlayApi.class)
+                .musicPlayApi(MainActivity.TOKEN, key)
+                .subscribe(o -> {
+                        },
+                        e -> Log.e(TAG, e.toString()));
 
         mediaPlayer = new MediaPlayer();
         try {
@@ -61,8 +73,8 @@ public class MusicService extends Service {
                 .putExtra(getString(R.string.music_cover), cover)
                 .putExtra(getString(R.string.music_title), title)
                 .putExtra(getString(R.string.music_utaite), utaite);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                 .setAutoCancel(true)
                 .setSmallIcon(R.mipmap.ic_launcher)

@@ -101,7 +101,7 @@
             android:src="@drawable/music_next" />
 
         <ImageButton
-            android:id="@+id/music_repeat"
+            android:id="@+id/music_shuffle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

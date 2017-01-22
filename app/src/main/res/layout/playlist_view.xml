@@ -25,7 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000" />
 
             <TextView
                 android:id="@+id/playlist_utaite"
@@ -33,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/playlist_title"
                 android:layout_centerHorizontal="true"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000" />
 
         </RelativeLayout>
 

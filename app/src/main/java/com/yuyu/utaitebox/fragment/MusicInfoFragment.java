@@ -327,14 +327,14 @@ public class MusicInfoFragment extends RxFragment {
             }
             Intent service = new Intent(context, MusicService.class);
             context.stopService(service);
-            context.startService(setIntent(service));
+            context.startService(putIntent(service));
 
             Intent intent = new Intent(context, MusicActivity.class);
-            startActivity(setIntent(intent));
+            startActivity(putIntent(intent));
         }
     }
 
-    public Intent setIntent(Intent intent) {
+    public Intent putIntent(Intent intent) {
         return intent.setFlags(FLAG_ACTIVITY_NO_HISTORY)
                 .putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()))
                 .putExtra(getString(R.string.music_key), repo.getSong().getKey())
