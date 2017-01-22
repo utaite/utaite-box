@@ -3,39 +3,33 @@ package com.yuyu.utaitebox.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.f2prateek.dart.Dart;
-import com.f2prateek.dart.InjectExtra;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.service.MusicService;
-import com.yuyu.utaitebox.utils.Constant;
-import com.yuyu.utaitebox.utils.MusicParcel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MusicActivity extends RxAppCompatActivity {
 
     private final String TAG = MusicActivity.class.getSimpleName();
 
-    @InjectExtra
-    MusicParcel musicParcel;
-
     private Context context;
-    private Thread pThread;
 
     private int sid;
     private String key, cover, title, utaite;
+    private boolean isDestroy;
 
     @BindView(R.id.music_cover)
     ImageView music_cover;
@@ -49,6 +43,10 @@ public class MusicActivity extends RxAppCompatActivity {
     TextView music_title;
     @BindView(R.id.music_utaite)
     TextView music_utaite;
+    @BindView(R.id.music_stop)
+    ImageView music_stop;
+    @BindView(R.id.music_progress)
+    ProgressBar music_progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +56,42 @@ public class MusicActivity extends RxAppCompatActivity {
         context = this;
         setTitle(getString(R.string.music));
 
-        boolean isNoti = getString(R.string.service_noti).equals(getIntent().getAction());
-        if (!isNoti) {
-            Dart.inject(this);
-        }
-        sid = isNoti ? getIntent().getIntExtra(getString(R.string.music_sid), -1) : musicParcel.getSid();
-        key = isNoti ? getIntent().getStringExtra(getString(R.string.music_key)) : musicParcel.getKey();
-        cover = isNoti ? getIntent().getStringExtra(getString(R.string.music_cover)) : musicParcel.getCover();
-        title = isNoti ? getIntent().getStringExtra(getString(R.string.music_title)) : musicParcel.getMusicTitle();
-        utaite = isNoti ? getIntent().getStringExtra(getString(R.string.music_utaite)) : musicParcel.getMusicUtaite();
+        sid = getIntent().getIntExtra(getString(R.string.music_sid), -1);
+        key = getIntent().getStringExtra(getString(R.string.music_key));
+        cover = getIntent().getStringExtra(getString(R.string.music_cover));
+        title = getIntent().getStringExtra(getString(R.string.music_title));
+        utaite = getIntent().getStringExtra(getString(R.string.music_utaite));
+        isDestroy = false;
+        music_progress.setVisibility(View.VISIBLE);
 
-        new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                initialize();
-            }
-        }.sendEmptyMessageDelayed(0, isNoti ? 0 : Constant.DELAY_TIME);
+        if (getString(R.string.service_noti).equals(getIntent().getAction())) {
+            initialize();
+        } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    while (!MusicService.mediaPlayer.isPlaying()) {
+                    }
+                    runOnUiThread(() -> initialize());
+                }
+            }.start();
+        }
+    }
+
+    @OnClick(R.id.music_stop)
+    public void onMusicStopButtonClick() {
+        if (MusicService.mediaPlayer.isPlaying()) {
+            MusicService.mediaPlayer.pause();
+            music_stop.setImageResource(R.drawable.music_play);
+        } else {
+            MusicService.mediaPlayer.start();
+            music_stop.setImageResource(R.drawable.music_stop);
+        }
     }
 
     public void initialize() {
+        music_progress.setVisibility(View.GONE);
+        music_stop.setImageResource(R.drawable.music_stop);
         music_seek_bar.setMax(MusicService.mediaPlayer.getDuration());
         music_seek_bar.setProgress(MusicService.mediaPlayer.getCurrentPosition());
         music_title.setText(title);
@@ -116,23 +131,28 @@ public class MusicActivity extends RxAppCompatActivity {
     }
 
     public void musicThread() {
-        Runnable task = () -> {
-            while (!pThread.isInterrupted()) {
-                if (MusicService.mediaPlayer != null) {
-                    Log.e(TAG, MusicService.mediaPlayer.getCurrentPosition() + "");
-                    music_seek_bar.setProgress(MusicService.mediaPlayer.getCurrentPosition());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                        Log.e(TAG, e.toString());
+        new Thread() {
+            @Override
+            public void run() {
+                while (!isDestroy) {
+                    if (MusicService.mediaPlayer != null) {
+                        music_seek_bar.setProgress(MusicService.mediaPlayer.getCurrentPosition());
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    } else {
+                        isDestroy = true;
                     }
-                } else {
-                    pThread.interrupt();
                 }
             }
-        };
-        pThread = new Thread(task);
-        pThread.start();
+        }.start();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isDestroy = true;
+    }
 }

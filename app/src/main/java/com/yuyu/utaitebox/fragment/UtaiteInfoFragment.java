@@ -187,8 +187,8 @@ public class UtaiteInfoFragment extends RxFragment {
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(utaiteinfo_timeline_edittext.getWindowToken(), 0);
         int nickInt = 1, contInt = 100, dateInt = 10000;
         if (!text2Check && !img2Check) {
-            glide.load(RestUtils.BASE + (MainActivity.TEMP_AVATAR == null ?
-                    getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_AVATAR))
+            glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (MainActivity.TEMP_AVATAR == null ?
+                    getString(R.string.rest_profile) : MainActivity.TEMP_AVATAR))
                     .bitmapTransform(new CropCircleTransformation(context))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(utaiteinfo_avatar);
@@ -313,7 +313,7 @@ public class UtaiteInfoFragment extends RxFragment {
                                         .attach(this)
                                         .commit();
                             },
-                            e ->{
+                            e -> {
                                 ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_error));
                                 Log.e(TAG, e.toString());
                             });

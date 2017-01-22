@@ -1,6 +1,7 @@
 package com.yuyu.utaitebox.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -54,6 +55,24 @@ public class RegisterActivity extends RxAppCompatActivity {
         register_bg.setAlpha(125);
         Chained.setAlpha(150, register_register_btn);
         setTitle(getString(R.string._login_register_btn));
+
+        if (getString(R.string.service_noti).equals(getIntent().getAction())) {
+            Intent intent = getIntent();
+            int sid = intent.getIntExtra(getString(R.string.music_sid), -1);
+            String key = intent.getStringExtra(getString(R.string.music_key));
+            String cover = intent.getStringExtra(getString(R.string.music_cover));
+            String title = intent.getStringExtra(getString(R.string.music_title));
+            String utaite = intent.getStringExtra(getString(R.string.music_utaite));
+
+            Intent i = new Intent(context, MainActivity.class).setAction(getString(R.string.service_noti));
+            i.putExtra(getString(R.string.music_sid), sid);
+            i.putExtra(getString(R.string.music_key), key);
+            i.putExtra(getString(R.string.music_cover), cover);
+            i.putExtra(getString(R.string.music_title), title);
+            i.putExtra(getString(R.string.music_utaite), utaite);
+            startActivity(i);
+            finish();
+        }
     }
 
     @OnClick(R.id.register_register_btn)

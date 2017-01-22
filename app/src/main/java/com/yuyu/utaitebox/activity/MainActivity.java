@@ -3,6 +3,7 @@ package com.yuyu.utaitebox.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -26,6 +27,7 @@ import com.yuyu.utaitebox.chain.ChainedArrayList;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.fragment.ChartFragment;
 import com.yuyu.utaitebox.fragment.MainFragment;
+import com.yuyu.utaitebox.fragment.MusicInfoFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
 import com.yuyu.utaitebox.fragment.SearchFragment;
 import com.yuyu.utaitebox.fragment.TimelineFragment;
@@ -154,6 +156,32 @@ public class MainActivity extends RxAppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_main, new MainFragment())
                 .commit();
+
+        Intent intent = getIntent();
+        if (getString(R.string.service_noti).equals(intent.getAction())) {
+            int sid = intent.getIntExtra(getString(R.string.music_sid), -1);
+            String key = intent.getStringExtra(getString(R.string.music_key));
+            String cover = intent.getStringExtra(getString(R.string.music_cover));
+            String title = intent.getStringExtra(getString(R.string.music_title));
+            String utaite = intent.getStringExtra(getString(R.string.music_utaite));
+
+            Fragment fragment = new MusicInfoFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(context.getString(R.string.rest_sid), sid);
+            fragment.setArguments(bundle);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_main, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+            Intent i = new Intent(context, MusicActivity.class);
+            i.putExtra(getString(R.string.music_sid), sid);
+            i.putExtra(getString(R.string.music_key), key);
+            i.putExtra(getString(R.string.music_cover), cover);
+            i.putExtra(getString(R.string.music_title), title);
+            i.putExtra(getString(R.string.music_utaite), utaite);
+            startActivity(i);
+        }
     }
 
     public void requestRetrofit(String what, int index) {

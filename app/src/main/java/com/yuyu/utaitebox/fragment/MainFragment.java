@@ -3,6 +3,7 @@ package com.yuyu.utaitebox.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,16 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.components.RxFragment;
-import com.yuyu.utaitebox.activity.Henson;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.activity.MusicActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.rest.Music;
 import com.yuyu.utaitebox.rest.RestUtils;
-import com.yuyu.utaitebox.service.MusicService;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
-import com.yuyu.utaitebox.utils.MusicParcel;
 
 import java.util.ArrayList;
 

@@ -13,7 +13,8 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.yuyu.utaitebox.R;
-import com.yuyu.utaitebox.activity.MusicActivity;
+import com.yuyu.utaitebox.activity.MainActivity;
+import com.yuyu.utaitebox.activity.RegisterActivity;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.utils.Constant;
 
@@ -28,7 +29,7 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null) {
+        if (intent != null) {
             sid = intent.getIntExtra(getString(R.string.music_sid), -1);
             key = intent.getStringExtra(getString(R.string.music_key));
             cover = intent.getStringExtra(getString(R.string.music_cover));
@@ -51,7 +52,8 @@ public class MusicService extends Service {
 
     public void sendNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), MusicActivity.class);
+        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class).setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setAction(getString(R.string.service_noti));
         intent.putExtra(getString(R.string.music_sid), sid);
         intent.putExtra(getString(R.string.music_key), key);
@@ -63,10 +65,9 @@ public class MusicService extends Service {
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                 .setAutoCancel(true)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("setContentTitle")
+                .setContentTitle(title)
                 .setContentIntent(pendingIntent)
-                .setTicker("setTicker")
-                .setContentText("setContentText");
+                .setContentText(utaite);
 
         Notification noti = builder.build();
         startForeground(Constant.NOTI_ID, noti);

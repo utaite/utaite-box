@@ -27,8 +27,8 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
-import com.yuyu.utaitebox.activity.Henson;
 import com.yuyu.utaitebox.activity.MainActivity;
+import com.yuyu.utaitebox.activity.MusicActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.chain.Chained;
 import com.yuyu.utaitebox.rest.Comment;
@@ -40,11 +40,8 @@ import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.service.MusicService;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
-import com.yuyu.utaitebox.utils.MusicParcel;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -217,7 +214,7 @@ public class MusicInfoFragment extends RxFragment {
     public void onTextView3Click() {
         int nickInt = 1, contInt = 1001, dateInt = 2001;
         if (!text3Check && !img3Check) {
-            glide.load(RestUtils.BASE + (MainActivity.TEMP_AVATAR == null ? getString(R.string.rest_profile_cover) + getString(R.string.rest_profile) : getString(R.string.rest_profile_image) + MainActivity.TEMP_AVATAR))
+            glide.load(RestUtils.BASE + getString(R.string.rest_profile_image) + (MainActivity.TEMP_AVATAR == null ? getString(R.string.rest_profile) : MainActivity.TEMP_AVATAR))
                     .bitmapTransform(new CropCircleTransformation(context))
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(musicinfo_avatar);
@@ -323,19 +320,19 @@ public class MusicInfoFragment extends RxFragment {
         }
         Intent service = new Intent(context, MusicService.class);
         context.stopService(service);
+        context.startService(setIntent(service));
 
-        service.putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()));
-        service.putExtra(getString(R.string.music_key), repo.getSong().getKey());
-        service.putExtra(getString(R.string.music_cover), repo.getSong().getCover());
-        service.putExtra(getString(R.string.music_title), repo.getSong().getSong_original());
-        service.putExtra(getString(R.string.music_utaite), repo.getSong().getArtist_en());
-        context.startService(service);
+        Intent intent = new Intent(context, MusicActivity.class);
+        startActivity(setIntent(intent));
+    }
 
-        startActivity(Henson.with(context)
-                .gotoMusicActivity()
-                .musicParcel(new MusicParcel(Integer.parseInt(repo.getSong().get_sid()), repo.getSong().getKey(),
-                        repo.getSong().getCover(), repo.getSong().getSong_original(), repo.getSong().getArtist_en()))
-                .build());
+    public Intent setIntent(Intent intent) {
+        intent.putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()));
+        intent.putExtra(getString(R.string.music_key), repo.getSong().getKey());
+        intent.putExtra(getString(R.string.music_cover), repo.getSong().getCover());
+        intent.putExtra(getString(R.string.music_title), repo.getSong().getSong_original());
+        intent.putExtra(getString(R.string.music_utaite), repo.getSong().getArtist_en());
+        return intent;
     }
 
     @OnClick({R.id.musicinfo_ribbon_src, R.id.musicinfo_text2_src})

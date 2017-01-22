@@ -84,7 +84,7 @@ public class LoginActivity extends RxAppCompatActivity {
         if (!networkCheck()) {
             toast.setTextShow(getString(R.string.login_network_err));
         } else {
-            loginPrepare(getString(R.string.login_guest), getString(R.string.login_guest), false);
+            loginPrepare(getString(R.string.login_guest), getString(R.string.login_guest), true);
         }
     }
 
@@ -158,7 +158,7 @@ public class LoginActivity extends RxAppCompatActivity {
                             e -> Log.e(TAG, e.toString()),
                             () -> {
                                 if (arrayList.size() == 2) {
-                                    loginPrepare(arrayList.get(0), arrayList.get(1), true);
+                                    loginPrepare(arrayList.get(0), arrayList.get(1), false);
                                 }
                             });
         }
@@ -173,7 +173,7 @@ public class LoginActivity extends RxAppCompatActivity {
     }
 
     public void loginPrepare(String id, String pw, boolean isGuest) {
-        if (isGuest) {
+        if (!isGuest) {
             SharedPreferences preferences = getSharedPreferences(getString(R.string.login_login), MODE_PRIVATE);
 
             preferences.edit().putString(getString(R.string.login_status), login_check_btn.isChecked() ?
