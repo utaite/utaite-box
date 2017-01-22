@@ -22,12 +22,18 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.RegisterActivity"/>
+        <activity android:name=".activity.RegisterActivity" />
+
+        <activity android:name=".activity.MusicActivity" />
 
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".service.MusicService"
+            android:enabled="true"
+            android:exported="true" />
 
     </application>
 

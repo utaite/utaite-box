@@ -57,7 +57,7 @@
     <string name="rest_images_cover">/images/cover.jpg</string>
     <string name="rest_images_artist">/images/artist.jpg</string>
 
-    <string name="rest_stream">/api/play/stream/</string>
+    <string name="rest_stream">api/play/stream/</string>
     <string name="rest_ribbon">ribbon</string>
     <string name="rest_listen">listen</string>
     <string name="rest_upload">upload</string>
@@ -147,4 +147,16 @@
     <string name="register_err_3">중복된 이메일입니다.</string>
     <string name="register_err_4">중복된 아이디입니다.</string>
     <string name="register_success">회원가입에 성공하셨습니다.</string>
+
+
+    <string name="music_default">0:00</string>
+    <string name="music">MUSIC</string>
+    <string name="music_sid">sid</string>
+    <string name="music_key">key</string>
+    <string name="music_cover">cover</string>
+    <string name="music_title">title</string>
+    <string name="music_utaite">utaite</string>
+
+
+    <string name="service_noti">Notification</string>
 </resources>

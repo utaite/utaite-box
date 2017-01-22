@@ -298,7 +298,7 @@ public class UtaiteInfoFragment extends RxFragment {
 
     @OnClick(R.id.utaiteinfo_text1_src)
     public void onUtaiteRibbonClick() {
-        if (MainActivity.MID == 1994) {
+        if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
         } else {
             RestUtils.getRetrofit()
@@ -323,7 +323,7 @@ public class UtaiteInfoFragment extends RxFragment {
     @OnClick(R.id.utaiteinfo_timeline_button)
     public void onUtaiteTimelineClick() {
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(utaiteinfo_timeline_edittext.getWindowToken(), 0);
-        if (MainActivity.MID == 1994) {
+        if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
             utaiteinfo_timeline_edittext.getText().clear();
         } else {

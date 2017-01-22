@@ -2,9 +2,9 @@ package com.yuyu.utaitebox.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +27,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.RxFragment;
 import com.yuyu.utaitebox.R;
+import com.yuyu.utaitebox.activity.Henson;
 import com.yuyu.utaitebox.activity.MainActivity;
 import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.chain.Chained;
@@ -36,10 +37,14 @@ import com.yuyu.utaitebox.rest.Repo;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Ribbon;
 import com.yuyu.utaitebox.rest.Song;
+import com.yuyu.utaitebox.service.MusicService;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
+import com.yuyu.utaitebox.utils.MusicParcel;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +58,6 @@ public class MusicInfoFragment extends RxFragment {
     private Repo repo;
     private Context context;
     private RequestManager glide;
-    private MediaPlayer mediaPlayer;
 
     private ArrayList<MainVO> vo;
     private String str2Check;
@@ -313,21 +317,30 @@ public class MusicInfoFragment extends RxFragment {
 
     @OnClick(R.id.musicinfo_play)
     public void onPlayButtonClick() {
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(RestUtils.BASE + getString(R.string.rest_stream) + repo.getSong().getKey());
-        } catch (Exception ignored) {
+        if (MusicService.mediaPlayer != null) {
+            MusicService.mediaPlayer.stop();
+            MusicService.mediaPlayer.release();
         }
-        mediaPlayer.setOnPreparedListener(mp -> {
-            mediaPlayer.start();
-        });
-        mediaPlayer.prepareAsync();
+        Intent service = new Intent(context, MusicService.class);
+        context.stopService(service);
+
+        service.putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()));
+        service.putExtra(getString(R.string.music_key), repo.getSong().getKey());
+        service.putExtra(getString(R.string.music_cover), repo.getSong().getCover());
+        service.putExtra(getString(R.string.music_title), repo.getSong().getSong_original());
+        service.putExtra(getString(R.string.music_utaite), repo.getSong().getArtist_en());
+        context.startService(service);
+
+        startActivity(Henson.with(context)
+                .gotoMusicActivity()
+                .musicParcel(new MusicParcel(Integer.parseInt(repo.getSong().get_sid()), repo.getSong().getKey(),
+                        repo.getSong().getCover(), repo.getSong().getSong_original(), repo.getSong().getArtist_en()))
+                .build());
     }
 
     @OnClick({R.id.musicinfo_ribbon_src, R.id.musicinfo_text2_src})
     public void onMusicRibbonClick() {
-        if (MainActivity.MID == 1994) {
+        if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
         } else {
             RestUtils.getRetrofit()
@@ -349,7 +362,7 @@ public class MusicInfoFragment extends RxFragment {
     @OnClick(R.id.musicinfo_timeline_button)
     public void onMusicTimelineClick() {
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(musicinfo_timeline_edittext.getWindowToken(), 0);
-        if (MainActivity.MID == 1994) {
+        if (MainActivity.MID == Constant.GUEST) {
             ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
             musicinfo_timeline_edittext.getText().clear();
         } else {
