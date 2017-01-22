@@ -64,7 +64,7 @@ public class TimelineFragment2 extends RxFragment {
     }
 
     public void initialize(ArrayList<Right> right) {
-        int nickInt = 1, contInt = 100, dateInt = 10000;
+        int nickInt = 1, contInt = 100, titleInt = 1000, dateInt = 10000;
         RequestManager glide = Glide.with(context);
         int size = right.size();
 
@@ -73,11 +73,16 @@ public class TimelineFragment2 extends RxFragment {
             rAbsolute = new LinearLayout(context);
             rAbsolute.setOrientation(LinearLayout.VERTICAL);
 
-            RelativeLayout rRelativeNick, rRelativeCont, rRelativeImg, rRelativeDate;
+            RelativeLayout rRelativeNick, rRelativeTitle, rRelativeCont, rRelativeImg, rRelativeDate;
             ImageView iv[] = new ImageView[size];
             TextView nick[] = new TextView[size];
+            TextView title[] = new TextView[size];
+            TextView utaite[] = new TextView[size];
+            TextView hypen[] = new TextView[size];
             TextView cont[] = new TextView[size];
             TextView date[] = new TextView[size];
+            LinearLayout text[] = new LinearLayout[size];
+
             for (int i = 0; i < size; i++) {
                 iv[i] = new ImageView(context);
                 iv[i].setScaleType(ImageView.ScaleType.FIT_XY);
@@ -115,15 +120,67 @@ public class TimelineFragment2 extends RxFragment {
                 rRelativeNick.setPadding(0, 10, 10, 0);
                 rRelativeImg.addView(rRelativeNick);
 
+                title[i] = new TextView(context);
+                title[i].setText(right.get(i).getSong_original() == null ? "" : right.get(i).getSong_original());
+                title[i].setTextColor(Color.BLACK);
+                title[i].setTextSize(12);
+                title[i].setOnClickListener(v -> {
+                    Fragment fragment = new MusicInfoFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(context.getString(R.string.rest_sid), Integer.parseInt(right.get(position).get_sid()));
+                    fragment.setArguments(bundle);
+                    ((MainActivity) context).getFragmentManager().beginTransaction()
+                            .replace(R.id.content_main, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
+
+                utaite[i] = new TextView(context);
+                utaite[i].setText(right.get(i).getSong_original() == null ? "" : right.get(i).getArtist_en());
+                utaite[i].setTextColor(Color.BLACK);
+                utaite[i].setTextSize(12);
+                utaite[i].setOnClickListener(v -> {
+                    Fragment fragment = new UtaiteInfoFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(context.getString(R.string.rest_aid), Integer.parseInt(right.get(position).get_aid()));
+                    fragment.setArguments(bundle);
+                    ((MainActivity) context).getFragmentManager().beginTransaction()
+                            .replace(R.id.content_main, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
+
+                hypen[i] = new TextView(context);
+                hypen[i].setText(right.get(i).getSong_original() == null ? "" : " - ");
+                hypen[i].setTextColor(Color.BLACK);
+                hypen[i].setTextSize(12);
+
+                text[i] = new LinearLayout(context);
+                text[i].addView(title[i]);
+                text[i].addView(hypen[i]);
+                text[i].addView(utaite[i]);
+
+                rRelativeTitle = new RelativeLayout(context);
+                RelativeLayout.LayoutParams tCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                tCont.setMargins(250, 0, 0, 0);
+                tCont.addRule(RelativeLayout.BELOW, rRelativeNick.getId());
+                rRelativeTitle.setId(i + titleInt);
+                rRelativeTitle.setPadding(0, 0, 10, 10);
+                rRelativeTitle.setLayoutParams(tCont);
+                rRelativeTitle.addView(text[i]);
+                rRelativeImg.addView(rRelativeTitle);
+
                 cont[i] = new TextView(context);
                 cont[i].setText(right.get(i).getContent());
                 cont[i].setTextColor(Color.BLACK);
                 cont[i].setTextSize(12);
+
                 rRelativeCont = new RelativeLayout(context);
                 RelativeLayout.LayoutParams pCont = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
                 pCont.setMargins(250, 0, 0, 0);
-                pCont.addRule(RelativeLayout.BELOW, rRelativeNick.getId());
+                pCont.addRule(RelativeLayout.BELOW, rRelativeTitle.getId());
                 rRelativeCont.setId(i + contInt);
                 rRelativeCont.setPadding(0, 0, 10, 10);
                 rRelativeCont.setLayoutParams(pCont);

@@ -2,6 +2,7 @@ package com.yuyu.utaitebox.activity;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -87,6 +88,11 @@ public class MusicActivity extends RxAppCompatActivity {
             MusicService.mediaPlayer.start();
             music_stop.setImageResource(R.drawable.music_stop);
         }
+    }
+
+    @OnClick(R.id.music_list_btn)
+    public void onMusisListButtonClick() {
+
     }
 
     public void initialize() {

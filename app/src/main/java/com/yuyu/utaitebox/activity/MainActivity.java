@@ -47,6 +47,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
+    public static ArrayList<PlaylistVO> playlists;
     public static int MID;
     public static int TODAY = Constant.TODAY_DEFAULT;
     public static String TOKEN, TEMP_AVATAR;
@@ -57,7 +58,6 @@ public class MainActivity extends RxAppCompatActivity {
 
     private int index;
     private ArrayList<Integer> items;
-    private ArrayList<PlaylistVO> playlists;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -254,10 +254,6 @@ public class MainActivity extends RxAppCompatActivity {
 
     public ChainedToast getToast() {
         return toast;
-    }
-
-    public ArrayList<PlaylistVO> getPlaylists() {
-        return playlists;
     }
 
 }

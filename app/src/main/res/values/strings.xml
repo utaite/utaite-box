@@ -90,7 +90,8 @@
     <string name="musicinfo_txt3">%1$s&#160;&#160;지금 당신은 어떤 느낌인가요?</string>
     <string name="not_ribbon">아직 아무도 좋아요를 누르지 않았어요.\n첫 좋아요를 눌러보세요!</string>
     <string name="musicinfo_ribbon">이 노래가 좋아요!</string>
-    <string name="musicinfo_not_ribbon">이 노래가 싫어졌어요...</string>s
+    <string name="musicinfo_not_ribbon">이 노래가 싫어졌어요...</string>
+    <string name="musicinfo_addlist">노래를 플레이리스트에 추가했어요!</string>
 
     <string name="musicinfo_content_1">/*&#160;&#160;&#160;Upload music&#160;&#160;&#160;*/</string>
     <string name="musicinfo_content_2">/*&#160;&#160;&#160;Upload cover image&#160;&#160;&#160;*/</string>
@@ -105,8 +106,11 @@
     <string name="playlist_option2">선택 노래 삭제</string>
     <string name="playlist_option3">전체 노래 삭제</string>
 
+    <string name="playlist_delete1">선택된 노래를 삭제했습니다.</string>
+    <string name="playlist_delete2">전체 노래</string>
 
-    <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드 된 노래에요.</string>
+
+    <string name="musiclist_txt1">▼&#160;&#160;가장 최근에 업로드된 노래에요.</string>
     <string name="musiclist_txt2">▲&#160;&#160;이전 페이지로</string>
     <string name="musiclist_next">▼&#160;&#160;다음 페이지로</string>
     <string name="_musiclist_search">페이지 이동</string>

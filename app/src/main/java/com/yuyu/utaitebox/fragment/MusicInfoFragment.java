@@ -40,6 +40,7 @@ import com.yuyu.utaitebox.rest.Song;
 import com.yuyu.utaitebox.service.MusicService;
 import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
+import com.yuyu.utaitebox.utils.PlaylistVO;
 
 import java.util.ArrayList;
 
@@ -314,16 +315,21 @@ public class MusicInfoFragment extends RxFragment {
 
     @OnClick(R.id.musicinfo_play)
     public void onPlayButtonClick() {
-        if (MusicService.mediaPlayer != null) {
-            MusicService.mediaPlayer.stop();
-            MusicService.mediaPlayer.release();
-        }
-        Intent service = new Intent(context, MusicService.class);
-        context.stopService(service);
-        context.startService(setIntent(service));
+        if (MainActivity.MID == Constant.GUEST) {
+            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
+        } else {
+            addList(false);
+            if (MusicService.mediaPlayer != null) {
+                MusicService.mediaPlayer.stop();
+                MusicService.mediaPlayer.release();
+            }
+            Intent service = new Intent(context, MusicService.class);
+            context.stopService(service);
+            context.startService(setIntent(service));
 
-        Intent intent = new Intent(context, MusicActivity.class);
-        startActivity(setIntent(intent));
+            Intent intent = new Intent(context, MusicActivity.class);
+            startActivity(setIntent(intent));
+        }
     }
 
     public Intent setIntent(Intent intent) {
@@ -378,6 +384,45 @@ public class MusicInfoFragment extends RxFragment {
                             },
                             e -> Log.e(TAG, e.toString()));
         }
+    }
+
+    @OnClick(R.id.musicinfo_addlist_src)
+    public void onMusicAddlistClick() {
+        if (MainActivity.MID == Constant.GUEST) {
+            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
+        } else {
+            addList(true);
+        }
+    }
+
+    public void addList(boolean isShow) {
+        PlaylistVO vo = new PlaylistVO();
+        vo.set_sid(Integer.parseInt(repo.getSong().get_sid()))
+                .set_aid(Integer.parseInt(repo.getSong().get_aid()))
+                .setRibbon(Integer.parseInt(repo.getSong().getRibbon()))
+                .setSong_original(repo.getSong().getSong_original())
+                .setArtist_en(repo.getSong().getArtist_en())
+                .setKey(repo.getSong().getKey())
+                .setCover(repo.getSong().getCover());
+        MainActivity.playlists.add(vo);
+
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (PlaylistVO v : MainActivity.playlists) {
+            arrayList.add(v.get_sid());
+        }
+        RestUtils.getRetrofit()
+                .create(RestUtils.PlaylistUpdate.class)
+                .playlistUpdate(MainActivity.TOKEN, arrayList)
+                .subscribe(o -> {
+                            if (isShow) {
+                                ((MainActivity) context).getToast().setTextShow(getString(R.string.musicinfo_addlist));
+                                getFragmentManager().beginTransaction()
+                                        .detach(this)
+                                        .attach(this)
+                                        .commit();
+                            }
+                        },
+                        e -> Log.e(TAG, e.toString()));
     }
 
     public void requestRetrofit(String what, int index) {

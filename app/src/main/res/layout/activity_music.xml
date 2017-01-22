@@ -51,15 +51,22 @@
         android:layout_marginBottom="6dp"
         android:text="" />
 
+    <ProgressBar
+        android:id="@+id/music_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
     <LinearLayout
         android:id="@+id/music_bottom_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="33dp"
         android:orientation="horizontal"
-        android:weightSum="5">
+        android:weightSum="5"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
 
         <ImageButton
             android:id="@+id/music_list_btn"
@@ -102,12 +109,5 @@
             android:src="@drawable/music_repeat" />
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/music_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
 
 </RelativeLayout>

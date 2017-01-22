@@ -28,11 +28,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     private final String TAG = PlaylistAdapter.class.getSimpleName();
 
     private Context context;
-    private ArrayList<PlaylistVO> vo;
 
-    public PlaylistAdapter(Context context, ArrayList<PlaylistVO> vo) {
+    public PlaylistAdapter(Context context) {
         this.context = context;
-        this.vo = vo;
     }
 
     @Override
@@ -43,8 +41,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.title.setText(vo.get(position).getSong_original());
-        holder.utaite.setText("- " + vo.get(position).getArtist_en());
+        holder.title.setText(MainActivity.playlists.get(position).getSong_original());
+        holder.utaite.setText("- " + MainActivity.playlists.get(position).getArtist_en());
 
         holder.cardView.setOnClickListener(v -> onMusicClick(position));
         holder.cardView.setOnLongClickListener(v -> {
@@ -67,11 +65,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     public Intent setIntent(Intent intent, int position) {
-        intent.putExtra(context.getString(R.string.music_sid), vo.get(position).get_sid());
-        intent.putExtra(context.getString(R.string.music_key), vo.get(position).getKey());
-        intent.putExtra(context.getString(R.string.music_cover), vo.get(position).getCover());
-        intent.putExtra(context.getString(R.string.music_title), vo.get(position).getSong_original());
-        intent.putExtra(context.getString(R.string.music_utaite), vo.get(position).getArtist_en());
+        intent.putExtra(context.getString(R.string.music_sid), MainActivity.playlists.get(position).get_sid());
+        intent.putExtra(context.getString(R.string.music_key), MainActivity.playlists.get(position).getKey());
+        intent.putExtra(context.getString(R.string.music_cover), MainActivity.playlists.get(position).getCover());
+        intent.putExtra(context.getString(R.string.music_title), MainActivity.playlists.get(position).getSong_original());
+        intent.putExtra(context.getString(R.string.music_utaite), MainActivity.playlists.get(position).getArtist_en());
         return intent;
     }
 
@@ -100,7 +98,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void onMusicInfo(int position) {
         Fragment fragment = new MusicInfoFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(context.getString(R.string.rest_sid), vo.get(position).get_sid());
+        bundle.putInt(context.getString(R.string.rest_sid), MainActivity.playlists.get(position).get_sid());
         fragment.setArguments(bundle);
         ((MainActivity) context).getFragmentManager().beginTransaction()
                 .replace(R.id.content_main, fragment)
@@ -109,16 +107,22 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     public void onSelectMusicDelete(int position) {
-        vo.remove(position);
+        MainActivity.playlists.remove(position);
         ArrayList<Integer> arrayList = new ArrayList<>();
-        for (PlaylistVO v : vo) {
+        for (PlaylistVO v : MainActivity.playlists) {
             arrayList.add(v.get_sid());
         }
         RestUtils.getRetrofit()
                 .create(RestUtils.PlaylistUpdate.class)
                 .playlistUpdate(MainActivity.TOKEN, arrayList)
-                .subscribe(o -> notifyDataSetChanged(),
-                        e -> Log.e(TAG, e.toString()));
+                .subscribe(o -> {
+                            notifyDataSetChanged();
+                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete1));
+                        },
+                        e -> {
+                            Log.e(TAG, e.toString());
+                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
+                        });
     }
 
     public void onAllMusicDelete() {
@@ -126,17 +130,20 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 .create(RestUtils.PlaylistDelete.class)
                 .playlistDelete(MainActivity.TOKEN, "")
                 .subscribe(o -> {
-                            vo.clear();
+                            MainActivity.playlists.clear();
                             notifyDataSetChanged();
+                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete2));
                         },
-                        e -> Log.e(TAG, e.toString()));
+                        e -> {
+                            Log.e(TAG, e.toString());
+                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
+                        });
     }
 
     @Override
     public int getItemCount() {
-        return vo.size();
+        return MainActivity.playlists.size();
     }
-
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;

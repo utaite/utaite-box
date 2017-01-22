@@ -18,6 +18,7 @@ import com.yuyu.utaitebox.adapter.MainAdapter;
 import com.yuyu.utaitebox.adapter.PlaylistAdapter;
 import com.yuyu.utaitebox.rest.RestUtils;
 import com.yuyu.utaitebox.rest.Song;
+import com.yuyu.utaitebox.utils.Constant;
 import com.yuyu.utaitebox.utils.MainVO;
 
 import java.util.ArrayList;
@@ -40,7 +41,11 @@ public class PlaylistFragment extends RxFragment {
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
         ButterKnife.bind(this, view);
         context = getActivity();
-        initialize();
+        if (MainActivity.MID == Constant.GUEST) {
+            ((MainActivity) context).getToast().setTextShow(getString(R.string.rest_guest_err));
+        } else {
+            initialize();
+        }
         return view;
     }
 
@@ -49,7 +54,7 @@ public class PlaylistFragment extends RxFragment {
         LinearLayoutManager llm = new LinearLayoutManager(context);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         playlist_recyclerview.setLayoutManager(llm);
-        PlaylistAdapter playlistAdapter = new PlaylistAdapter(context, ((MainActivity) context).getPlaylists());
+        PlaylistAdapter playlistAdapter = new PlaylistAdapter(context);
         playlist_recyclerview.setAdapter(playlistAdapter);
     }
 
