@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yuyu.utaitebox.R;
@@ -38,6 +39,7 @@ public class MusicActivity extends RxAppCompatActivity {
 
     private Context context;
     private ChainedToast toast;
+    private RequestManager glide;
 
     private int sid, position;
     private String key, cover, title, utaite;
@@ -69,6 +71,7 @@ public class MusicActivity extends RxAppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         toast = new ChainedToast(this).makeTextTo(this, "", Toast.LENGTH_SHORT);
+        glide = Glide.with(context);
         setTitle(getString(R.string.music));
 
         sid = getIntent().getIntExtra(getString(R.string.music_sid), -1);
@@ -264,7 +267,7 @@ public class MusicActivity extends RxAppCompatActivity {
         setTime(music_time_current, MusicService.mediaPlayer.getCurrentPosition());
         MusicService.mediaPlayer.setOnCompletionListener(mp -> onMusicNext());
 
-        Glide.with(context).load(RestUtils.BASE + (cover == null ? getString(R.string.rest_images_cover) : getString(R.string.rest_cover) + cover))
+        glide.load(RestUtils.BASE + (cover == null ? getString(R.string.rest_images_cover) : getString(R.string.rest_cover) + cover))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(music_cover);
 
