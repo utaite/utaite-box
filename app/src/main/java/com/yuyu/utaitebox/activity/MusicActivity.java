@@ -197,7 +197,7 @@ public class MusicActivity extends RxAppCompatActivity {
 
     public void onMusicNext() {
         mediaPlayerDestroy();
-        initValue(true);
+        initValue(false);
 
         Intent service = new Intent(this, MusicService.class);
         stopService(service);
@@ -213,6 +213,7 @@ public class MusicActivity extends RxAppCompatActivity {
         int size = MainActivity.playlists.size();
 
         if (!MusicService.isShuffle) {
+            Log.e(TAG, "셔플");
             for (int i = 0; i < size; i++) {
                 if (MainActivity.playlists.get(i).get_sid() == sid) {
 
@@ -227,12 +228,15 @@ public class MusicActivity extends RxAppCompatActivity {
 
         } else {
             if (!isPrev) {
+                Log.e(TAG, "!isPrev");
                 MusicService.positions.add(position);
                 position = (int) (Math.random() * size);
 
             } else {
+                Log.e(TAG, "psize");
                 int psize = MusicService.positions.size();
                 if (psize > 0) {
+                    Log.e(TAG, "if");
                     position = MusicService.positions.get(psize - 1);
                     MusicService.positions.remove(psize - 1);
                 }
