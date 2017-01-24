@@ -23,6 +23,7 @@ import com.yuyu.utaitebox.utils.PlaylistVO;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT;
 import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
@@ -65,11 +66,14 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
         Intent intent = new Intent(context, MusicActivity.class);
         context.startActivity(setIntent(intent, position));
+
+        if (context.getString(R.string.service_list).equals(((MainActivity) context).getIntent().getAction())) {
+            ((MainActivity) context).finish();
+        }
     }
 
     public Intent setIntent(Intent intent, int position) {
-        return intent.setFlags(FLAG_ACTIVITY_NO_HISTORY)
-                .putExtra(context.getString(R.string.music_sid), MainActivity.playlists.get(position).get_sid())
+        return intent.putExtra(context.getString(R.string.music_sid), MainActivity.playlists.get(position).get_sid())
                 .putExtra(context.getString(R.string.music_key), MainActivity.playlists.get(position).getKey())
                 .putExtra(context.getString(R.string.music_cover), MainActivity.playlists.get(position).getCover())
                 .putExtra(context.getString(R.string.music_title), MainActivity.playlists.get(position).getSong_original())
@@ -129,18 +133,22 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     public void onAllMusicDelete() {
-        RestUtils.getRetrofit()
-                .create(RestUtils.PlaylistDelete.class)
-                .playlistDelete(MainActivity.TOKEN, "")
-                .subscribe(o -> {
-                            MainActivity.playlists.clear();
-                            notifyDataSetChanged();
-                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete2));
-                        },
-                        e -> {
-                            Log.e(TAG, e.toString());
-                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
-                        });
+        if (MainActivity.playlists.size() == 1) {
+            onSelectMusicDelete(1);
+        } else {
+            RestUtils.getRetrofit()
+                    .create(RestUtils.PlaylistDelete.class)
+                    .playlistDelete(MainActivity.TOKEN, "")
+                    .subscribe(o -> {
+                                MainActivity.playlists.clear();
+                                notifyDataSetChanged();
+                                ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete2));
+                            },
+                            e -> {
+                                Log.e(TAG, e.toString());
+                                ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
+                            });
+        }
     }
 
     @Override

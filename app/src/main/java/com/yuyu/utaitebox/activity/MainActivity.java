@@ -27,7 +27,6 @@ import com.yuyu.utaitebox.chain.ChainedArrayList;
 import com.yuyu.utaitebox.chain.ChainedToast;
 import com.yuyu.utaitebox.fragment.ChartFragment;
 import com.yuyu.utaitebox.fragment.MainFragment;
-import com.yuyu.utaitebox.fragment.MusicInfoFragment;
 import com.yuyu.utaitebox.fragment.MusicListFragment;
 import com.yuyu.utaitebox.fragment.PlaylistFragment;
 import com.yuyu.utaitebox.fragment.SearchFragment;
@@ -94,13 +93,14 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        nav_view.getMenu().getItem(index).setChecked(true);
+        nav_view.getMenu().getItem(getString(R.string.service_list).equals(getIntent().getAction()) ?
+                1 : index).setChecked(true);
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         nav_view.getMenu().getItem(0).setChecked(true);
     }
@@ -176,7 +176,6 @@ public class MainActivity extends RxAppCompatActivity {
             String utaite = intent.getStringExtra(getString(R.string.music_utaite));
 
             Intent i = new Intent(context, MusicActivity.class)
-                    .setFlags(FLAG_ACTIVITY_NO_HISTORY)
                     .putExtra(getString(R.string.music_sid), sid)
                     .putExtra(getString(R.string.music_key), key)
                     .putExtra(getString(R.string.music_cover), cover)
@@ -185,11 +184,11 @@ public class MainActivity extends RxAppCompatActivity {
             startActivity(i);
 
         } else if (getString(R.string.service_list).equals(intent.getAction())) {
-            nav_view.getMenu().getItem(1).setChecked(true);
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_main, new PlaylistFragment())
                     .addToBackStack(null)
                     .commit();
+            setTitle(getString(R.string.nav_playlist));
         }
     }
 

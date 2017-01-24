@@ -30,7 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT;
 import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
 
 public class MusicActivity extends RxAppCompatActivity {
@@ -95,13 +97,13 @@ public class MusicActivity extends RxAppCompatActivity {
         }
 
         if (getString(R.string.service_noti).equals(getIntent().getAction())) {
-            initialize();
+            viewInitialize();
         } else {
-            prepare();
+            onPrepare();
         }
     }
 
-    public void prepare() {
+    public void onPrepare() {
         new Thread() {
             @Override
             public void run() {
@@ -110,7 +112,7 @@ public class MusicActivity extends RxAppCompatActivity {
                         while (!MusicService.mediaPlayer.isPlaying()) {
                             Thread.sleep(10);
                         }
-                        runOnUiThread(() -> initialize());
+                        runOnUiThread(() -> viewInitialize());
                     } else {
                         while (MusicService.mediaPlayer == null) {
                             Thread.sleep(10);
@@ -118,7 +120,7 @@ public class MusicActivity extends RxAppCompatActivity {
                         while (!MusicService.mediaPlayer.isPlaying()) {
                             Thread.sleep(10);
                         }
-                        runOnUiThread(() -> initialize());
+                        runOnUiThread(() -> viewInitialize());
                     }
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
@@ -148,7 +150,6 @@ public class MusicActivity extends RxAppCompatActivity {
             if (MusicService.mediaPlayer.getDuration() > Constant.DELAY_TIME) {
                 Intent intent = new Intent(context, MainActivity.class)
                         .setAction(getString(R.string.service_list))
-                        .setFlags(FLAG_ACTIVITY_NO_HISTORY)
                         .putExtra(getString(R.string.music_sid), sid)
                         .putExtra(getString(R.string.music_key), key)
                         .putExtra(getString(R.string.music_cover), cover)
@@ -177,7 +178,7 @@ public class MusicActivity extends RxAppCompatActivity {
             Intent service = new Intent(context, MusicService.class);
             context.stopService(service);
             context.startService(putIntent(service));
-            prepare();
+            onPrepare();
         }
     }
 
@@ -190,7 +191,7 @@ public class MusicActivity extends RxAppCompatActivity {
             Intent service = new Intent(context, MusicService.class);
             context.stopService(service);
             context.startService(putIntent(service));
-            prepare();
+            onPrepare();
         }
     }
 
@@ -203,7 +204,7 @@ public class MusicActivity extends RxAppCompatActivity {
         startService(putIntent(service));
 
         if (isShow) {
-            prepare();
+            onPrepare();
         }
     }
 
@@ -247,15 +248,14 @@ public class MusicActivity extends RxAppCompatActivity {
     }
 
     public Intent putIntent(Intent intent) {
-        return intent.setFlags(FLAG_ACTIVITY_NO_HISTORY)
-                .putExtra(getString(R.string.music_sid), sid)
+        return intent.putExtra(getString(R.string.music_sid), sid)
                 .putExtra(getString(R.string.music_key), key)
                 .putExtra(getString(R.string.music_cover), cover)
                 .putExtra(getString(R.string.music_title), title)
                 .putExtra(getString(R.string.music_utaite), utaite);
     }
 
-    public void initialize() {
+    public void viewInitialize() {
         MusicService.isLoading = true;
         music_progress.setVisibility(View.GONE);
         music_stop.setImageResource(R.drawable.music_stop);

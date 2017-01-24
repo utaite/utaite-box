@@ -335,8 +335,7 @@ public class MusicInfoFragment extends RxFragment {
     }
 
     public Intent putIntent(Intent intent) {
-        return intent.setFlags(FLAG_ACTIVITY_NO_HISTORY)
-                .putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()))
+        return intent.putExtra(getString(R.string.music_sid), Integer.parseInt(repo.getSong().get_sid()))
                 .putExtra(getString(R.string.music_key), repo.getSong().getKey())
                 .putExtra(getString(R.string.music_cover), repo.getSong().getCover())
                 .putExtra(getString(R.string.music_title), repo.getSong().getSong_original())
@@ -466,6 +465,17 @@ public class MusicInfoFragment extends RxFragment {
                                         new String[]{getString(R.string.musicinfo_txt1, "▼"), "▼" + str2Check, getString(R.string.musicinfo_txt3, "▼"), repo.getSong().getArtist_en(),
                                                 repo.getSong().getSong_original(), repo.getSong().getSong_kr(), repo.getSong().getRibbon(), repo.getSong().getComment()});
                                 Chained.setPaintFlagsMany(musicinfo_ribbon_right, musicinfo_songkr, musicinfo_ribbon, musicinfo_addlist, musicinfo_utaite, musicinfo_song, musicinfo_played_right, musicinfo_comment_right);
+
+                                musicinfo_utaite.setOnClickListener(v ->  {
+                                    Fragment fragment = new UtaiteInfoFragment();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(context.getString(R.string.rest_aid), Integer.parseInt(repo.getSong().get_aid()));
+                                    fragment.setArguments(bundle);
+                                    ((MainActivity) context).getFragmentManager().beginTransaction()
+                                            .replace(R.id.content_main, fragment)
+                                            .addToBackStack(null)
+                                            .commit();
+                                });
                             } else {
                                 Song song = response.getSong();
                                 vo.add(new MainVO(song.getCover(), song.getArtist_cover(), song.getSong_original(), song.getArtist_en(),

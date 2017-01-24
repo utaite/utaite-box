@@ -146,6 +146,7 @@ public class UtaiteInfoFragment extends RxFragment {
                     String nickname = comment.get(i).getNickname();
                     tv[i].setText(nickname.length() <= Constant.LONG_STRING ? nickname : nickname.substring(0, Constant.LONG_STRING) + "...");
                     tv[i].setTextColor(Color.BLACK);
+                    tv[i].setOnClickListener(v -> onProfileClick(comment.get(position).get_mid()));
 
                     rAbsolute = new LinearLayout(context);
                     rAbsolute.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

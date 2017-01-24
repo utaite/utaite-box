@@ -3,15 +3,14 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:checked="true"
             android:icon="@drawable/ic_home"
             android:title="@string/nav_home" />
 
         <item
             android:id="@+id/nav_playlist"
+            android:checked="true"
             android:icon="@drawable/ic_playlist"
-            android:title="@string/nav_playlist"
-            />
+            android:title="@string/nav_playlist" />
 
         <item
             android:id="@+id/nav_music"
