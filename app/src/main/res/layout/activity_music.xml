@@ -41,15 +41,23 @@
         android:id="@+id/music_title"
         style="@style/MusicText"
         android:layout_above="@+id/music_utaite"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="6dp"
-        android:text="" />
+        android:layout_toLeftOf="@+id/music_close"
+        android:gravity="left"
+        android:maxLines="1"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/music_utaite"
         style="@style/MusicText"
         android:layout_above="@+id/music_bottom_linear"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="6dp"
-        android:text="" />
+        android:layout_toLeftOf="@+id/music_close"
+        android:gravity="left"
+        android:maxLines="1"
+        android:singleLine="true" />
 
     <ProgressBar
         android:id="@+id/music_progress"
@@ -62,11 +70,11 @@
         android:id="@+id/music_bottom_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_marginBottom="33dp"
         android:orientation="horizontal"
-        android:weightSum="5"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:weightSum="5">
 
         <ImageButton
             android:id="@+id/music_list_btn"
@@ -109,5 +117,16 @@
             android:src="@drawable/music_repeat" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/music_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/music_bottom_linear"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/music_close" />
 
 </RelativeLayout>

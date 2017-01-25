@@ -98,7 +98,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         } else if (which == 1) {
             onSelectMusicDelete(position);
         } else if (which == 2) {
-            onAllMusicDelete();
+            onAllMusicDelete(true);
         }
     }
 
@@ -119,36 +119,37 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
         for (PlaylistVO v : MainActivity.playlists) {
             arrayList.add(v.get_sid());
         }
-        RestUtils.getRetrofit()
-                .create(RestUtils.PlaylistUpdate.class)
-                .playlistUpdate(MainActivity.TOKEN, arrayList)
-                .subscribe(o -> {
-                            notifyDataSetChanged();
-                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete1));
-                        },
-                        e -> {
-                            Log.e(TAG, e.toString());
-                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
-                        });
-    }
-
-    public void onAllMusicDelete() {
-        if (MainActivity.playlists.size() == 1) {
-            onSelectMusicDelete(1);
+        if (MainActivity.playlists.size() == 0) {
+            onAllMusicDelete(false);
         } else {
             RestUtils.getRetrofit()
-                    .create(RestUtils.PlaylistDelete.class)
-                    .playlistDelete(MainActivity.TOKEN, "")
+                    .create(RestUtils.PlaylistUpdate.class)
+                    .playlistUpdate(MainActivity.TOKEN, arrayList)
                     .subscribe(o -> {
-                                MainActivity.playlists.clear();
                                 notifyDataSetChanged();
-                                ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete2));
+                                ((MainActivity) context).getToast().setTextShow(context.getString(R.string.playlist_delete1));
                             },
                             e -> {
                                 Log.e(TAG, e.toString());
                                 ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
                             });
         }
+    }
+
+    public void onAllMusicDelete(boolean isAll) {
+        RestUtils.getRetrofit()
+                .create(RestUtils.PlaylistDelete.class)
+                .playlistDelete(MainActivity.TOKEN, "")
+                .subscribe(o -> {
+                            MainActivity.playlists.clear();
+                            notifyDataSetChanged();
+                            ((MainActivity) context).getToast().setTextShow(isAll ?
+                                    context.getString(R.string.playlist_delete2) : context.getString(R.string.playlist_delete1));
+                        },
+                        e -> {
+                            Log.e(TAG, e.toString());
+                            ((MainActivity) context).getToast().setTextShow(context.getString(R.string.login_network_err));
+                        });
     }
 
     @Override

@@ -81,9 +81,8 @@ public class MusicActivity extends RxAppCompatActivity {
         cover = getIntent().getStringExtra(getString(R.string.music_cover));
         title = getIntent().getStringExtra(getString(R.string.music_title));
         utaite = getIntent().getStringExtra(getString(R.string.music_utaite));
-        isDestroy = false;
         isShow = true;
-        MusicService.isLoading = false;
+        MusicService.isLoading = isDestroy = false;
         music_progress.setVisibility(View.VISIBLE);
         music_shuffle.setColorFilter(ContextCompat.getColor(context, MusicService.isShuffle ? R.color.colorAccent : android.R.color.black));
 
@@ -129,17 +128,25 @@ public class MusicActivity extends RxAppCompatActivity {
         }.start();
     }
 
+    @OnClick(R.id.music_close)
+    public void onMusicCloseButtonClick() {
+        if (MusicService.isLoading) {
+            mediaPlayerDestroy();
+            Intent service = new Intent(context, MusicService.class);
+            context.stopService(service);
+            finish();
+        }
+    }
+
     @OnClick(R.id.music_stop)
     public void onMusicStopButtonClick() {
         if (MusicService.isLoading) {
-            if (MusicService.mediaPlayer.getDuration() > Constant.DELAY_TIME) {
-                if (MusicService.mediaPlayer.isPlaying()) {
-                    MusicService.mediaPlayer.pause();
-                    music_stop.setImageResource(R.drawable.music_play);
-                } else {
-                    MusicService.mediaPlayer.start();
-                    music_stop.setImageResource(R.drawable.music_stop);
-                }
+            if (MusicService.mediaPlayer.isPlaying()) {
+                MusicService.mediaPlayer.pause();
+                music_stop.setImageResource(R.drawable.music_play);
+            } else {
+                MusicService.mediaPlayer.start();
+                music_stop.setImageResource(R.drawable.music_stop);
             }
         }
     }
@@ -147,16 +154,14 @@ public class MusicActivity extends RxAppCompatActivity {
     @OnClick(R.id.music_list_btn)
     public void onMusicListButtonClick() {
         if (MusicService.isLoading) {
-            if (MusicService.mediaPlayer.getDuration() > Constant.DELAY_TIME) {
-                Intent intent = new Intent(context, MainActivity.class)
-                        .setAction(getString(R.string.service_list))
-                        .putExtra(getString(R.string.music_sid), sid)
-                        .putExtra(getString(R.string.music_key), key)
-                        .putExtra(getString(R.string.music_cover), cover)
-                        .putExtra(getString(R.string.music_title), title)
-                        .putExtra(getString(R.string.music_utaite), utaite);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(context, MainActivity.class)
+                    .setAction(getString(R.string.service_list))
+                    .putExtra(getString(R.string.music_sid), sid)
+                    .putExtra(getString(R.string.music_key), key)
+                    .putExtra(getString(R.string.music_cover), cover)
+                    .putExtra(getString(R.string.music_title), title)
+                    .putExtra(getString(R.string.music_utaite), utaite);
+            startActivity(intent);
         }
     }
 
@@ -213,7 +218,6 @@ public class MusicActivity extends RxAppCompatActivity {
         int size = MainActivity.playlists.size();
 
         if (!MusicService.isShuffle) {
-            Log.e(TAG, "셔플");
             for (int i = 0; i < size; i++) {
                 if (MainActivity.playlists.get(i).get_sid() == sid) {
 
@@ -228,15 +232,12 @@ public class MusicActivity extends RxAppCompatActivity {
 
         } else {
             if (!isPrev) {
-                Log.e(TAG, "!isPrev");
                 MusicService.positions.add(position);
                 position = (int) (Math.random() * size);
 
             } else {
-                Log.e(TAG, "psize");
                 int psize = MusicService.positions.size();
                 if (psize > 0) {
-                    Log.e(TAG, "if");
                     position = MusicService.positions.get(psize - 1);
                     MusicService.positions.remove(psize - 1);
                 }

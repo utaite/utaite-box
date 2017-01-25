@@ -9,6 +9,7 @@ public class Constant {
             GUEST = 1994,
             NOTI_ID = 6888,
             DELAY_TIME = 1000;
+
     public static long CURRENT_TIME;
 
 }

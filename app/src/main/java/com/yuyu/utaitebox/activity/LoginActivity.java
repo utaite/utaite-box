@@ -189,6 +189,7 @@ public class LoginActivity extends RxAppCompatActivity {
         RestUtils.getRetrofit()
                 .create(RestUtils.Login.class)
                 .login(id, pw)
+                .distinct()
                 .subscribe(o -> {
                             if (o.isStatus()) {
                                 MainActivity.MID = o.getData().get_mid();
