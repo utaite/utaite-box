@@ -122,11 +122,9 @@
         android:id="@+id/music_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/music_bottom_linear"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/music_close" />
+        android:src="@drawable/music_close"
+        android:layout_alignBottom="@+id/music_utaite"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

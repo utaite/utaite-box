@@ -130,12 +130,10 @@ public class MusicActivity extends RxAppCompatActivity {
 
     @OnClick(R.id.music_close)
     public void onMusicCloseButtonClick() {
-        if (MusicService.isLoading) {
-            mediaPlayerDestroy();
-            Intent service = new Intent(context, MusicService.class);
-            context.stopService(service);
-            finish();
-        }
+        mediaPlayerDestroy();
+        Intent service = new Intent(context, MusicService.class);
+        context.stopService(service);
+        finish();
     }
 
     @OnClick(R.id.music_stop)
@@ -153,16 +151,14 @@ public class MusicActivity extends RxAppCompatActivity {
 
     @OnClick(R.id.music_list_btn)
     public void onMusicListButtonClick() {
-        if (MusicService.isLoading) {
-            Intent intent = new Intent(context, MainActivity.class)
-                    .setAction(getString(R.string.service_list))
-                    .putExtra(getString(R.string.music_sid), sid)
-                    .putExtra(getString(R.string.music_key), key)
-                    .putExtra(getString(R.string.music_cover), cover)
-                    .putExtra(getString(R.string.music_title), title)
-                    .putExtra(getString(R.string.music_utaite), utaite);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(context, MainActivity.class)
+                .setAction(getString(R.string.service_list))
+                .putExtra(getString(R.string.music_sid), sid)
+                .putExtra(getString(R.string.music_key), key)
+                .putExtra(getString(R.string.music_cover), cover)
+                .putExtra(getString(R.string.music_title), title)
+                .putExtra(getString(R.string.music_utaite), utaite);
+        startActivity(intent);
     }
 
     @OnClick(R.id.music_shuffle)
