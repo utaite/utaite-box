@@ -4,9 +4,9 @@ Utaite Box
 
 - 제작 기간 : 2016.11 ~ 2017.01
 
-- 사용 기술 : Retrofit2, RxJava, RxRetrofit, JWT, Glide, ButterKnife, ProjectLombok, RetroLambda, JSON
+- 사용 기술 : Retrofit2, RxJava, RxRetrofit2, JWT, Glide, ButterKnife, ProjectLombok, RetroLambda, JSON
 
-- 기능 : 서버 통신(로그인, 회원가입, 플레이리스트, 노래재생, 노래리본, 댓글작성, 검색) / 셔플 및 반복재생
+- 기능 : 서버 통신(로그인, 회원가입, 플레이리스트, 노래재생, 노래리본, 댓글작성, 검색 ) / 셔플 및 반복재생
 
 - [다운로드][link]
 [link]: https://github.com/Utaite/utaite-box/blob/master/readme/apk/com.yuyu.utaitebox.apk
