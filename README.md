@@ -2,7 +2,7 @@ Utaite Box [개인프로젝트]
 =
 ####우타이테들의 노래를 스트리밍으로 감상하고 의견을 나눌 수 있는 어플리케이션
 
-- 제작 기간 : 2016.11 ~ 2017.01
+- 개발 기간 : 2016.11 ~ 2017.01
 
 - 사용 기술 : Retrofit2, RxJava, RxRetrofit2, JWT, Glide, ButterKnife, ProjectLombok, RetroLambda, JSON
 
