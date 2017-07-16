@@ -8,7 +8,7 @@ Utaite Box [개인프로젝트]
 
 - 기능 : 서버 통신(로그인, 회원가입, 플레이리스트, 노래재생, 노래리본, 댓글작성, 검색 등), 셔플 및 반복재생 등
 
-- 다운로드 : https://github.com/Utaite/utaite-box/blob/master/readme/apk/com.yuyu.utaitebox.apk
+- 다운로드 : https://github.com/Utaite/utaite-box/raw/master/readme/apk/com.yuyu.utaitebox.apk
 
 - 웹 서버 : http://utaitebox.com/
 
